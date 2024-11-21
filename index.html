@@ -1,1 +1,483 @@
-<script type="text/javascript">window.location.href="http://backdoorbench.com";</script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://kit.fontawesome.com/15106f0a68.js" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <title>BackdoorBench</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+        content="BackdoorBench is a comprehensive benchmark for evaluating backdoor attacks and defenses.">
+    <meta name="keywords" content="Backdoor Benchmark, Backdoor Attack, Backdoor Defense, AI Security, Adversarial">
+    <meta name="author" content="BackdoorBench">
+    <link rel="icon" href="image/favicon.ico">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <style>
+        /* Logo 样式 */
+        .navbar-brand .logo {
+            height: 50px; /* 高度 */
+            display: inline-block;
+            vertical-align: middle; /* 对齐 */
+        }
+
+        /* 导航栏背景颜色 */
+        .navbar {
+            background-color: white !important;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 阴影 */
+        }
+
+        /* 导航栏文字颜色 */
+        .navbar-nav .nav-link {
+            color: black !important;
+            transition: color 0.3s ease; /* 颜色变化 */
+        }
+
+        .header-container {
+            background-image: url('image/bg_network.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #ffffff;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        /* 导航栏边距 */
+        .container-fluid {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        /* 主标题 */
+        .header-container h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        /* 副标题 */
+        .header-container p {
+            font-size: 1.5rem;
+            color: black;
+            margin-top: 10px;
+        }
+
+        .btn-custom {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #7e57c2;
+            text-decoration: none;
+            border: 2px solid #7e57c2;
+            border-radius: 20px;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #7e57c2;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* 按钮通用样式 */
+        .btn-outline-custom {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #7e57c2;
+            border: 2px solid #7e57c2;
+            border-radius: 5px; /* 圆角 */
+            background-color: transparent;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* 鼠标悬停效果 */
+        .btn-outline-custom:hover {
+            background-color: #7e57c2; /* 背景 */
+            color: white; /* 字体 */
+            text-decoration: none;
+        }
+
+        .btn-outline-custom + .btn-outline-custom {
+            margin-left: 10px;
+        }
+
+        /* 边框效果 */
+        .card-simple {
+            border: 1px solid #e0e0e0; /* 边框颜色 */
+            border-radius: 10px; /* 圆角 */
+            padding: 20px; /* 内边距 */
+            margin-bottom: 20px;
+            background-color: #ffffff; /* 背景颜色 */
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 阴影 */
+        }
+
+        /* 标题样式 */
+        .card-simple h4 {
+            margin-bottom: 15px; /* 标题下方间距 */
+        }
+
+        /* 文献作者+会议 */
+        .article-metadata {
+            font-size: 14px;
+            font-weight: bold;
+            color: #757575; /* 较浅的灰色 */
+            margin-bottom: 10px;
+        }
+
+        /* 按钮对齐 */
+        .btn-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap; /* 自动换行 */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-brand">
+                <img src="image/logo.png" alt="Logo 1" class="logo">
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#content"
+                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="content">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html"><b>Home</b></a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Leaderboard
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="leaderboard-cifar10.html">CIFAR-10</a>
+                            <a class="dropdown-item" href="leaderboard-cifar100.html">CIFAR-100</a>
+                            <a class="dropdown-item" href="leaderboard-gtsrb.html">GTSRB</a>
+                            <a class="dropdown-item" href="leaderboard-tinyimagenet.html">Tiny ImageNet</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="challenge.html">Challenge</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="people.html">Team</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/SCLBD/backdoorbench" target="_blank">Github</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="header-container">
+        <div class="container mt-4 p-5">
+            <h1>BackdoorBench</h1>
+            <p style="color: black;">A Comprehensive Benchmark for Evaluating Backdoor Attacks and Defenses</p>
+            <a class="btn-custom a_btn" href="start.html" role="button">Get Started</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="lead">
+                    <br />
+                    Backdoor learning is an emerging topic of studying the adversarial
+                    vulnerability of machine learning models during the training stage. Many backdoor attack
+                    and defense methods have been developed in recent ML and Security
+                    conferences/journals. It is important to build a benchmark to review the current progress and
+                    facilitate future research in backdoor learning.
+                    <br />
+                    <br />
+                    BackdoorBench aims to provide an easy implementation of both
+                    backdoor attack and backdoor defense methods to facilitate future research, as well as a <b><a
+                            href="lead_overview.html">comprehensive evaluation</a></b> of
+                    existing attack and defense methods.
+                    <br /> <br />
+                    This benchmark will be continuously updated to track the latest
+                    advances of backdoor learning, including the implementations of more backdoor methods, as well as
+                    their evaluations in the leaderboard. You are welcome to contribute
+                    your backdoor methods to BackdoorBench.
+                </p>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
+                <h2 class="text-center"><a href=""><i class="fa fa-table"></i></a></h2>
+                <h4 class="text-center"><a href="">Unified Evaluation</a></h4>
+                <p><strong>BackdoorBench defines a realistic threat model where attackers and defenders can compete with
+                        each other under unified settings, which facilitates fair comparisons of various methods.</strong>
+                </p>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <h2 class="text-center"><a href=""><i class="fa fa-cogs"></i></a></h2>
+                <h4 class="text-center"><a href="">Modular Framework</a></h4>
+                <p>
+                    <strong>BackdoorBench provides a coding framework with a modular design, which facilitates the
+                        implementation of all attacks, defenses, and related evaluation processes.</strong>
+                </p>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <h2 class="text-center"><a href=""><i class="fa fa-bar-chart"></i></a></h2>
+                <h4 class="text-center"><a href="">High Reproducibility</a></h4>
+                <p>
+                    <strong>BackdoorBench guarantees high reproducibility of all results on the leaderboards, by
+                        providing all necessary terms including implementation of methods, hyper-parameters,
+                        trained models,
+                        easy-to-use scripts,
+                        etc.</strong>
+                </p>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-12">
+                <h2>Our Papers</h2>
+                <p>Here are the related papers.</p>
+            </div>
+            <div class="col-12 col-lg-12">
+                <div class="card-simple">
+    
+                    <h4>
+                        <a href="https://openreview.net/forum?id=31_U7n18gM7" style="color: #000;">BackdoorBench: A Comprehensive Benchmark
+                            of Backdoor Learning</a>
+                    </h4>
+                    <div class="article-metadata">
+                        <div>
+                            <span><a href="https://sites.google.com/site/baoyuanwu2015/home">Baoyuan Wu</a></span>,
+                            <span><a href="">Hongrui Chen</a></span>,
+                            <span><a href="">Mingda Zhang</a></span>,
+                            <span><a href="">Zihao Zhu</a></span>,
+                            <span><a href="">Shaokui Wei</a></span>,
+                            <span><a href="">Danni Yuan</a></span>,
+                            <span><a href="">Chao Shen</a></span>,
+                        </div>
+                        <span class="pub-publication"><em style="color: red;">NeurIPS 2022 Track Datasets and Benchmarks</em></span>
+                    </div>
+                    <div class="btn-links">
+                        <a class="btn btn-outline-custom my-1 mr-1" href="https://openreview.net/pdf?id=31_U7n18gM7" rel="noopener">PDF</a>
+                        <button type="button" class="btn btn-outline-custom my-1 mr-1" data-toggle="modal" data-target="#cite_backdoorbench">
+                            Cite
+                        </button>
+                        <a class="btn btn-outline-custom my-1 mr-1" href="https://github.com/SCLBD/BackdoorBench" rel="noopener">Code</a>
+    
+                        <div class="modal fade" id="cite_backdoorbench" tabindex="-1" role="dialog" aria-labelledby="cite_backdoorbench" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">BibTeX Record</h5>
+                                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <pre>
+    @inproceedings{ wu2022backdoorbench, 
+        title={BackdoorBench: A Comprehensive Benchmark of Backdoor Learning}, 
+        author={Baoyuan Wu and Hongrui Chen and Mingda Zhang and Zihao Zhu and Shaokui Wei and Danni Yuan and Chao Shen},
+        booktitle={Thirty-sixth Conference on Neural Information Processing Systems Datasets and Benchmarks Track}, 
+        year={2022}}
+                                                    </pre>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-custom" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+                </br>
+                <div class="card-simple">
+    
+                    <h4>
+                        <a href="https://openreview.net/forum?id=AsH-Tx2U0Ug" style="color: #000;">Effective Backdoor Defense by Exploiting Sensitivity of Poisoned Samples</a>
+                    </h4>
+                    <div class="article-metadata">
+                        <div>
+                            <span><a href="">Weixin Chen</a></span>,
+                            <span><a href="https://sites.google.com/site/baoyuanwu2015/home">Baoyuan Wu</a></span>,
+                            <span><a href="">Haoqian Wang</a></span>,
+    
+                        </div>
+                        <span class="pub-publication"><em style="color: red;">NeurIPS 2022</em></span>
+                    </div>
+                    <div class="btn-links">
+                        <a class="btn btn-outline-custom my-1 mr-1" href="https://openreview.net/pdf?id=AsH-Tx2U0Ug" rel="noopener">PDF</a>
+                        <button type="button" class="btn btn-outline-custom my-1 mr-1" data-toggle="modal" data-target="#cite_effective">
+                            Cite
+                        </button>
+                        <a class="btn btn-outline-custom my-1 mr-1" href="https://github.com/SCLBD/Effective_backdoor_defense" rel="noopener">Code</a>
+    
+                        <div class="modal fade" id="cite_effective" tabindex="-1" role="dialog" aria-labelledby="cite_effective" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">BibTex Record</h5>
+                                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <pre>
+    @inproceedings{chen2022effective, 
+        title={Effective Backdoor Defense by Exploiting Sensitivity of Poisoned Samples}, 
+        author={Weixin Chen and Baoyuan Wu and Haoqian Wang}, 
+        booktitle={Advances in Neural Information Processing Systems}, 
+        year={2022}}
+                                                    </pre>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-custom" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+                </br>
+                <div class="card-simple">
+    
+                    <h4>
+                        <a href="https://openreview.net/forum?id=TySnJ-0RdKI" style="color: #000;">Backdoor Defense via Decoupling the Training Process</a>
+                    </h4>
+                    <div class="article-metadata">
+                        <div>
+                            <span><a href="">Kunzhe Huang</a></span>,
+                            <span><a href="">Yiming Li</a></span>,
+                            <span><a href="https://sites.google.com/site/baoyuanwu2015/home">Baoyuan Wu</a></span>,
+                            <span><a href="">Zhan Qin</a></span>,
+                            <span><a href="">Kui Ren</a></span>,
+    
+                        </div>
+                        <span class="pub-publication"><em style="color: red;">ICLR 2022</em></span>
+                    </div>
+                    <div class="btn-links">
+                        <a class="btn btn-outline-custom my-1 mr-1" href="https://openreview.net/pdf?id=TySnJ-0RdKI" rel="noopener">PDF</a>
+                        <button type="button" class="btn btn-outline-custom my-1 mr-1" data-toggle="modal" data-target="#cite_dbd">
+                            Cite
+                        </button>
+                        <a class="btn btn-outline-custom my-1 mr-1" href="https://github.com/SCLBD/DBD" rel="noopener">Code</a>
+    
+                        <div class="modal fade" id="cite_dbd" tabindex="-1" role="dialog" aria-labelledby="cite_dbd" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">BibTex Record</h5>
+                                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <pre>
+    @inproceedings{ huang2022backdoor, 
+        title={Backdoor Defense via Decoupling the Training Process},
+        author={Kunzhe Huang and Yiming Li and Baoyuan Wu and Zhan Qin and Kui Ren}, 
+        booktitle={International Conference on Learning Representations}, 
+        year={2022}}
+                                                    </pre>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-custom" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+                </br>
+                <div class="card-simple">
+    
+                    <h4>
+                        <a href="https://openaccess.thecvf.com/content/ICCV2021/html/Li_Invisible_Backdoor_Attack_With_Sample-Specific_Triggers_ICCV_2021_paper.html" style="color: #000;">Invisible
+                            Backdoor Attack With Sample-Specific Triggers</a>
+                    </h4>
+                    <div class="article-metadata">
+                        <div>
+                            <span><a href="">YueZun Li</a></span>,
+                            <span><a href="">Yiming Li</a></span>,
+                            <span><a href="https://sites.google.com/site/baoyuanwu2015/home">Baoyuan Wu</a></span>,
+                            <span><a href="">Longkang Li</a></span>,
+                            <span><a href="">Ran He</a></span>,
+                            <span><a href="">Siwei Lyu</a></span>
+                        </div>
+                        <span class="pub-publication"><em style="color: red;">ICCV 2021</em></span>
+                    </div>
+                    <div class="btn-links">
+                        <a class="btn btn-outline-custom my-1 mr-1"
+                            href="https://openaccess.thecvf.com/content/ICCV2021/papers/Li_Invisible_Backdoor_Attack_With_Sample-Specific_Triggers_ICCV_2021_paper.pdf" rel="noopener">PDF</a>
+                        <button type="button" class="btn btn-outline-custom my-1 mr-1" data-toggle="modal" data-target="#cite_ssba">
+                            Cite
+                        </button>
+                        <a class="btn btn-outline-custom my-1 mr-1" href="https://github.com/SCLBD/ISSBA" rel="noopener">Code</a>
+                        <div class="modal fade" id="cite_ssba" tabindex="-1" role="dialog" aria-labelledby="cite_ssba" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">BibTex Record</h5>
+                                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <pre>
+    @InProceedings{Li_2021_ICCV, 
+        author = {Li, Yuezun and Li, Yiming and Wu, Baoyuan and Li, Longkang and He, Ran and Lyu, Siwei}, 
+        title = {Invisible Backdoor Attack With Sample-Specific Triggers},
+        booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)}, 
+        month = {October}, 
+        year = {2021}, 
+        pages = {16463-16472} }
+                                                </pre>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-custom" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <p class="text-center font-size:10px">
+                BackdoorBench@2023 <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2023006778号-1</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/sorttable.js"></script>
+</body>
+
+</html>
