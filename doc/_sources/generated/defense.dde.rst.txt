@@ -1,0 +1,10 @@
+﻿defense.dde
+===========
+
+.. currentmodule:: defense
+
+.. autoclass:: dde
+   :show-inheritance:
+   :members:
+   :inherited-members:
+   :special-members: __cat_dim__, __inc__

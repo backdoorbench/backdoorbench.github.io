@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>detection_pretrain.spectre &mdash; BackdoorBench v2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="/static/_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="/static/_static/css/mytheme.css" />
+
+  
+    <link rel="shortcut icon" href="/static/_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="/static/_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="/static/_static/documentation_options.js"></script>
+        <script src="/static/_static/jquery.js"></script>
+        <script src="/static/_static/underscore.js"></script>
+        <script src="/static/_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="/static/_static/doctools.js"></script>
+        <script src="/static/_static/js/version_alert.js"></script>
+    <script src="/static/_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="/static/_static/pyg_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../start/installation.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../start/quickstart.html">Quick Start by Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bddataset.html">Build Your Own Backdoor Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/attack.html">Build Your Own Backdoor Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/defense.html">Build Your Own Backdoor Defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PACKAGE REFERENCE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/attack.html">packages of attack and defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Visualization</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/analysis_readme.html">Analysis Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/Demo_FV.html">Demo_FV</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BackdoorBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">detection_pretrain.spectre</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for detection_pretrain.spectre</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">from</span> <span class="nn">defense.base</span> <span class="kn">import</span> <span class="n">defense</span>
+<span class="c1">#</span>
+<span class="c1"># import argparse</span>
+<span class="c1"># import os,sys</span>
+<span class="c1"># import numpy as np</span>
+<span class="c1"># import torch</span>
+<span class="c1"># import torch.nn as nn</span>
+<span class="c1">#</span>
+<span class="c1"># sys.path.append(&#39;../&#39;)</span>
+<span class="c1"># sys.path.append(os.getcwd())</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># from pprint import  pformat</span>
+<span class="c1"># import yaml</span>
+<span class="c1"># import logging</span>
+<span class="c1"># import time</span>
+<span class="c1"># from defense.base import defense</span>
+<span class="c1">#</span>
+<span class="c1"># from utils.aggregate_block.train_settings_generate import argparser_criterion, argparser_opt_scheduler</span>
+<span class="c1"># from utils.trainer_cls import PureCleanModelTrainer</span>
+<span class="c1"># from utils.aggregate_block.fix_random import fix_random</span>
+<span class="c1"># from utils.aggregate_block.model_trainer_generate import generate_cls_model</span>
+<span class="c1"># from utils.log_assist import get_git_info</span>
+<span class="c1"># from utils.aggregate_block.dataset_and_transform_generate import get_input_shape, get_num_classes, get_transform</span>
+<span class="c1"># from utils.save_load_attack import load_attack_result, save_defense_result</span>
+<span class="c1"># from sklearn.metrics import confusion_matrix</span>
+<span class="c1"># import csv</span>
+<span class="c1"># from sklearn import metrics</span>
+<span class="c1"># import subprocess</span>
+<span class="c1"># from sklearn.decomposition import PCA</span>
+<span class="c1"># from numpy.linalg import norm, inv</span>
+<span class="c1"># from scipy.linalg import sqrtm</span>
+<span class="c1"># from detection_pretrain.spectre_utils import *</span>
+<span class="c1"># from utils.bd_dataset_v2 import xy_iter</span>
+<span class="c1"># from torch.utils.data import DataLoader</span>
+<span class="c1"># from scipy.linalg import svd</span>
+<span class="c1">#</span>
+<span class="c1"># def get_features(name, model, dataloader, target_layer):</span>
+<span class="c1">#     with torch.no_grad():</span>
+<span class="c1">#         model.eval()</span>
+<span class="c1">#         TOO_SMALL_ACTIVATIONS = 32</span>
+<span class="c1">#     activations_all = []</span>
+<span class="c1">#     for i, (x_batch, y_batch) in enumerate(dataloader):</span>
+<span class="c1">#         assert name in [&#39;preactresnet18&#39;, &#39;vgg19&#39;,&#39;vgg19_bn&#39;, &#39;resnet18&#39;, &#39;mobilenet_v3_large&#39;, &#39;densenet161&#39;, &#39;efficientnet_b3&#39;,&#39;convnext_tiny&#39;,&#39;vit_b_16&#39;]</span>
+<span class="c1">#         x_batch = x_batch.to(args.device)</span>
+<span class="c1">#         if name == &#39;preactresnet18&#39;:</span>
+<span class="c1">#             inps,outs = [],[]</span>
+<span class="c1">#             def layer_hook(module, inp, out):</span>
+<span class="c1">#                 outs.append(out.data)</span>
+<span class="c1">#             hook = target_layer.register_forward_hook(layer_hook)</span>
+<span class="c1">#             _ = model(x_batch)</span>
+<span class="c1">#             activations = outs[0].view(outs[0].size(0), -1)</span>
+<span class="c1">#             activations_all.append(activations.cpu())</span>
+<span class="c1">#             hook.remove()</span>
+<span class="c1">#         elif name == &#39;vgg19&#39;:</span>
+<span class="c1">#             inps,outs = [],[]</span>
+<span class="c1">#             def layer_hook(module, inp, out):</span>
+<span class="c1">#                 outs.append(out.data)</span>
+<span class="c1">#             hook = target_layer.register_forward_hook(layer_hook)</span>
+<span class="c1">#             _ = model(x_batch)</span>
+<span class="c1">#             activations = outs[0].view(outs[0].size(0), -1)</span>
+<span class="c1">#             activations_all.append(activations.cpu())</span>
+<span class="c1">#             hook.remove()</span>
+<span class="c1">#         elif name == &#39;vgg19_bn&#39;:</span>
+<span class="c1">#             inps,outs = [],[]</span>
+<span class="c1">#             def layer_hook(module, inp, out):</span>
+<span class="c1">#                 outs.append(out.data)</span>
+<span class="c1">#             hook = target_layer.register_forward_hook(layer_hook)</span>
+<span class="c1">#             _ = model(x_batch)</span>
+<span class="c1">#             activations = outs[0].view(outs[0].size(0), -1)</span>
+<span class="c1">#             activations_all.append(activations.cpu())</span>
+<span class="c1">#             hook.remove()</span>
+<span class="c1">#         elif name == &#39;resnet18&#39;:</span>
+<span class="c1">#             inps,outs = [],[]</span>
+<span class="c1">#             def layer_hook(module, inp, out):</span>
+<span class="c1">#                 outs.append(out.data)</span>
+<span class="c1">#             hook = target_layer.register_forward_hook(layer_hook)</span>
+<span class="c1">#             _ = model(x_batch)</span>
+<span class="c1">#             activations = outs[0].view(outs[0].size(0), -1)</span>
+<span class="c1">#             activations_all.append(activations.cpu())</span>
+<span class="c1">#             hook.remove()</span>
+<span class="c1">#         elif name == &#39;mobilenet_v3_large&#39;:</span>
+<span class="c1">#             inps,outs = [],[]</span>
+<span class="c1">#             def layer_hook(module, inp, out):</span>
+<span class="c1">#                 outs.append(out.data)</span>
+<span class="c1">#             hook = target_layer.register_forward_hook(layer_hook)</span>
+<span class="c1">#             _ = model(x_batch)</span>
+<span class="c1">#             activations = outs[0].view(outs[0].size(0), -1)</span>
+<span class="c1">#             activations_all.append(activations.cpu())</span>
+<span class="c1">#             hook.remove()</span>
+<span class="c1">#         elif name == &#39;densenet161&#39;:</span>
+<span class="c1">#             inps,outs = [],[]</span>
+<span class="c1">#             def layer_hook(module, inp, out):</span>
+<span class="c1">#                 outs.append(out.data)</span>
+<span class="c1">#             hook = target_layer.register_forward_hook(layer_hook)</span>
+<span class="c1">#             _ = model(x_batch)</span>
+<span class="c1">#             outs[0] = torch.nn.functional.relu(outs[0])</span>
+<span class="c1">#             activations = outs[0].view(outs[0].size(0), -1)</span>
+<span class="c1">#             activations_all.append(activations.cpu())</span>
+<span class="c1">#             hook.remove()</span>
+<span class="c1">#         elif name == &#39;efficientnet_b3&#39;:</span>
+<span class="c1">#             inps,outs = [],[]</span>
+<span class="c1">#             def layer_hook(module, inp, out):</span>
+<span class="c1">#                 outs.append(out.data)</span>
+<span class="c1">#             hook = target_layer.register_forward_hook(layer_hook)</span>
+<span class="c1">#             _ = model(x_batch)</span>
+<span class="c1">#             activations = outs[0].view(outs[0].size(0), -1)</span>
+<span class="c1">#             activations_all.append(activations.cpu())</span>
+<span class="c1">#             hook.remove()</span>
+<span class="c1">#         elif name == &#39;convnext_tiny&#39;:</span>
+<span class="c1">#             inps,outs = [],[]</span>
+<span class="c1">#             def layer_hook(module, inp, out):</span>
+<span class="c1">#                 outs.append(out.data)</span>
+<span class="c1">#             hook = target_layer.register_forward_hook(layer_hook)</span>
+<span class="c1">#             _ = model(x_batch)</span>
+<span class="c1">#             activations = outs[0].view(outs[0].size(0), -1)</span>
+<span class="c1">#             activations_all.append(activations.cpu())</span>
+<span class="c1">#             hook.remove()</span>
+<span class="c1">#         elif name == &#39;vit_b_16&#39;:</span>
+<span class="c1">#             inps,outs = [],[]</span>
+<span class="c1">#             def layer_hook(module, inp, out):</span>
+<span class="c1">#                 inps.append(inp[0].data)</span>
+<span class="c1">#             hook = target_layer.register_forward_hook(layer_hook)</span>
+<span class="c1">#             _ = model(x_batch)</span>
+<span class="c1">#             activations = inps[0].view(inps[0].size(0), -1)</span>
+<span class="c1">#             activations_all.append(activations.cpu())</span>
+<span class="c1">#             hook.remove()</span>
+<span class="c1">#</span>
+<span class="c1">#     activations_all = torch.cat(activations_all, axis=0)</span>
+<span class="c1">#     return activations_all</span>
+<span class="c1">#</span>
+<span class="c1"># def rcov_quantum_filter(reps, eps, k, alpha=4, tau=0.1, limit1=2, limit2=1.5):</span>
+<span class="c1">#     n, d = reps.shape</span>
+<span class="c1">#</span>
+<span class="c1">#     # PCA</span>
+<span class="c1">#     pca = PCA(n_components=k)</span>
+<span class="c1">#     reps_pca = pca.fit_transform(reps)</span>
+<span class="c1">#</span>
+<span class="c1">#     if k == 1:</span>
+<span class="c1">#         reps_estimated_white = reps_pca</span>
+<span class="c1">#         sigma_prime = np.ones((1, 1))</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         selected = cov_estimation_iterate(reps_pca, eps/n, tau, None, limit=round(limit1*eps))</span>
+<span class="c1">#         reps_pca_selected = reps_pca[selected,:]</span>
+<span class="c1">#         sigma = np.cov(reps_pca_selected, rowvar=False, bias=False)</span>
+<span class="c1">#         reps_estimated_white = np.linalg.solve(sqrtm(sigma), reps_pca.T).T</span>
+<span class="c1">#         sigma_prime = np.cov(reps_estimated_white, rowvar=False, bias=False)</span>
+<span class="c1">#</span>
+<span class="c1">#     I = np.eye(sigma_prime.shape[0])</span>
+<span class="c1">#     M = np.exp(alpha * (sigma_prime - I) / (norm(sigma_prime, 2) - 1)) if k &gt; 1 else np.ones((1, 1))</span>
+<span class="c1">#     M /= np.trace(M)</span>
+<span class="c1">#     estimated_poison_ind = k_lowest_ind(-np.array([x.T @ M @ x for x in reps_estimated_white]), round(limit2*eps))</span>
+<span class="c1">#</span>
+<span class="c1">#     return ~estimated_poison_ind</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def rcov_auto_quantum_filter(reps, eps, poison_indices, alpha=4, tau=0.1, limit1=2, limit2=1.5):</span>
+<span class="c1">#</span>
+<span class="c1">#     pca = PCA(n_components=64)</span>
+<span class="c1">#     reps_pca = pca.fit_transform(reps)  # 降维后的数据</span>
+<span class="c1">#     U = pca.components_  # 主成分矩阵</span>
+<span class="c1">#</span>
+<span class="c1">#     best_opnorm, best_selected, best_k = -float(&#39;inf&#39;), None, None</span>
+<span class="c1">#     squared_values = [int(x) for x in np.linspace(1, np.sqrt(64), 8) ** 2]</span>
+<span class="c1">#</span>
+<span class="c1">#     for k in squared_values:</span>
+<span class="c1">#         selected = rcov_quantum_filter(reps, eps, k, alpha, tau, limit1=limit1, limit2=limit2)</span>
+<span class="c1">#         selected_matrix = reps_pca[selected,:].T</span>
+<span class="c1">#         cov_matrix = np.cov(selected_matrix)</span>
+<span class="c1">#         transformed = np.linalg.solve(sqrtm(cov_matrix), reps_pca.T)</span>
+<span class="c1">#         cov_matrix_prime = np.cov(transformed)</span>
+<span class="c1">#         I = np.eye(cov_matrix_prime.shape[0])</span>
+<span class="c1">#         U, s, Vh = svd(cov_matrix_prime)</span>
+<span class="c1">#         opnorm = s[0]</span>
+<span class="c1">#</span>
+<span class="c1">#         M = np.exp(alpha * (cov_matrix_prime - I) / (opnorm - 1))</span>
+<span class="c1">#         M /= np.trace(M)</span>
+<span class="c1">#         op = np.trace(cov_matrix_prime * M) / np.trace(M)</span>
+<span class="c1">#         poison_removed = sum([not selected[i] for i in poison_indices])</span>
+<span class="c1">#         if op &gt; best_opnorm:</span>
+<span class="c1">#             best_opnorm, best_selected, best_k = op, selected, k</span>
+<span class="c1">#     return best_selected, best_opnorm</span>
+<span class="c1">#</span>
+
+<div class="viewcode-block" id="spectre"><a class="viewcode-back" href="../../generated/detection_pretrain.spectre.html#detection_pretrain.spectre">[docs]</a><span class="k">class</span> <span class="nc">spectre</span><span class="p">(</span><span class="n">defense</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&#39;&#39;&#39;SPECTRE: Defending Against Backdoor Attacks Using Robust Statistics</span>
+
+<span class="sd">        basic sturcture for defense method:</span>
+
+<span class="sd">        1. basic setting: args</span>
+<span class="sd">        2. attack result(model, train data, test data)</span>
+<span class="sd">        3. Spectral defense:</span>
+<span class="sd">            a. get the activation as representation for each data</span>
+<span class="sd">            b. run quantum filter for k different squared values</span>
+<span class="sd">            c. keep the best k and correspoding selected samples as backdoor samples</span>
+<span class="sd">        4. Record TPR and FPR.</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            parser = argparse.ArgumentParser(description=sys.argv[0])</span>
+<span class="sd">            spectre.add_arguments(parser)</span>
+<span class="sd">            args = parser.parse_args()</span>
+<span class="sd">            spectral_method = spectre(args)</span>
+<span class="sd">            if &quot;result_file&quot; not in args.__dict__:</span>
+<span class="sd">                args.result_file = &#39;defense_test_badnet&#39;</span>
+<span class="sd">            elif args.result_file is None:</span>
+<span class="sd">                args.result_file = &#39;defense_test_badnet&#39;</span>
+<span class="sd">            result = spectral_method.detection(args.result_file)</span>
+
+
+<span class="sd">        .. Note::</span>
+<span class="sd">            @inproceedings{hayase2021spectre,</span>
+<span class="sd">            title={Spectre: Defending against backdoor attacks using robust statistics},</span>
+<span class="sd">            author={Hayase, Jonathan and Kong, Weihao and Somani, Raghav and Oh, Sewoong},</span>
+<span class="sd">            booktitle={International Conference on Machine Learning},</span>
+<span class="sd">            pages={4129--4139},</span>
+<span class="sd">            year={2021},</span>
+<span class="sd">            organization={PMLR}}</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            baisc args: in the base class</span>
+<span class="sd">            target_layer(str): which layer for detection</span>
+<span class="sd">            clean_sample_num(int): number of clean sample given</span>
+<span class="sd">            percentile(float): percentile that over this threshold will be regard as backdoor</span>
+<span class="sd">            &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+<span class="c1">#</span>
+<span class="c1">#         with open(args.yaml_path, &#39;r&#39;) as f:</span>
+<span class="c1">#             defaults = yaml.safe_load(f)</span>
+<span class="c1">#</span>
+<span class="c1">#         defaults.update({k:v for k,v in args.__dict__.items() if v is not None})</span>
+<span class="c1">#</span>
+<span class="c1">#         args.__dict__ = defaults</span>
+<span class="c1">#</span>
+<span class="c1">#         args.terminal_info = sys.argv</span>
+<span class="c1">#</span>
+<span class="c1">#         args.num_classes = get_num_classes(args.dataset)</span>
+<span class="c1">#         args.input_height, args.input_width, args.input_channel = get_input_shape(args.dataset)</span>
+<span class="c1">#         args.img_size = (args.input_height, args.input_width, args.input_channel)</span>
+<span class="c1">#         args.dataset_path = f&quot;{args.dataset_path}/{args.dataset}&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#         self.args = args</span>
+<span class="c1">#</span>
+<span class="c1">#         if &#39;result_file&#39; in args.__dict__ :</span>
+<span class="c1">#             if args.result_file is not None:</span>
+<span class="c1">#                 self.set_result(args.result_file)</span>
+<span class="c1">#</span>
+<span class="c1">#     def add_arguments(parser):</span>
+<span class="c1">#         parser.add_argument(&#39;--device&#39;, type=str, help=&#39;cuda, cpu&#39;)</span>
+<span class="c1">#         parser.add_argument(&quot;-pm&quot;,&quot;--pin_memory&quot;, type=lambda x: str(x) in [&#39;True&#39;, &#39;true&#39;, &#39;1&#39;], help = &quot;dataloader pin_memory&quot;)</span>
+<span class="c1">#         parser.add_argument(&quot;-nb&quot;,&quot;--non_blocking&quot;, type=lambda x: str(x) in [&#39;True&#39;, &#39;true&#39;, &#39;1&#39;], help = &quot;.to(), set the non_blocking = ?&quot;)</span>
+<span class="c1">#         parser.add_argument(&quot;-pf&quot;, &#39;--prefetch&#39;, type=lambda x: str(x) in [&#39;True&#39;, &#39;true&#39;, &#39;1&#39;], help=&#39;use prefetch&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--amp&#39;, default = False, type=lambda x: str(x) in [&#39;True&#39;,&#39;true&#39;,&#39;1&#39;])</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--checkpoint_load&#39;, type=str, help=&#39;the location of load model&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--checkpoint_save&#39;, type=str, help=&#39;the location of checkpoint where model is saved&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--log&#39;, type=str, help=&#39;the location of log&#39;)</span>
+<span class="c1">#         parser.add_argument(&quot;--dataset_path&quot;, type=str, help=&#39;the location of data&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--dataset&#39;, type=str, help=&#39;mnist, cifar10, cifar100, gtrsb, tiny&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--result_file&#39;, type=str, help=&#39;the location of result&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--epochs&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&#39;--batch_size&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&quot;--num_workers&quot;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--lr&#39;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--lr_scheduler&#39;, type=str, help=&#39;the scheduler of lr&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--steplr_stepsize&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&#39;--steplr_gamma&#39;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--steplr_milestones&#39;, type=list)</span>
+<span class="c1">#         parser.add_argument(&#39;--model&#39;, type=str, help=&#39;resnet18&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--client_optimizer&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&#39;--sgd_momentum&#39;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--wd&#39;, type=float, help=&#39;weight decay of sgd&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--frequency_save&#39;, type=int,</span>
+<span class="c1">#                         help=&#39; frequency_save, 0 is never&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--random_seed&#39;, type=int, help=&#39;random seed&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--yaml_path&#39;, type=str, default=&quot;./config/detection/spectre/cifar10.yaml&quot;, help=&#39;the path of yaml&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         #set the parameter for the spectral defense</span>
+<span class="c1">#         parser.add_argument(&#39;--percentile&#39;, type=float, help=&#39;close to pratio&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--target_layer&#39;, type=str)</span>
+<span class="c1">#         parser.add_argument(&#39;--clean_sample_num&#39;, type=int)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     def set_result(self, result_file):</span>
+<span class="c1">#         attack_file = &#39;record/&#39; + result_file</span>
+<span class="c1">#         save_path = &#39;record/&#39; + result_file + &#39;/detection/spectre_pretrain/&#39;</span>
+<span class="c1">#         if not (os.path.exists(save_path)):</span>
+<span class="c1">#             os.makedirs(save_path)</span>
+<span class="c1">#         # assert(os.path.exists(save_path))</span>
+<span class="c1">#         self.args.save_path = save_path</span>
+<span class="c1">#         if self.args.checkpoint_save is None:</span>
+<span class="c1">#             self.args.checkpoint_save = save_path + &#39;checkpoint/&#39;</span>
+<span class="c1">#             if not (os.path.exists(self.args.checkpoint_save)):</span>
+<span class="c1">#                 os.makedirs(self.args.checkpoint_save)</span>
+<span class="c1">#         if self.args.log is None:</span>
+<span class="c1">#             self.args.log = save_path + &#39;log/&#39;</span>
+<span class="c1">#             if not (os.path.exists(self.args.log)):</span>
+<span class="c1">#                 os.makedirs(self.args.log)</span>
+<span class="c1">#         self.result = load_attack_result(attack_file + &#39;/attack_result.pt&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#     def set_trainer(self, model):</span>
+<span class="c1">#         self.trainer = PureCleanModelTrainer(</span>
+<span class="c1">#             model,</span>
+<span class="c1">#         )</span>
+<span class="c1">#</span>
+<span class="c1">#     def set_logger(self):</span>
+<span class="c1">#         args = self.args</span>
+<span class="c1">#         logFormatter = logging.Formatter(</span>
+<span class="c1">#             fmt=&#39;%(asctime)s [%(levelname)-8s] [%(filename)s:%(lineno)d] %(message)s&#39;,</span>
+<span class="c1">#             datefmt=&#39;%Y-%m-%d:%H:%M:%S&#39;,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         logger = logging.getLogger()</span>
+<span class="c1">#</span>
+<span class="c1">#         fileHandler = logging.FileHandler(args.log + &#39;/&#39; + time.strftime(&quot;%Y_%m_%d_%H_%M_%S&quot;, time.localtime()) + &#39;.log&#39;)</span>
+<span class="c1">#         fileHandler.setFormatter(logFormatter)</span>
+<span class="c1">#         logger.addHandler(fileHandler)</span>
+<span class="c1">#</span>
+<span class="c1">#         consoleHandler = logging.StreamHandler()</span>
+<span class="c1">#         consoleHandler.setFormatter(logFormatter)</span>
+<span class="c1">#         logger.addHandler(consoleHandler)</span>
+<span class="c1">#</span>
+<span class="c1">#         logger.setLevel(logging.INFO)</span>
+<span class="c1">#         logging.info(pformat(args.__dict__))</span>
+<span class="c1">#</span>
+<span class="c1">#         try:</span>
+<span class="c1">#             logging.info(pformat(get_git_info()))</span>
+<span class="c1">#         except:</span>
+<span class="c1">#             logging.info(&#39;Getting git info fails.&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#     def set_devices(self):</span>
+<span class="c1">#         self.device = self.args.device</span>
+<span class="c1">#</span>
+<span class="c1">#     def cal(self, true, pred):</span>
+<span class="c1">#         TN, FP, FN, TP = confusion_matrix(true, pred).ravel()</span>
+<span class="c1">#         return TN, FP, FN, TP</span>
+<span class="c1">#     def metrix(self,TN, FP, FN, TP):</span>
+<span class="c1">#         TPR = TP/(TP+FN)</span>
+<span class="c1">#         FPR = FP/(FP+TN)</span>
+<span class="c1">#         precision = TP/(TP+FP)</span>
+<span class="c1">#         acc = (TP+TN)/(TN+FP+FN+TP)</span>
+<span class="c1">#         return TPR, FPR, precision, acc</span>
+<span class="c1">#</span>
+<span class="c1">#     def filtering(self):</span>
+<span class="c1">#         start = time.perf_counter()</span>
+<span class="c1">#         self.set_devices()</span>
+<span class="c1">#         fix_random(self.args.random_seed)</span>
+<span class="c1">#</span>
+<span class="c1">#         ### a. prepare the model and dataset</span>
+<span class="c1">#         model = generate_cls_model(self.args.model,self.args.num_classes)</span>
+<span class="c1">#         model.load_state_dict(self.result[&#39;model&#39;])</span>
+<span class="c1">#         if &quot;,&quot; in self.device:</span>
+<span class="c1">#             model = torch.nn.DataParallel(</span>
+<span class="c1">#                 model,</span>
+<span class="c1">#                 device_ids=[int(i) for i in self.args.device[5:].split(&quot;,&quot;)]  # eg. &quot;cuda:2,3,7&quot; -&gt; [2,3,7]</span>
+<span class="c1">#             )</span>
+<span class="c1">#             self.args.device = f&#39;cuda:{model.device_ids[0]}&#39;</span>
+<span class="c1">#             model.to(self.args.device)</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             model.to(self.args.device)</span>
+<span class="c1">#</span>
+<span class="c1">#         module_dict = dict(model.named_modules())</span>
+<span class="c1">#         target_layer = module_dict[args.target_layer]</span>
+<span class="c1">#         train_tran = get_transform(self.args.dataset, *([self.args.input_height,self.args.input_width]), train = False)</span>
+<span class="c1">#         train_dataset = self.result[&#39;bd_train&#39;].wrapped_dataset</span>
+<span class="c1">#         data_set_without_tran = train_dataset</span>
+<span class="c1">#         data_set_o = self.result[&#39;bd_train&#39;]</span>
+<span class="c1">#         data_set_o.wrapped_dataset = data_set_without_tran</span>
+<span class="c1">#         data_set_o.wrap_img_transform = train_tran</span>
+<span class="c1">#         data_set_o.wrapped_dataset.getitem_all = False</span>
+<span class="c1">#         pindex = np.where(np.array(data_set_o.poison_indicator) == 1)[0]</span>
+<span class="c1">#         dataset = data_set_o</span>
+<span class="c1">#</span>
+<span class="c1">#         images_poison = []</span>
+<span class="c1">#         labels_poison = []</span>
+<span class="c1">#         for img, label in dataset.wrapped_dataset:</span>
+<span class="c1">#             images_poison.append(img)</span>
+<span class="c1">#             labels_poison.append(label)</span>
+<span class="c1">#</span>
+<span class="c1">#         test_tran = get_transform(self.args.dataset, *([self.args.input_height,self.args.input_width]) , train = False)</span>
+<span class="c1">#         bd_train_dataset = xy_iter(images_poison, labels_poison,transform=test_tran)</span>
+<span class="c1">#         bd_train_dataloader = DataLoader(bd_train_dataset,batch_size=self.args.batch_size, shuffle=False)</span>
+<span class="c1">#</span>
+<span class="c1">#         feats = get_features(args.model, model, bd_train_dataloader)</span>
+<span class="c1">#         poison_labels = range(self.args.num_classes)</span>
+<span class="c1">#</span>
+<span class="c1">#         scores = []</span>
+<span class="c1">#         suspicious_indices = []</span>
+<span class="c1">#         for target_label in poison_labels:</span>
+<span class="c1">#             lbl = target_label</span>
+<span class="c1">#             cur_indices = [i for i,v in enumerate(labels_poison) if v==lbl]</span>
+<span class="c1">#</span>
+<span class="c1">#             pt = 0</span>
+<span class="c1">#             cur_poisoned = []</span>
+<span class="c1">#             for j in cur_indices:</span>
+<span class="c1">#                 if j in pindex:</span>
+<span class="c1">#                     cur_poisoned.append(pt)</span>
+<span class="c1">#                 pt += 1</span>
+<span class="c1">#</span>
+<span class="c1">#             ### b. get the activation as representation for each data</span>
+<span class="c1">#             full_cov = [feats[temp_idx].cpu().numpy() for temp_idx in cur_indices]</span>
+<span class="c1">#             full_cov = np.array(full_cov)</span>
+<span class="c1">#             n, _ = full_cov.shape</span>
+<span class="c1">#             eps = self.args.percentile * len(labels_poison)</span>
+<span class="c1">#             if eps &lt;= 0:</span>
+<span class="c1">#                 eps = round(0.1 * n)</span>
+<span class="c1">#             if eps &gt; 0.33 * n:</span>
+<span class="c1">#                 eps = round(0.33 * n)</span>
+<span class="c1">#             if n &lt; 500:</span>
+<span class="c1">#                 if eps &gt; 0.1 * n:</span>
+<span class="c1">#                     eps = round( 0.1 * n)</span>
+<span class="c1">#             eps = int(eps)</span>
+<span class="c1">#             removed = round(1.5 * eps)</span>
+<span class="c1">#             print(&quot;%s: Running quantum filter\n&quot;, target_label)</span>
+<span class="c1">#             quantum_poison_ind, opnorm = rcov_auto_quantum_filter(full_cov, eps, cur_poisoned)</span>
+<span class="c1">#             quantum_poison_ind = np.logical_not(quantum_poison_ind)</span>
+<span class="c1">#             poison_removed = sum(quantum_poison_ind[cur_poisoned])</span>
+<span class="c1">#             clean_removed = removed - poison_removed</span>
+<span class="c1">#</span>
+<span class="c1">#             scores.append(opnorm.item())</span>
+<span class="c1">#             suspicious_class_indices_mask = quantum_poison_ind</span>
+<span class="c1">#             suspicious_class_indices = torch.tensor(suspicious_class_indices_mask).nonzero().squeeze(1)</span>
+<span class="c1">#             cur_class_indices = torch.tensor(cur_indices)</span>
+<span class="c1">#             suspicious_indices.append(cur_class_indices[suspicious_class_indices])</span>
+<span class="c1">#         suspicious_indices = np.concatenate(suspicious_indices,axis=0)</span>
+<span class="c1">#</span>
+<span class="c1">#         scores = torch.tensor(scores)</span>
+<span class="c1">#         suspect_target_class = scores.argmax(dim=0)</span>
+<span class="c1">#</span>
+<span class="c1">#         true_index = np.zeros(len(images_poison))</span>
+<span class="c1">#         for i in range(len(true_index)):</span>
+<span class="c1">#             if i in pindex:</span>
+<span class="c1">#                 true_index[i] = 1</span>
+<span class="c1">#         if len(suspicious_indices)==0:</span>
+<span class="c1">#             tn = len(true_index) - np.sum(true_index)</span>
+<span class="c1">#             fp = np.sum(true_index)</span>
+<span class="c1">#             fn = 0</span>
+<span class="c1">#             tp = 0</span>
+<span class="c1">#             f = open(self.args.save_path + &#39;/detection_info.csv&#39;, &#39;a&#39;, encoding=&#39;utf-8&#39;)</span>
+<span class="c1">#             csv_write = csv.writer(f)</span>
+<span class="c1">#             csv_write.writerow([&#39;record&#39;, &#39;TN&#39;,&#39;FP&#39;,&#39;FN&#39;,&#39;TP&#39;,&#39;TPR&#39;,&#39;FPR&#39;, &#39;target&#39;])</span>
+<span class="c1">#             csv_write.writerow([args.result_file, tn,fp,fn,tp, 0,0, &#39;None&#39;])</span>
+<span class="c1">#             f.close()</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             logging.info(&quot;Flagged label list: {}&quot;.format(suspect_target_class))</span>
+<span class="c1">#             findex = np.zeros(len(images_poison))</span>
+<span class="c1">#             for i in range(len(findex)):</span>
+<span class="c1">#                 if i in suspicious_indices:</span>
+<span class="c1">#                     findex[i] = 1</span>
+<span class="c1">#</span>
+<span class="c1">#             tn, fp, fn, tp = self.cal(true_index, findex)</span>
+<span class="c1">#             TPR, FPR, precision, acc = self.metrix(tn, fp, fn, tp)</span>
+<span class="c1">#             new_TP = tp</span>
+<span class="c1">#             new_FN = fn*9</span>
+<span class="c1">#             new_FP = fp*1</span>
+<span class="c1">#             precision = new_TP / (new_TP + new_FP) if new_TP + new_FP != 0 else 0</span>
+<span class="c1">#             recall = new_TP / (new_TP + new_FN) if new_TP + new_FN != 0 else 0</span>
+<span class="c1">#             fw1 = 2*(precision * recall)/ (precision + recall) if precision + recall != 0 else 0</span>
+<span class="c1">#             end = time.perf_counter()</span>
+<span class="c1">#             time_miniute = (end-start)/60</span>
+<span class="c1">#</span>
+<span class="c1">#             f = open(self.args.save_path + &#39;/detection_info.csv&#39;, &#39;a&#39;, encoding=&#39;utf-8&#39;)</span>
+<span class="c1">#             csv_write = csv.writer(f)</span>
+<span class="c1">#             csv_write.writerow([&#39;record&#39;, &#39;TN&#39;,&#39;FP&#39;,&#39;FN&#39;,&#39;TP&#39;,&#39;TPR&#39;,&#39;FPR&#39;, &#39;target&#39;])</span>
+<span class="c1">#             csv_write.writerow([args.result_file, tn, fp, fn, tp, TPR, FPR, suspect_target_class.item()])</span>
+<span class="c1">#             f.close()</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     def detection(self,result_file):</span>
+<span class="c1">#         self.set_result(result_file)</span>
+<span class="c1">#         self.set_logger()</span>
+<span class="c1">#         self.filtering()</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># if __name__ == &#39;__main__&#39;:</span>
+<span class="c1">#     parser = argparse.ArgumentParser(description=sys.argv[0])</span>
+<span class="c1">#     spectre.add_arguments(parser)</span>
+<span class="c1">#     args = parser.parse_args()</span>
+<span class="c1">#     spectral_method = spectre(args)</span>
+<span class="c1">#     if &quot;result_file&quot; not in args.__dict__:</span>
+<span class="c1">#         args.result_file = &#39;defense_test_badnet&#39;</span>
+<span class="c1">#     elif args.result_file is None:</span>
+<span class="c1">#         args.result_file = &#39;defense_test_badnet&#39;</span>
+<span class="c1">#     result = spectral_method.detection(args.result_file)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SCLBD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

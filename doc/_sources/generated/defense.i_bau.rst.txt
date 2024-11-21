@@ -1,0 +1,10 @@
+﻿defense.i\_bau
+==============
+
+.. currentmodule:: defense
+
+.. autoclass:: i_bau
+   :show-inheritance:
+   :members:
+   :inherited-members:
+   :special-members: __cat_dim__, __inc__

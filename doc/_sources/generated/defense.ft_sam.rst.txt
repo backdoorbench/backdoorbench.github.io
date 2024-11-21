@@ -1,0 +1,10 @@
+﻿defense.ft\_sam
+===============
+
+.. currentmodule:: defense
+
+.. autoclass:: ft_sam
+   :show-inheritance:
+   :members:
+   :inherited-members:
+   :special-members: __cat_dim__, __inc__

@@ -1,0 +1,28 @@
+
+Install and Setup
+===================
+
+1. Activate your virtual environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: sh
+    
+       conda create -n backdoorbench python=3.8
+       conda activate backdoorbench
+
+2. Install the requirement
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: sh
+    
+       git clone https://github.com/SCLBD/BackdoorBench.git
+       cd BackdoorBench
+       sh sh/install.sh
+
+3. Make the folders
+~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: sh
+    
+       sh sh/init_folder.sh
+
+.. note::
+    If you meet any installation problem, feel free to open an issue
+    in the our github `page <https://github.com/SCLBD/BackdoorBench/issues>`_

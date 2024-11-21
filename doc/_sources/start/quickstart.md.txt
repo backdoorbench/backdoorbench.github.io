@@ -1,0 +1,21 @@
+# Quick Start by Examples
+
+## Attack
+
+This is a demo script of running BadNets attack on CIFAR-10.
+
+```
+python attack/badnet_attack.py --yaml_path ../config/attack/badnet/cifar10.yaml --dataset cifar10 --dataset_path ../data --save_folder_name badnet_0.1
+```
+
+After attack you will get a folder with all files saved in `record/`, including `attack_result.pt` for attack model and backdoored data, which will be used by following defense methods. 
+
+If you want to change the attack methods, dataset, save folder location, you should specify both the attack method script in `attack` and the YAML config file to use different attack methods. The detailed descriptions for each attack may be put into the `add_args` function in each script.
+
+
+## Defense
+This is a demo script of running ac defense on CIFAR-10 for BadNets attack. Before defense you need to run badnet attack on CIFAR-10 at first. Then you use the folder name as `result_file`.
+
+```sh
+python defense/ac/ac.py --result_file badnet_0_1 --yaml_path ./config/defense/ac/cifar10.yaml --dataset cifar10
+```

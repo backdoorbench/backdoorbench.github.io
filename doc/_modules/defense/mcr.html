@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>defense.mcr &mdash; BackdoorBench v2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="/static/_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="/static/_static/css/mytheme.css" />
+
+  
+    <link rel="shortcut icon" href="/static/_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="/static/_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="/static/_static/documentation_options.js"></script>
+        <script src="/static/_static/jquery.js"></script>
+        <script src="/static/_static/underscore.js"></script>
+        <script src="/static/_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="/static/_static/doctools.js"></script>
+        <script src="/static/_static/js/version_alert.js"></script>
+    <script src="/static/_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="/static/_static/pyg_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../start/installation.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../start/quickstart.html">Quick Start by Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bddataset.html">Build Your Own Backdoor Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/attack.html">Build Your Own Backdoor Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/defense.html">Build Your Own Backdoor Defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PACKAGE REFERENCE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/attack.html">packages of attack and defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Visualization</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/analysis_readme.html">Analysis Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/Demo_FV.html">Demo_FV</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BackdoorBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">defense.mcr</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for defense.mcr</h1><div class="highlight"><pre>
+<span></span><span class="c1"># python defense/mcr/mcr.py --save_path /workspace/chenhongrui/bdzoo2/record/t_914_badnet</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This file is modified based on the following source:</span>
+<span class="sd">link : https://github.com/IBM/model-sanitization.</span>
+<span class="sd">The defense method is called mcr.</span>
+
+<span class="sd">Since the model is different from original paper, we change the hyperparameter for preactresnet18 on cifar10 to align the performance.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">defense.base</span> <span class="kn">import</span> <span class="n">defense</span>
+
+
+<span class="c1"># def plot_hessian_eigenvalues(</span>
+<span class="c1">#         model_visual,</span>
+<span class="c1">#         data_loader,  # only use one batch</span>
+<span class="c1">#         device,</span>
+<span class="c1">#         save_path_for_hessian=None,  # xx/xx/xx.png</span>
+<span class="c1"># ):</span>
+<span class="c1">#     # save_path_for_hessian =</span>
+<span class="c1">#     # data_loader =</span>
+<span class="c1">#     # device =</span>
+<span class="c1">#     # model_visual =</span>
+<span class="c1">#</span>
+<span class="c1">#     model_visual = (model_visual)</span>
+<span class="c1">#     data_loader = (data_loader)</span>
+<span class="c1">#     model_visual.to(device)</span>
+<span class="c1">#</span>
+<span class="c1">#     # !!! Important to set eval mode !!!</span>
+<span class="c1">#     model_visual.eval()</span>
+<span class="c1">#</span>
+<span class="c1">#     criterion = torch.nn.CrossEntropyLoss()</span>
+<span class="c1">#</span>
+<span class="c1">#     batch_x, batch_y, *others = next(iter(data_loader))</span>
+<span class="c1">#     batch_x = batch_x.to(device)</span>
+<span class="c1">#     batch_y = batch_y.to(device)</span>
+<span class="c1">#</span>
+<span class="c1">#     if torch.__version__ &gt; &#39;1.8.1&#39;:</span>
+<span class="c1">#         logging.info(&#39;Use self-defined function as an alternative for torch.eig since your torch&gt;=1.9&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         def old_torcheig(A, eigenvectors):</span>
+<span class="c1">#             &#39;&#39;&#39;A temporary function as an alternative for torch.eig (torch&lt;1.9)&#39;&#39;&#39;</span>
+<span class="c1">#             vals, vecs = torch.linalg.eig(A)</span>
+<span class="c1">#             if torch.is_complex(vals) or torch.is_complex(vecs):</span>
+<span class="c1">#                 logging.info(</span>
+<span class="c1">#                     &#39;Warning: Complex values founded in Eigenvalues/Eigenvectors. This is impossible for real symmetric matrix like Hessian. \n We only keep the real part.&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#             vals = torch.real(vals)</span>
+<span class="c1">#             vecs = torch.real(vecs)</span>
+<span class="c1">#</span>
+<span class="c1">#             # vals is a nx2 matrix. see https://virtualgroup.cn/pytorch.org/docs/stable/generated/torch.eig.html</span>
+<span class="c1">#             vals = vals.view(-1, 1) + torch.zeros(vals.size()[0], 2).to(vals.device)</span>
+<span class="c1">#             if eigenvectors:</span>
+<span class="c1">#                 return vals, vecs</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 return vals, torch.tensor([])</span>
+<span class="c1">#</span>
+<span class="c1">#         torch.eig = old_torcheig</span>
+<span class="c1">#</span>
+<span class="c1">#     # create the hessian computation module</span>
+<span class="c1">#     hessian_comp = hessian(model_visual, criterion, data=(batch_x, batch_y), cuda=True)</span>
+<span class="c1">#     # Now let&#39;s compute the top 2 eigenavlues and eigenvectors of the Hessian</span>
+<span class="c1">#     top_eigenvalues, top_eigenvector = hessian_comp.eigenvalues(top_n=2, maxIter=1000)</span>
+<span class="c1">#     logging.info(&quot;The top two eigenvalues of this model are: %.4f %.4f&quot; % (top_eigenvalues[0], top_eigenvalues[1]))</span>
+<span class="c1">#</span>
+<span class="c1">#     if save_path_for_hessian is not None:</span>
+<span class="c1">#</span>
+<span class="c1">#         density_eigen, density_weight = hessian_comp.density()</span>
+<span class="c1">#</span>
+<span class="c1">#         def get_esd_plot(eigenvalues, weights):</span>
+<span class="c1">#             density, grids = density_generate(eigenvalues, weights)</span>
+<span class="c1">#             plt.semilogy(grids, density + 1.0e-7)</span>
+<span class="c1">#             plt.ylabel(&#39;Density (Log Scale)&#39;, fontsize=14, labelpad=10)</span>
+<span class="c1">#             plt.xlabel(&#39;Eigenvlaue&#39;, fontsize=14, labelpad=10)</span>
+<span class="c1">#             plt.xticks(fontsize=12)</span>
+<span class="c1">#             plt.yticks(fontsize=12)</span>
+<span class="c1">#             plt.axis([np.min(eigenvalues) - 1, np.max(eigenvalues) + 1, None, None])</span>
+<span class="c1">#             return plt.gca()</span>
+<span class="c1">#</span>
+<span class="c1">#         def density_generate(eigenvalues,</span>
+<span class="c1">#                              weights,</span>
+<span class="c1">#                              num_bins=10000,</span>
+<span class="c1">#                              sigma_squared=1e-5,</span>
+<span class="c1">#                              overhead=0.01):</span>
+<span class="c1">#             eigenvalues = np.array(eigenvalues)</span>
+<span class="c1">#             weights = np.array(weights)</span>
+<span class="c1">#</span>
+<span class="c1">#             lambda_max = np.mean(np.max(eigenvalues, axis=1), axis=0) + overhead</span>
+<span class="c1">#             lambda_min = np.mean(np.min(eigenvalues, axis=1), axis=0) - overhead</span>
+<span class="c1">#</span>
+<span class="c1">#             grids = np.linspace(lambda_min, lambda_max, num=num_bins)</span>
+<span class="c1">#             sigma = sigma_squared * max(1, (lambda_max - lambda_min))</span>
+<span class="c1">#</span>
+<span class="c1">#             num_runs = eigenvalues.shape[0]</span>
+<span class="c1">#             density_output = np.zeros((num_runs, num_bins))</span>
+<span class="c1">#</span>
+<span class="c1">#             for i in range(num_runs):</span>
+<span class="c1">#                 for j in range(num_bins):</span>
+<span class="c1">#                     x = grids[j]</span>
+<span class="c1">#                     tmp_result = gaussian(eigenvalues[i, :], x, sigma)</span>
+<span class="c1">#                     density_output[i, j] = np.sum(tmp_result * weights[i, :])</span>
+<span class="c1">#             density = np.mean(density_output, axis=0)</span>
+<span class="c1">#             normalization = np.sum(density) * (grids[1] - grids[0])</span>
+<span class="c1">#             density = density / normalization</span>
+<span class="c1">#             return density, grids</span>
+<span class="c1">#</span>
+<span class="c1">#         def gaussian(x, x0, sigma_squared):</span>
+<span class="c1">#             return np.exp(-(x0 - x) ** 2 /</span>
+<span class="c1">#                           (2.0 * sigma_squared)) / np.sqrt(2 * np.pi * sigma_squared)</span>
+<span class="c1">#</span>
+<span class="c1">#         ax = get_esd_plot(density_eigen, density_weight)</span>
+<span class="c1">#</span>
+<span class="c1">#         ax.set_title(f&#39;Max Eigen Value: {top_eigenvalues[0]:.2f}&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         plt.tight_layout()</span>
+<span class="c1">#         plt.savefig(save_path_for_hessian)</span>
+<span class="c1">#         plt.close()</span>
+<span class="c1">#</span>
+<span class="c1">#         logging.info(f&#39;Save to {save_path_for_hessian}&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#     return top_eigenvalues</span>
+
+
+<div class="viewcode-block" id="mcr"><a class="viewcode-back" href="../../generated/defense.mcr.html#defense.mcr">[docs]</a><span class="k">class</span> <span class="nc">mcr</span><span class="p">(</span><span class="n">defense</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&#39;&#39;&#39;Bridging mode connectivity in loss landscapes and adversarial robustness</span>
+
+<span class="sd">    basic structure:</span>
+
+<span class="sd">    1. config args, save_path, fix random seed</span>
+<span class="sd">    2. load the backdoor attack data and backdoor test data</span>
+<span class="sd">    3. mcr</span>
+<span class="sd">        a. use poisoned model and clean(finetuned from poison) model to form a curve in parameter space</span>
+<span class="sd">        b. train curve with given subset of data, test with given t</span>
+<span class="sd">    4. test the result and get ASR, ACC, RC</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        mcr = mcr()</span>
+<span class="sd">        parser = argparse.ArgumentParser(description=sys.argv[0])</span>
+<span class="sd">        parser = mcr.set_args(parser)</span>
+<span class="sd">        args = parser.parse_args()</span>
+<span class="sd">        mcr.add_yaml_to_args(args)</span>
+<span class="sd">        args = mcr.process_args(args)</span>
+<span class="sd">        mcr.prepare(args)</span>
+<span class="sd">        mcr.defense()</span>
+
+<span class="sd">    .. Note::</span>
+<span class="sd">        @inproceedings{zhao2020bridging,</span>
+<span class="sd">        title={BRIDGING MODE CONNECTIVITY IN LOSS LANDSCAPES AND ADVERSARIAL ROBUSTNESS},</span>
+<span class="sd">        author={Zhao, Pu and Chen, Pin-Yu and Das, Payel and Ramamurthy, Karthikeyan Natesan and Lin, Xue},</span>
+<span class="sd">        booktitle={International Conference on Learning Representations (ICLR 2020)},</span>
+<span class="sd">        year={2020}}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        baisc args: in the base class</span>
+<span class="sd">        train_curve_epochs(int): how many epochs to train the curve</span>
+<span class="sd">        num_bends(int): number of bends in curve</span>
+<span class="sd">        test_t(float): t of tested model on the curve (which points on the curve is used in test)</span>
+<span class="sd">        curve(str): which curve is used</span>
+<span class="sd">        ft_epochs(int): finetune epochs</span>
+<span class="sd">        ft_lr_scheduler(str): finetune lr_scheduler</span>
+<span class="sd">        ratio(float): the ratio of clean data loader</span>
+<span class="sd">        acc_ratio(float): the tolerance ration of the clean accuracy</span>
+<span class="sd">        test_curve_every(int): frequency of testing the models on curve</span>
+<span class="sd">        load_other_model_path(str): instead of finetune the given poisoned model, we load other model from this part</span>
+<span class="sd">        use_clean_subset(bool): use bd poison dataset as data poison for path training and BN update; or, use clean subset instead</span>
+
+
+
+<span class="sd">    &#39;&#39;&#39;</span></div>
+
+ 
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SCLBD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

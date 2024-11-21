@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://kit.fontawesome.com/15106f0a68.js" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <title>BackdoorBench</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+        content="BackdoorBench is a comprehensive benchmark for evaluating backdoor attacks and defenses.">
+    <meta name="keywords" content="Backdoor Benchmark, Backdoor Attack, Backdoor Defense, AI Security, Adversarial">
+    <meta name="author" content="BackdoorBench">
+    <link rel="icon" href="image/favicon.ico">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <style>
+        /* Logo 样式 */
+        .navbar-brand .logo {
+            height: 50px; /* 高度 */
+            display: inline-block;
+            vertical-align: middle; /* 对齐 */
+        }
+
+        /* 导航栏背景颜色 */
+        .navbar {
+            background-color: white !important;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 阴影 */
+        }
+
+        /* 导航栏文字颜色 */
+        .navbar-nav .nav-link {
+            color: black !important;
+            transition: color 0.3s ease; /* 颜色变化 */
+        }
+
+        .header-container {
+            background-image: url('image/bg_network.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #ffffff;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        /* 导航栏边距 */
+        .container-fluid {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        /* 主标题 */
+        .header-container h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        /* 副标题 */
+        .header-container p {
+            font-size: 1.5rem;
+            color: black;
+            margin-top: 10px;
+        }
+
+        .btn-custom {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #7e57c2;
+            text-decoration: none;
+            border: 2px solid #7e57c2;
+            border-radius: 20px;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #7e57c2;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* 按钮通用样式 */
+        .btn-outline-custom {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #7e57c2;
+            border: 2px solid #7e57c2;
+            border-radius: 5px; /* 圆角 */
+            background-color: transparent;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* 鼠标悬停效果 */
+        .btn-outline-custom:hover {
+            background-color: #7e57c2; /* 背景 */
+            color: white; /* 字体 */
+            text-decoration: none;
+        }
+
+        .btn-outline-custom + .btn-outline-custom {
+            margin-left: 10px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            font-size: large;
+        }
+
+        .button-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .button-container .btn-download {
+            display: none; /* 初始隐藏 */
+            position: absolute;
+            top: 50px; /* 相对 OK 按钮的偏移 */
+            left: 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+     <!-- Navbar -->
+     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-brand">
+                <img src="image/logo.png" alt="Logo 1" class="logo">
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#content"
+                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="content">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html"><b>Home</b></a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="challenge.html">Challenge</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Leaderboard
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="leaderboard-cifar10.html">CIFAR-10</a>
+                            <a class="dropdown-item" href="leaderboard-cifar100.html">CIFAR-100</a>
+                            <a class="dropdown-item" href="leaderboard-gtsrb.html">GTSRB</a>
+                            <a class="dropdown-item" href="leaderboard-tinyimagenet.html">Tiny ImageNet</a>
+                        </div>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="people.html">Team</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/SCLBD/backdoorbench" target="_blank">Github</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 pt-5">
+        <h1>Model Zoo</h1>
+        <form id="modelForm">
+            <div class="form-group">
+                <label for="dataset">Choose Dataset</label>
+                <select class="form-control" id="dataset" name="dataset">
+                    <option value="cifar10">CIFAR-10</option>
+                    <option value="cifar100">CIFAR-100</option>
+                    <option value="gtsrb">GTSRB</option>
+                    <option value="tiny">Tiny-ImageNet</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="attack">Choose Backdoor Attack</label>
+                <select class="form-control" id="attack" name="attack">
+                    <option value="badnet">BadNets</option>
+                    <option value="blended">Blended</option>
+                    <option value="lc">LC</option>
+                    <option value="sig">SIG</option>
+                    <option value="lf">LF</option>
+                    <option value="ssba">SSBA</option>
+                    <option value="wanet">WaNet</option>
+                    <option value="inputaware">InputAware</option>
+                    <option value="blind">Blind</option>
+                    <option value="bpp">BPP</option>
+                    <option value="lira">LIRA</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="backbone">Choose Backbone</label>
+                <select class="form-control" id="backbone" name="backbone">
+                    <option value="preactresnet18">PreAct-Resnet18</option>
+                    <option value="vgg19_bn">VGG19_BN</option>
+                    <option value="convnext_tiny">ConvNext_tiny</option>
+                    <option value="vit_b_16">ViT_b_16</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="pratio">Choose Poisoning Ratio</label>
+                <select class="form-control" id="pratio" name="pratio">
+                    <option value="0_001">0.1%</option>
+                    <option value="0_005">0.5%</option>
+                    <option value="0_01">1%</option>
+                    <option value="0_05">5%</option>
+                    <option value="0_1">10%</option>
+                </select>
+            </div>
+            <div class="button-container">
+                <button type="button" id="submitBtn" class="btn btn-primary">OK</button>
+                <a href="#" id="downloadBtn" class="btn btn-success btn-download">DOWNLOAD</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("submitBtn").addEventListener("click", function () {
+            const downloadBtn = document.getElementById("downloadBtn");
+            downloadBtn.style.display = "inline-block"; // 显示按钮
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <p class="text-center">
+                BackdoorBench@2023 <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2023006778号-1</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</body>
+
+</html>

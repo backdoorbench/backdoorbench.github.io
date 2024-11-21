@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analysis Tools &mdash; BackdoorBench v2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="/static/_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="/static/_static/css/mytheme.css" />
+
+  
+    <link rel="shortcut icon" href="/static/_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="/static/_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="/static/_static/documentation_options.js"></script>
+        <script src="/static/_static/jquery.js"></script>
+        <script src="/static/_static/underscore.js"></script>
+        <script src="/static/_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="/static/_static/doctools.js"></script>
+        <script src="/static/_static/js/version_alert.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="/static/_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Demo_FV" href="Demo_FV.html" />
+    <link rel="prev" title="detection_pretrain.ac" href="../generated/detection_pretrain.ac.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="/static/_static/pyg_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/quickstart.html">Quick Start by Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/bddataset.html">Build Your Own Backdoor Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/attack.html">Build Your Own Backdoor Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/defense.html">Build Your Own Backdoor Defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PACKAGE REFERENCE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/attack.html">packages of attack and defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Visualization</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Analysis Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledge">Acknowledge</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Demo_FV.html">Demo_FV</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BackdoorBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Analysis Tools</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/visualization/analysis_readme.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="analysis-tools">
+<h1>Analysis Tools<a class="headerlink" href="#analysis-tools" title="Permalink to this heading"></a></h1>
+<p>This folder contains the visualization and analysis tools developed for
+BackdoorBench. The demo scripts for utilizing such tools are given in
+<strong>demo.sh</strong>. The jupyter notebook for utilizing such tools are in
+<strong>Demos</strong> folder.</p>
+<p>The implemented tools and corresponding scripts are * visual_tsne.py *
+<strong>T-SNE</strong>, the T-SNE of features. Typical output is</p>
+<p><a class="reference internal" href="/static/_images/demo_tsne.jpg"><img alt="avatar" src="/static/_images/demo_tsne.jpg" style="width: 500px;" /></a></p>
+<ul>
+<li><p>visual_umap.py</p>
+<ul class="simple">
+<li><p><strong>UMAP</strong>, the UMAP of features. Both UMAP and T-SNE can be used
+for dimension reduction, i.e., reducing the dimension of given
+features. But, UMAP is much faster than T-SNE which allows us to
+use more samples for a more comprehensive view. Typical output is
+<a class="reference internal" href="/static/_images/demo_umap.png"><img alt="image1" src="/static/_images/demo_umap.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_na.py</p>
+<ul class="simple">
+<li><p><strong>Neuron Activation</strong>, the activation value of a given layer of
+Neurons. Typical output is <a class="reference internal" href="/static/_images/demo_na.png"><img alt="image2" src="/static/_images/demo_na.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_shap.py</p>
+<ul class="simple">
+<li><p><strong>Shapely Value</strong>, the Shapely Value for given inputs and a given
+layer. Typical output is <a class="reference internal" href="/static/_images/demo_shap.png"><img alt="image3" src="/static/_images/demo_shap.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_gradcam.py</p>
+<ul class="simple">
+<li><p><strong>Grad-CAM</strong>, the Grad-CAM for given inputs and a given layer.
+Typical output is <a class="reference internal" href="/static/_images/demo_gradcam.png"><img alt="image4" src="/static/_images/demo_gradcam.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visualize_fre.py</p>
+<ul class="simple">
+<li><p><strong>Frequency Map</strong>, the Frequency Saliency Map for given inputs and
+a given layer. Typical output is <a class="reference internal" href="/static/_images/demo_fre.png"><img alt="image5" src="/static/_images/demo_fre.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_act.py</p>
+<ul class="simple">
+<li><p><strong>Activated Image</strong>, the top images who activate the given layer
+of Neurons most. Typical output is <a class="reference internal" href="/static/_images/demo_act.png"><img alt="image6" src="/static/_images/demo_act.png" style="width: 500px;" /></a> The poiso samples are
+marked with <strong>red</strong> title.</p></li>
+</ul>
+</li>
+<li><p>visual_cm.py</p>
+<ul class="simple">
+<li><p><strong>Confusion Matrix</strong>. Typical output is
+<a class="reference internal" href="/static/_images/demo_cm.png"><img alt="image7" src="/static/_images/demo_cm.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_fv.py</p>
+<ul class="simple">
+<li><p><strong>Feature Visualization</strong>, the synthetic images which activate the
+given layer of Neurons most. The image is generated by Projected
+Gradient Descend. Typical output is <a class="reference internal" href="/static/_images/demo_fv.png"><img alt="image8" src="/static/_images/demo_fv.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_fm.py</p>
+<ul class="simple">
+<li><p><strong>Feature Map</strong>, the output of a given layer of CNNs for a given
+image. Typical output is <a class="reference internal" href="/static/_images/demo_out.png"><img alt="image9" src="/static/_images/demo_out.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_actdist.py</p>
+<ul class="simple">
+<li><p><strong>Activation Distribution</strong>, the class distribution of Top-k
+images which activate the Neuron most. Typical output is <a class="reference internal" href="/static/_images/demo_path.png"><img alt="image10" src="/static/_images/demo_path.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_tac.py</p>
+<ul class="simple">
+<li><p><strong>Trigger Activation Change</strong>, the average (absolute) activation
+change between images with and without triggers. Typical output is
+<a class="reference internal" href="/static/_images/demo_tac.png"><img alt="image11" src="/static/_images/demo_tac.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_lips.py</p>
+<ul class="simple">
+<li><p><strong>Lipschitz Constant</strong>, the lipschitz constant of each neuron.
+Typical output is <a class="reference internal" href="/static/_images/demo_lips.png"><img alt="image12" src="/static/_images/demo_lips.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_landscape.py</p>
+<ul class="simple">
+<li><p><strong>Loss Landscape</strong>, the loss landscape of given results with two
+random directions. Typical output is <a class="reference internal" href="/static/_images/demo_landscape.png"><img alt="image13" src="/static/_images/demo_landscape.png" style="width: 500px;" /></a> More details can be
+founded in the subfolder loss_landscape.</p></li>
+</ul>
+</li>
+<li><p>visual_network.py</p>
+<ul class="simple">
+<li><p><strong>Network Structure</strong>, the Network Structure of given model. We
+provide two ways to visualize the network structure. Typical
+outputs are <a class="reference internal" href="/static/_images/demo_network.png"><img alt="image14" src="/static/_images/demo_network.png" style="width: 500px;" /></a> <a class="reference internal" href="/static/_images/demo_network_2.png"><img alt="image15" src="/static/_images/demo_network_2.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_hessian.py</p>
+<ul class="simple">
+<li><p><strong>Eigenvalues of Hessian</strong>, the dense plot of hessian matrix for a
+batch of data. Typical output is <a class="reference internal" href="/static/_images/demo_hessian.png"><img alt="image16" src="/static/_images/demo_hessian.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_metric.py</p>
+<ul class="simple">
+<li><p><strong>Metrics</strong>, evaluating the given results using some metrics. Both
+csv file and visualization are given. Typical output is <a class="reference internal" href="/static/_images/demo_metric.png"><img alt="image17" src="/static/_images/demo_metric.png" style="width: 500px;" /></a></p></li>
+</ul>
+</li>
+<li><p>visual_quality.py</p>
+<ul class="simple">
+<li><p><strong>Image Quality</strong>, evaluating the given results using some image
+quality metrics. The csv file is given.</p></li>
+</ul>
+</li>
+<li><p>Dataset used for visualization.</p>
+<ul class="simple">
+<li><p>Mixed Test is generated by sampling data from both Clean Test and
+BD Test by a poison ratio <em>pratio</em> given in args.</p></li>
+<li><p>Subset is default to sample 5000 samples with <em>n_sub</em> in args.</p></li>
+<li><p>By default, all methods use <strong>BD train</strong> dataset for visualization
+(if needed).</p></li>
+<li><p>For clean model trained using <em>prototype.py</em>, the results can be
+loaded using args ‘prototype’. However, only clean dataset can be
+loaded and some methods cannot be adopted to analyze such results.</p></li>
+<li><p>Supported dataset types for each method is given in the following
+table</p></li>
+</ul>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Supported dataset types for each method</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 11.1%" />
+<col style="width: 11.1%" />
+<col style="width: 11.1%" />
+<col style="width: 11.1%" />
+<col style="width: 11.1%" />
+<col style="width: 11.1%" />
+<col style="width: 11.1%" />
+<col style="width: 11.1%" />
+<col style="width: 11.1%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Script</p></th>
+<th class="head"><p>Method</p></th>
+<th class="head"><p>Clean Train</p></th>
+<th class="head"><p>BD Train</p></th>
+<th class="head"><p>Clean Test</p></th>
+<th class="head"><p>BD Test</p></th>
+<th class="head"><p>Mixed Test</p></th>
+<th class="head"><p>Subset</p></th>
+<th class="head"><p>Remark</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>visual_tsne.py</p></td>
+<td><p>T-SNE</p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>visual_umap.py</p></td>
+<td><p>UMAP</p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>visual_na.py</p></td>
+<td><p>Neuron Activation</p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p>BD only</p></td>
+</tr>
+<tr class="row-odd"><td><p>visual_shap.py</p></td>
+<td><p>Shapely Value</p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>visual_gradcam.py</p></td>
+<td><p>Grad-CAM</p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>visual_fre.py</p></td>
+<td><p>Frequency Saliency Map</p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>visual_act.py</p></td>
+<td><p>Activated Image</p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>visual_cm.py</p></td>
+<td><p>Confusion Matrix</p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>visual_fv.py</p></td>
+<td><p>Feature Visualization</p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>visual_fm.py</p></td>
+<td><p>Feature Map</p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>visual_actdist.py</p></td>
+<td><p>Activation Distribution</p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>visual_tac.py</p></td>
+<td><p>Trigger Activation Change</p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p>BD only</p></td>
+</tr>
+<tr class="row-even"><td><p>visual_lips.py</p></td>
+<td><p>Lipschitz Constant</p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>visual_landscape.py</p></td>
+<td><p>Loss Landscape</p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>visual_network.py</p></td>
+<td><p>Network Structure</p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>visual_hessian.py</p></td>
+<td><p>Eigenvalues of Hessian</p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>visual_metric.py</p></td>
+<td><p>Metrics</p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>visual_quality.py</p></td>
+<td><p>Image Quality</p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\times\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\surd\)</span></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>Additional note for Loss Landscape</p>
+<ul class="simple">
+<li><p><strong>Message Passing Interface (MPI)</strong> is needed to accelerate the
+computation of loss landscape. Thus, you will need to install
+mpi4py. mpi4py can be installed either using pip or conda, but
+with pip you will need to install MPI yourself first (e.g. OpenMPI
+or MPICH), while conda will install its own MPI libraries. For
+example, you can run the following commands in your terminal to
+install mpi4py:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">libopenmpi</span><span class="o">-</span><span class="n">dev</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">mpi4py</span>
+</pre></div>
+</div>
+<p>or <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">conda-forge</span> <span class="pre">mpi4py</span></code></p>
+<ul class="simple">
+<li><p>You need also clone the repo
+<a class="reference external" href="https://github.com/tomgoldstein/loss-landscape">https://github.com/tomgoldstein/loss-landscape</a> to the
+<strong>visualization</strong> folder.</p></li>
+<li><p>To run the landscape visualization using MPI (parallel), you can
+run the command</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">n</span> <span class="n">num_gpu</span> <span class="n">python</span> <span class="n">visual_landscape</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For more information, please refer to
+<a class="reference external" href="https://github.com/tomgoldstein/loss-landscape/blob/master/README.md">https://github.com/tomgoldstein/loss-landscape/blob/master/README.md</a></p></li>
+</ul>
+</li>
+<li><p>Additional note for network structure</p>
+<ul class="simple">
+<li><p>GraphViz and its Python wrapper are needed by hiddenlayer and
+pytorchviz to generate network graphs. Similar as MPI, you can
+install them using pip or conda. For example, you can run the
+following commands in your terminal to install them</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">graphviz</span>
+<span class="n">pip3</span> <span class="n">install</span> <span class="n">graphviz</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">hiddenlayer</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">szagoruyko</span><span class="o">/</span><span class="n">pytorchviz</span><span class="o">.</span><span class="n">git</span><span class="nd">@master</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">graphviz</span> <span class="n">python</span><span class="o">-</span><span class="n">graphviz</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">hiddenlayer</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">szagoruyko</span><span class="o">/</span><span class="n">pytorchviz</span><span class="o">.</span><span class="n">git</span><span class="nd">@master</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For more information, please refer to
+<a class="reference external" href="https://github.com/waleedka/hiddenlayer/blob/master/README.md">https://github.com/waleedka/hiddenlayer/blob/master/README.md</a> or
+<a class="reference external" href="https://github.com/szagoruyko/pytorchviz/blob/master/README.md">https://github.com/szagoruyko/pytorchviz/blob/master/README.md</a></p></li>
+</ul>
+</li>
+</ul>
+<section id="acknowledge">
+<h2>Acknowledge<a class="headerlink" href="#acknowledge" title="Permalink to this heading"></a></h2>
+<div class="line-block">
+<div class="line">Our implementation is partially built based on</div>
+</div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/utkuozbulak/pytorch-cnn-visualizations">https://github.com/utkuozbulak/pytorch-cnn-visualizations</a></p></li>
+<li><p><a class="reference external" href="https://github.com/slundberg/shap">https://github.com/slundberg/shap</a></p></li>
+<li><p><a class="reference external" href="https://github.com/jacobgil/pytorch-grad-cam">https://github.com/jacobgil/pytorch-grad-cam</a></p></li>
+<li><p><a class="reference external" href="https://github.com/tomgoldstein/loss-landscape">https://github.com/tomgoldstein/loss-landscape</a></p></li>
+<li><p><a class="reference external" href="https://github.com/salesforce/OmniXAI">https://github.com/salesforce/OmniXAI</a></p></li>
+<li><p><a class="reference external" href="https://github.com/waleedka/hiddenlayer">https://github.com/waleedka/hiddenlayer</a></p></li>
+<li><p><a class="reference external" href="https://github.com/szagoruyko/pytorchviz">https://github.com/szagoruyko/pytorchviz</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../generated/detection_pretrain.ac.html" class="btn btn-neutral float-left" title="detection_pretrain.ac" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Demo_FV.html" class="btn btn-neutral float-right" title="Demo_FV" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SCLBD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

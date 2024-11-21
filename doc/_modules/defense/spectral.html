@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>defense.spectral &mdash; BackdoorBench v2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="/static/_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="/static/_static/css/mytheme.css" />
+
+  
+    <link rel="shortcut icon" href="/static/_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="/static/_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="/static/_static/documentation_options.js"></script>
+        <script src="/static/_static/jquery.js"></script>
+        <script src="/static/_static/underscore.js"></script>
+        <script src="/static/_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="/static/_static/doctools.js"></script>
+        <script src="/static/_static/js/version_alert.js"></script>
+    <script src="/static/_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="/static/_static/pyg_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../start/installation.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../start/quickstart.html">Quick Start by Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bddataset.html">Build Your Own Backdoor Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/attack.html">Build Your Own Backdoor Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/defense.html">Build Your Own Backdoor Defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PACKAGE REFERENCE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/attack.html">packages of attack and defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Visualization</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/analysis_readme.html">Analysis Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/Demo_FV.html">Demo_FV</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BackdoorBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">defense.spectral</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for defense.spectral</h1><div class="highlight"><pre>
+<span></span><span class="c1"># # MIT License</span>
+<span class="c1">#</span>
+<span class="c1"># # Copyright (c) 2017 Brandon Tran and Jerry Li</span>
+<span class="c1">#</span>
+<span class="c1"># # Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># # of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># # in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># # copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># # furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># # The above copyright notice and this permission notice shall be included in all</span>
+<span class="c1"># # copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># # THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># # SOFTWARE.</span>
+<span class="c1">#</span>
+<span class="c1"># &#39;&#39;&#39;</span>
+<span class="c1"># This file is modified based on the following source:</span>
+<span class="c1"># link : https://github.com/MadryLab/backdoor_data_poisoning.</span>
+<span class="c1"># The defense method is called spectral.</span>
+<span class="c1">#</span>
+<span class="c1"># The update include:</span>
+<span class="c1"># 	1. data preprocess and dataset setting</span>
+<span class="c1"># 	2. model setting</span>
+<span class="c1"># 	3. args and config</span>
+<span class="c1"># 	4. save process</span>
+<span class="c1"># 	5. new standard: robust accuracy</span>
+<span class="c1"># 	6. use the PyTorch environment instead of TensorFlow</span>
+<span class="c1"># 	7. add some addtional backbone such as resnet18 and vgg19</span>
+<span class="c1"># 	8. the poison ratio can also be preset when the data for each category is small</span>
+<span class="c1"># basic sturcture for defense method:</span>
+<span class="c1"># 	1. basic setting: args</span>
+<span class="c1"># 	2. attack result(model, train data, test data)</span>
+<span class="c1"># 	3. spectral defense:</span>
+<span class="c1"># 		a. prepare the model and dataset</span>
+<span class="c1"># 		b. get the activation as representation for each data</span>
+<span class="c1"># 		c. detect the backdoor data by the SVD decomposition</span>
+<span class="c1"># 		d. retrain the model with remaining data</span>
+<span class="c1"># 	4. test the result and get ASR, ACC, RC</span>
+<span class="c1"># &#39;&#39;&#39;</span>
+<span class="c1">#</span>
+<span class="c1"># import argparse</span>
+<span class="c1"># import os,sys</span>
+<span class="c1"># import numpy as np</span>
+<span class="c1"># import torch</span>
+<span class="c1"># import torch.nn as nn</span>
+<span class="c1">#</span>
+<span class="c1"># sys.path.append(&#39;../&#39;)</span>
+<span class="c1"># sys.path.append(os.getcwd())</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># from pprint import pformat</span>
+<span class="c1"># import yaml</span>
+<span class="c1"># import logging</span>
+<span class="c1"># import time</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># from utils.aggregate_block.train_settings_generate import argparser_criterion, argparser_opt_scheduler</span>
+<span class="c1"># from utils.trainer_cls import PureCleanModelTrainer</span>
+<span class="c1"># from utils.aggregate_block.fix_random import fix_random</span>
+<span class="c1"># from utils.aggregate_block.model_trainer_generate import generate_cls_model</span>
+<span class="c1"># from utils.log_assist import get_git_info</span>
+<span class="c1"># from utils.aggregate_block.dataset_and_transform_generate import get_input_shape, get_num_classes, get_transform</span>
+<span class="c1"># from utils.save_load_attack import load_attack_result, save_defense_result</span>
+<span class="kn">from</span> <span class="nn">defense.base</span> <span class="kn">import</span> <span class="n">defense</span>
+
+
+<div class="viewcode-block" id="spectral"><a class="viewcode-back" href="../../generated/defense.spectral.html#defense.spectral">[docs]</a><span class="k">class</span> <span class="nc">spectral</span><span class="p">(</span><span class="n">defense</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Spectral Signatures in Backdoor Attacks</span>
+
+<span class="sd">    basic structure:</span>
+
+<span class="sd">    1. config args, save_path, fix random seed</span>
+<span class="sd">    2. load the backdoor attack data and backdoor test data</span>
+<span class="sd">    3. load the backdoor model</span>
+<span class="sd">    4. spectral defense:</span>
+<span class="sd">        a. prepare the model and dataset</span>
+<span class="sd">        b. get the activation as representation for each data</span>
+<span class="sd">        c. detect the backdoor data by the SVD decomposition</span>
+<span class="sd">        d. retrain the model with remaining data</span>
+<span class="sd">    5. test the result and get ASR, ACC, RC</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        parser = argparse.ArgumentParser(description=sys.argv[0])</span>
+<span class="sd">        spectral.add_arguments(parser)</span>
+<span class="sd">        args = parser.parse_args()</span>
+<span class="sd">        spectral_method = spectral(args)</span>
+<span class="sd">        if &quot;result_file&quot; not in args.__dict__:</span>
+<span class="sd">            args.result_file = &#39;one_epochs_debug_badnet_attack&#39;</span>
+<span class="sd">        elif args.result_file is None:</span>
+<span class="sd">            args.result_file = &#39;one_epochs_debug_badnet_attack&#39;</span>
+<span class="sd">        result = spectral_method.defense(args.result_file)</span>
+
+<span class="sd">    .. Note::</span>
+<span class="sd">        @article{tran2018spectral,</span>
+<span class="sd">        title={Spectral signatures in backdoor attacks},</span>
+<span class="sd">        author={Tran, Brandon and Li, Jerry and Madry, Aleksander},</span>
+<span class="sd">        journal={Advances in neural information processing systems},</span>
+<span class="sd">        volume={31},</span>
+<span class="sd">        year={2018}}</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        baisc args: in the base class</span>
+<span class="sd">        percentile: the percentile of the singular value</span>
+<span class="sd">        target_label: the target label of the backdoor data(the default is None, which means all the labels are possible target labels)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">):</span>
+        <span class="k">pass</span></div>
+<span class="c1"># 		super(spectral, self).__init__(parser)</span>
+<span class="c1">#</span>
+<span class="c1"># 	def add_arguments(self,parser):</span>
+<span class="c1"># 		parser = super().add_arguments(parser)</span>
+<span class="c1"># 		#set the parameter for the spectral defense</span>
+<span class="c1"># 		parser.add_argument(&#39;--percentile&#39;, type=float)</span>
+<span class="c1"># 		parser.add_argument(&#39;--target_label&#39;, type=int)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># 	def set_trainer(self, model):</span>
+<span class="c1"># 		self.trainer = PureCleanModelTrainer(</span>
+<span class="c1"># 			model,</span>
+<span class="c1"># 		)</span>
+<span class="c1">#</span>
+<span class="c1"># 	def set_devices(self):</span>
+<span class="c1"># 		# self.device = torch.device(</span>
+<span class="c1"># 		#     (</span>
+<span class="c1"># 		#         f&quot;cuda:{[int(i) for i in self.args.device[5:].split(&#39;,&#39;)][0]}&quot; if &quot;,&quot; in self.args.device else self.args.device</span>
+<span class="c1"># 		#         # since DataParallel only allow .to(&quot;cuda&quot;)</span>
+<span class="c1"># 		#     ) if torch.cuda.is_available() else &quot;cpu&quot;</span>
+<span class="c1"># 		# )</span>
+<span class="c1"># 		self.device = self.args.device</span>
+<span class="c1"># 	def mitigation(self):</span>
+<span class="c1"># 		args = self.args</span>
+<span class="c1"># 		self.set_devices()</span>
+<span class="c1"># 		fix_random(self.args.random_seed)</span>
+<span class="c1">#</span>
+<span class="c1"># 		### a. prepare the model and dataset</span>
+<span class="c1"># 		model = generate_cls_model(self.args.model,self.args.num_classes)</span>
+<span class="c1"># 		model.load_state_dict(self.result[&#39;model&#39;])</span>
+<span class="c1"># 		if &quot;,&quot; in self.device:</span>
+<span class="c1"># 			model = torch.nn.DataParallel(</span>
+<span class="c1"># 				model,</span>
+<span class="c1"># 				device_ids=[int(i) for i in self.args.device[5:].split(&quot;,&quot;)]  # eg. &quot;cuda:2,3,7&quot; -&gt; [2,3,7]</span>
+<span class="c1"># 			)</span>
+<span class="c1"># 			self.args.device = f&#39;cuda:{model.device_ids[0]}&#39;</span>
+<span class="c1"># 			model.to(self.args.device)</span>
+<span class="c1"># 		else:</span>
+<span class="c1"># 			model.to(self.args.device)</span>
+<span class="c1"># 		# Setting up the data and the model</span>
+<span class="c1"># 		train_tran = get_transform(self.args.dataset, *([self.args.input_height,self.args.input_width]) , train = True)</span>
+<span class="c1"># 		train_dataset = self.result[&#39;bd_train&#39;].wrapped_dataset</span>
+<span class="c1"># 		data_set_without_tran = train_dataset</span>
+<span class="c1"># 		data_set_o = self.result[&#39;bd_train&#39;]</span>
+<span class="c1"># 		data_set_o.wrapped_dataset = data_set_without_tran</span>
+<span class="c1"># 		data_set_o.wrap_img_transform = train_tran</span>
+<span class="c1"># 		data_set_o.wrapped_dataset.getitem_all = False</span>
+<span class="c1"># 		dataset = data_set_o</span>
+<span class="c1">#</span>
+<span class="c1"># 		# initialize data augmentation</span>
+<span class="c1"># 		logging.info(f&#39;Dataset Size: {len(dataset)}&#39; )</span>
+<span class="c1">#</span>
+<span class="c1"># 		if &#39;target_label&#39; in self.args.__dict__:</span>
+<span class="c1"># 			if isinstance(self.args.target_label,(int)):</span>
+<span class="c1"># 				poison_labels = [self.args.target_label]</span>
+<span class="c1"># 			else:</span>
+<span class="c1"># 				poison_labels = self.args.target_label</span>
+<span class="c1"># 		else:</span>
+<span class="c1"># 			poison_labels = range(self.args.num_classes)</span>
+<span class="c1">#</span>
+<span class="c1"># 		re_all = []</span>
+<span class="c1"># 		for target_label in poison_labels:</span>
+<span class="c1"># 			lbl = target_label</span>
+<span class="c1"># 			dataset_y = []</span>
+<span class="c1"># 			for i in range(len(dataset)):</span>
+<span class="c1"># 				dataset_y.append(dataset[i][1])</span>
+<span class="c1"># 			cur_indices = [i for i,v in enumerate(dataset_y) if v==lbl]</span>
+<span class="c1"># 			cur_examples = len(cur_indices)</span>
+<span class="c1"># 			logging.info(f&#39;Label, num ex: {lbl},{cur_examples}&#39; )</span>
+<span class="c1">#</span>
+<span class="c1"># 			model.eval()</span>
+<span class="c1"># 			### b. get the activation as representation for each data</span>
+<span class="c1"># 			for iex in range(cur_examples):</span>
+<span class="c1"># 				cur_im = cur_indices[iex]</span>
+<span class="c1"># 				x_batch = dataset[cur_im][0].unsqueeze(0).to(self.args.device)</span>
+<span class="c1"># 				y_batch = dataset[cur_im][1]</span>
+<span class="c1"># 				with torch.no_grad():</span>
+<span class="c1"># 					assert self.args.model in [&#39;preactresnet18&#39;, &#39;vgg19&#39;,&#39;vgg19_bn&#39;, &#39;resnet18&#39;, &#39;mobilenet_v3_large&#39;, &#39;densenet161&#39;, &#39;efficientnet_b3&#39;,&#39;convnext_tiny&#39;,&#39;vit_b_16&#39;]</span>
+<span class="c1"># 					if self.args.model == &#39;preactresnet18&#39;:</span>
+<span class="c1"># 						inps,outs = [],[]</span>
+<span class="c1"># 						def layer_hook(module, inp, out):</span>
+<span class="c1"># 							outs.append(out.data)</span>
+<span class="c1"># 						hook = model.layer4.register_forward_hook(layer_hook)</span>
+<span class="c1"># 						_ = model(x_batch)</span>
+<span class="c1"># 						batch_grads = outs[0].view(outs[0].size(0), -1).squeeze(0)</span>
+<span class="c1"># 						hook.remove()</span>
+<span class="c1"># 					elif self.args.model == &#39;vgg19&#39;:</span>
+<span class="c1"># 						inps,outs = [],[]</span>
+<span class="c1"># 						def layer_hook(module, inp, out):</span>
+<span class="c1"># 							outs.append(out.data)</span>
+<span class="c1"># 						hook = model.features.register_forward_hook(layer_hook)</span>
+<span class="c1"># 						_ = model(x_batch)</span>
+<span class="c1"># 						batch_grads = outs[0].view(outs[0].size(0), -1).squeeze(0)</span>
+<span class="c1"># 						hook.remove()</span>
+<span class="c1"># 					elif self.args.model == &#39;vgg19_bn&#39;:</span>
+<span class="c1"># 						inps,outs = [],[]</span>
+<span class="c1"># 						def layer_hook(module, inp, out):</span>
+<span class="c1"># 							outs.append(out.data)</span>
+<span class="c1"># 						hook = model.features.register_forward_hook(layer_hook)</span>
+<span class="c1"># 						_ = model(x_batch)</span>
+<span class="c1"># 						batch_grads = outs[0].view(outs[0].size(0), -1).squeeze(0)</span>
+<span class="c1"># 						hook.remove()</span>
+<span class="c1"># 					elif self.args.model == &#39;resnet18&#39;:</span>
+<span class="c1"># 						inps,outs = [],[]</span>
+<span class="c1"># 						def layer_hook(module, inp, out):</span>
+<span class="c1"># 							outs.append(out.data)</span>
+<span class="c1"># 						hook = model.layer4.register_forward_hook(layer_hook)</span>
+<span class="c1"># 						_ = model(x_batch)</span>
+<span class="c1"># 						batch_grads = outs[0].view(outs[0].size(0), -1).squeeze(0)</span>
+<span class="c1"># 						hook.remove()</span>
+<span class="c1"># 					elif self.args.model == &#39;mobilenet_v3_large&#39;:</span>
+<span class="c1"># 						inps,outs = [],[]</span>
+<span class="c1"># 						def layer_hook(module, inp, out):</span>
+<span class="c1"># 							outs.append(out.data)</span>
+<span class="c1"># 						hook = model.avgpool.register_forward_hook(layer_hook)</span>
+<span class="c1"># 						_ = model(x_batch)</span>
+<span class="c1"># 						batch_grads = outs[0].view(outs[0].size(0), -1).squeeze(0)</span>
+<span class="c1"># 						hook.remove()</span>
+<span class="c1"># 					elif self.args.model == &#39;densenet161&#39;:</span>
+<span class="c1"># 						inps,outs = [],[]</span>
+<span class="c1"># 						def layer_hook(module, inp, out):</span>
+<span class="c1"># 							outs.append(out.data)</span>
+<span class="c1"># 						hook = model.features.register_forward_hook(layer_hook)</span>
+<span class="c1"># 						_ = model(x_batch)</span>
+<span class="c1"># 						outs[0] = torch.nn.functional.relu(outs[0])</span>
+<span class="c1"># 						batch_grads = outs[0].view(outs[0].size(0), -1).squeeze(0)</span>
+<span class="c1"># 						hook.remove()</span>
+<span class="c1"># 					elif self.args.model == &#39;efficientnet_b3&#39;:</span>
+<span class="c1"># 						inps,outs = [],[]</span>
+<span class="c1"># 						def layer_hook(module, inp, out):</span>
+<span class="c1"># 							outs.append(out.data)</span>
+<span class="c1"># 						hook = model.avgpool.register_forward_hook(layer_hook)</span>
+<span class="c1"># 						_ = model(x_batch)</span>
+<span class="c1"># 						batch_grads = outs[0].view(outs[0].size(0), -1).squeeze(0)</span>
+<span class="c1"># 						hook.remove()</span>
+<span class="c1"># 					elif self.args.model == &#39;convnext_tiny&#39;:</span>
+<span class="c1"># 						inps,outs = [],[]</span>
+<span class="c1"># 						def layer_hook(module, inp, out):</span>
+<span class="c1"># 							outs.append(out.data)</span>
+<span class="c1"># 						hook = model.avgpool.register_forward_hook(layer_hook)</span>
+<span class="c1"># 						_ = model(x_batch)</span>
+<span class="c1"># 						batch_grads = outs[0].view(outs[0].size(0), -1).squeeze(0)</span>
+<span class="c1"># 						hook.remove()</span>
+<span class="c1"># 					elif self.args.model == &#39;vit_b_16&#39;:</span>
+<span class="c1"># 						inps,outs = [],[]</span>
+<span class="c1"># 						def layer_hook(module, inp, out):</span>
+<span class="c1"># 							inps.append(inp[0].data)</span>
+<span class="c1"># 						hook = model[1].heads.register_forward_hook(layer_hook)</span>
+<span class="c1"># 						_ = model(x_batch)</span>
+<span class="c1"># 						batch_grads = inps[0].view(inps[0].size(0), -1).squeeze(0)</span>
+<span class="c1"># 						hook.remove()</span>
+<span class="c1">#</span>
+<span class="c1"># 				if iex==0:</span>
+<span class="c1"># 					full_cov = np.zeros(shape=(cur_examples, len(batch_grads)))</span>
+<span class="c1"># 				full_cov[iex] = batch_grads.detach().cpu().numpy()</span>
+<span class="c1">#</span>
+<span class="c1"># 			### c. detect the backdoor data by the SVD decomposition</span>
+<span class="c1"># 			total_p = self.args.percentile</span>
+<span class="c1"># 			full_mean = np.mean(full_cov, axis=0, keepdims=True)</span>
+<span class="c1">#</span>
+<span class="c1"># 			centered_cov = full_cov - full_mean</span>
+<span class="c1"># 			u,s,v = np.linalg.svd(centered_cov, full_matrices=False)</span>
+<span class="c1"># 			logging.info(f&#39;Top 7 Singular Values: {s[0:7]}&#39;)</span>
+<span class="c1"># 			eigs = v[0:1]</span>
+<span class="c1"># 			p = total_p</span>
+<span class="c1"># 			corrs = np.matmul(eigs, np.transpose(full_cov)) #shape num_top, num_active_indices</span>
+<span class="c1"># 			scores = np.linalg.norm(corrs, axis=0) #shape num_active_indices</span>
+<span class="c1"># 			logging.info(f&#39;Length Scores: {len(scores)}&#39; )</span>
+<span class="c1"># 			p_score = np.percentile(scores, p)</span>
+<span class="c1"># 			top_scores = np.where(scores&gt;p_score)[0]</span>
+<span class="c1"># 			logging.info(f&#39;{top_scores}&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># 			removed_inds = np.copy(top_scores)</span>
+<span class="c1"># 			re = [cur_indices[v] for i,v in enumerate(removed_inds)]</span>
+<span class="c1"># 			re_all.extend(re)</span>
+<span class="c1">#</span>
+<span class="c1"># 		left_inds = np.delete(range(len(dataset)), re_all)</span>
+<span class="c1"># 		### d. retrain the model with remaining data</span>
+<span class="c1"># 		model = generate_cls_model(self.args.model,self.args.num_classes)</span>
+<span class="c1"># 		if &quot;,&quot; in self.device:</span>
+<span class="c1"># 			model = torch.nn.DataParallel(</span>
+<span class="c1"># 				model,</span>
+<span class="c1"># 				device_ids=[int(i) for i in args.device[5:].split(&quot;,&quot;)]  # eg. &quot;cuda:2,3,7&quot; -&gt; [2,3,7]</span>
+<span class="c1"># 			)</span>
+<span class="c1"># 			self.args.device = f&#39;cuda:{model.device_ids[0]}&#39;</span>
+<span class="c1"># 			model.to(self.args.device)</span>
+<span class="c1"># 		else:</span>
+<span class="c1"># 			model.to(self.args.device)</span>
+<span class="c1"># 		dataset.subset(left_inds)</span>
+<span class="c1"># 		dataset.wrapped_dataset.getitem_all = True</span>
+<span class="c1"># 		# dataset.subset(left_inds)</span>
+<span class="c1"># 		dataset_left = dataset</span>
+<span class="c1"># 		data_loader_sie = torch.utils.data.DataLoader(dataset_left, batch_size=self.args.batch_size, num_workers=self.args.num_workers, shuffle=True)</span>
+<span class="c1">#</span>
+<span class="c1"># 		optimizer, scheduler = argparser_opt_scheduler(model, self.args)</span>
+<span class="c1"># 		# criterion = nn.CrossEntropyLoss()</span>
+<span class="c1"># 		self.set_trainer(model)</span>
+<span class="c1"># 		criterion = argparser_criterion(args)</span>
+<span class="c1">#</span>
+<span class="c1"># 		test_tran = get_transform(self.args.dataset, *([self.args.input_height,self.args.input_width]) , train = False)</span>
+<span class="c1"># 		data_bd_testset = self.result[&#39;bd_test&#39;]</span>
+<span class="c1"># 		data_bd_testset.wrap_img_transform = test_tran</span>
+<span class="c1"># 		data_bd_loader = torch.utils.data.DataLoader(data_bd_testset, batch_size=self.args.batch_size, num_workers=self.args.num_workers,drop_last=False, shuffle=True,pin_memory=args.pin_memory)</span>
+<span class="c1">#</span>
+<span class="c1"># 		data_clean_testset = self.result[&#39;clean_test&#39;]</span>
+<span class="c1"># 		data_clean_testset.wrap_img_transform = test_tran</span>
+<span class="c1"># 		data_clean_loader = torch.utils.data.DataLoader(data_clean_testset, batch_size=self.args.batch_size, num_workers=self.args.num_workers,drop_last=False, shuffle=True,pin_memory=args.pin_memory)</span>
+<span class="c1">#</span>
+<span class="c1"># 		self.trainer.train_with_test_each_epoch_on_mix(</span>
+<span class="c1"># 			data_loader_sie,</span>
+<span class="c1"># 			data_clean_loader,</span>
+<span class="c1"># 			data_bd_loader,</span>
+<span class="c1"># 			args.epochs,</span>
+<span class="c1"># 			criterion=criterion,</span>
+<span class="c1"># 			optimizer=optimizer,</span>
+<span class="c1"># 			scheduler=scheduler,</span>
+<span class="c1"># 			device=self.args.device,</span>
+<span class="c1"># 			frequency_save=args.frequency_save,</span>
+<span class="c1"># 			save_folder_path=args.save_path,</span>
+<span class="c1"># 			save_prefix=&#39;spectral&#39;,</span>
+<span class="c1"># 			amp=args.amp,</span>
+<span class="c1"># 			prefetch=args.prefetch,</span>
+<span class="c1"># 			prefetch_transform_attr_name=&quot;ori_image_transform_in_loading&quot;, # since we use the preprocess_bd_dataset</span>
+<span class="c1"># 			non_blocking=args.non_blocking,</span>
+<span class="c1"># 		)</span>
+<span class="c1">#</span>
+<span class="c1"># 		result = {}</span>
+<span class="c1"># 		result[&quot;dataset&quot;] = dataset_left</span>
+<span class="c1"># 		result[&#39;model&#39;] = model</span>
+<span class="c1"># 		save_defense_result(</span>
+<span class="c1"># 			model_name=args.model,</span>
+<span class="c1"># 			num_classes=args.num_classes,</span>
+<span class="c1"># 			model=model.cpu().state_dict(),</span>
+<span class="c1"># 			save_path=args.save_path,</span>
+<span class="c1"># 		)</span>
+<span class="c1"># 		return result</span>
+<span class="c1">#</span>
+<span class="c1"># 	def defense(self,result_file):</span>
+<span class="c1"># 		self.set_result(result_file)</span>
+<span class="c1"># 		self.set_logger()</span>
+<span class="c1"># 		result = self.mitigation()</span>
+<span class="c1"># 		return result</span>
+<span class="c1">#</span>
+<span class="c1"># if __name__ == &#39;__main__&#39;:</span>
+<span class="c1"># 	spectral_method = spectral()</span>
+<span class="c1"># 	result = spectral_method.defense(spectral_method.args.result_file)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SCLBD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

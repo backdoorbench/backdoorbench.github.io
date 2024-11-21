@@ -1,0 +1,10 @@
+﻿detection\_pretrain.spectral
+============================
+
+.. currentmodule:: detection_pretrain
+
+.. autoclass:: spectral
+   :show-inheritance:
+   :members:
+   :inherited-members:
+   :special-members: __cat_dim__, __inc__

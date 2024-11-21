@@ -1,0 +1,10 @@
+﻿attack.CTRL
+===========
+
+.. currentmodule:: attack
+
+.. autoclass:: CTRL
+   :show-inheritance:
+   :members:
+   :inherited-members:
+   :special-members: __cat_dim__, __inc__

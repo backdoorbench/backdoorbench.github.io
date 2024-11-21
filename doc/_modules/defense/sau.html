@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>defense.sau &mdash; BackdoorBench v2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="/static/_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="/static/_static/css/mytheme.css" />
+
+  
+    <link rel="shortcut icon" href="/static/_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="/static/_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="/static/_static/documentation_options.js"></script>
+        <script src="/static/_static/jquery.js"></script>
+        <script src="/static/_static/underscore.js"></script>
+        <script src="/static/_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="/static/_static/doctools.js"></script>
+        <script src="/static/_static/js/version_alert.js"></script>
+    <script src="/static/_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="/static/_static/pyg_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../start/installation.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../start/quickstart.html">Quick Start by Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bddataset.html">Build Your Own Backdoor Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/attack.html">Build Your Own Backdoor Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/defense.html">Build Your Own Backdoor Defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PACKAGE REFERENCE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/attack.html">packages of attack and defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Visualization</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/analysis_readme.html">Analysis Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/Demo_FV.html">Demo_FV</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BackdoorBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">defense.sau</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for defense.sau</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This is the official implementation of the paper &quot;Shared Adversarial Unlearning: Backdoor Mitigation by Unlearning Shared Adversarial Examples&quot; (https://arxiv.org/pdf/2307.10562.pdf) in PyTorch.</span>
+<span class="sd">Implementation by: Shaokui Wei (the first author of the paper)</span>
+
+<span class="sd">basic sturcture for defense method:</span>
+<span class="sd">1. basic setting: args</span>
+<span class="sd">2. attack result(model, train data, test data)</span>
+<span class="sd">3. sau defense:</span>
+<span class="sd">    a. get some clean data</span>
+<span class="sd">    b. SAU:</span>
+<span class="sd">        b.1 generate the shared adversarial examples</span>
+<span class="sd">        b.2 unlearn the backdoor model by the pertubation</span>
+<span class="sd">4. test the result and get ASR, ACC, RC</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+
+<span class="kn">from</span> <span class="nn">defense.base</span> <span class="kn">import</span> <span class="n">defense</span>
+
+<span class="c1"># from utils.aggregate_block.train_settings_generate import argparser_opt_scheduler</span>
+<span class="c1"># from utils.trainer_cls import Metric_Aggregator, PureCleanModelTrainer, general_plot_for_epoch, given_dataloader_test</span>
+<span class="c1"># from utils.choose_index import choose_index</span>
+<span class="c1"># from utils.aggregate_block.fix_random import fix_random</span>
+<span class="c1"># from utils.aggregate_block.model_trainer_generate import generate_cls_model</span>
+<span class="c1"># from utils.log_assist import get_git_info</span>
+<span class="c1"># from utils.aggregate_block.dataset_and_transform_generate import get_input_shape, get_num_classes, get_transform, get_dataset_normalization, get_dataset_denormalization</span>
+<span class="c1"># from utils.save_load_attack import load_attack_result, save_defense_result</span>
+<span class="c1"># from utils.bd_dataset_v2 import prepro_cls_DatasetBD_v2</span>
+
+
+<span class="c1"># class Shared_PGD():</span>
+<span class="c1">#     def __init__(self, model, model_ref, beta_1 = 0.01, beta_2 = 1, norm_bound = 0.2, norm_type = &#39;L_inf&#39;, step_size = 0.2, num_steps = 5, init_type = &#39;max&#39;, loss_func = torch.nn.CrossEntropyLoss(), pert_func = None, verbose = False):</span>
+<span class="c1">#         &#39;&#39;&#39;</span>
+<span class="c1">#         PGD attack for generating shared adversarial examples.</span>
+<span class="c1">#         See &quot;Shared Adversarial Unlearning: Backdoor Mitigation by Unlearning Shared Adversarial Examples&quot; (https://arxiv.org/pdf/2307.10562.pdf) for more details.</span>
+<span class="c1">#         Implemented by Shaokui Wei (the first author of the paper) in PyTorch.</span>
+<span class="c1">#         The code is originally implemented as a part of BackdoorBench but is not dependent on BackdoorBench, and can be used independently.</span>
+<span class="c1">#</span>
+<span class="c1">#         args:</span>
+<span class="c1">#             model: the model to be attacked</span>
+<span class="c1">#             model_ref: the reference model to be attacked</span>
+<span class="c1">#             beta_1: the weight of adversarial loss, e.g. 0.01</span>
+<span class="c1">#             beta_2: the weight of shared loss, e.g. 1</span>
+<span class="c1">#             norm_bound: the bound of the norm of perturbation, e.g. 0.2</span>
+<span class="c1">#             norm_type: the type of norm, choose from [&#39;L_inf&#39;, &#39;L1&#39;, &#39;L2&#39;, &#39;Reg&#39;]</span>
+<span class="c1">#             step_size: the step size of PGD, e.g. 0.2</span>
+<span class="c1">#             num_steps: the number of steps of PGD, e.g. 5</span>
+<span class="c1">#             init_type: the type of initialization of perturbation, choose from [&#39;zero&#39;, &#39;random&#39;, &#39;max&#39;, &#39;min&#39;]</span>
+<span class="c1">#             loss_func: the loss function, e.g. nn.CrossEntropyLoss()</span>
+<span class="c1">#             pert_func: the function to process the perturbation and image, e.g. add the perturbation to image</span>
+<span class="c1">#             verbose: whether to print the information of the attack</span>
+<span class="c1">#         &#39;&#39;&#39;</span>
+<span class="c1">#</span>
+<span class="c1">#         self.model = model</span>
+<span class="c1">#         self.model_ref = model_ref</span>
+<span class="c1">#         self.beta_1 = beta_1</span>
+<span class="c1">#         self.beta_2 = beta_2</span>
+<span class="c1">#         self.norm_bound = norm_bound</span>
+<span class="c1">#         self.norm_type = norm_type</span>
+<span class="c1">#         self.step_size = step_size</span>
+<span class="c1">#         self.num_steps = num_steps</span>
+<span class="c1">#         self.init_type = init_type</span>
+<span class="c1">#         self.loss_func = loss_func</span>
+<span class="c1">#         self.verbose = verbose</span>
+<span class="c1">#</span>
+<span class="c1">#         if pert_func is None:</span>
+<span class="c1">#             # simply add x to perturbation</span>
+<span class="c1">#             self.pert_func = lambda x, pert: x + pert</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             self.pert_func = pert_func</span>
+<span class="c1">#</span>
+<span class="c1">#     def projection(self, pert):</span>
+<span class="c1">#         if self.norm_type == &#39;L_inf&#39;:</span>
+<span class="c1">#             pert.data = torch.clamp(pert.data, -self.norm_bound , self.norm_bound)</span>
+<span class="c1">#         elif self.norm_type == &#39;L1&#39;:</span>
+<span class="c1">#             norm = torch.sum(torch.abs(pert), dim=(1, 2, 3), keepdim=True)</span>
+<span class="c1">#             for i in range(pert.shape[0]):</span>
+<span class="c1">#                 if norm[i] &gt; self.norm_bound:</span>
+<span class="c1">#                     pert.data[i] = pert.data[i] * self.norm_bound / norm[i].item()</span>
+<span class="c1">#         elif self.norm_type == &#39;L2&#39;:</span>
+<span class="c1">#             norm = torch.sum(pert ** 2, dim=(1, 2, 3), keepdim=True) ** 0.5</span>
+<span class="c1">#             for i in range(pert.shape[0]):</span>
+<span class="c1">#                 if norm[i] &gt; self.norm_bound:</span>
+<span class="c1">#                     pert.data[i] = pert.data[i] * self.norm_bound / norm[i].item()</span>
+<span class="c1">#         elif self.norm_type == &#39;Reg&#39;:</span>
+<span class="c1">#             pass</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             raise NotImplementedError</span>
+<span class="c1">#         return pert</span>
+<span class="c1">#</span>
+<span class="c1">#     def init_pert(self, batch_pert):</span>
+<span class="c1">#         if self.init_type==&#39;zero&#39;:</span>
+<span class="c1">#             batch_pert.data = batch_pert.data*0</span>
+<span class="c1">#         elif self.init_type==&#39;random&#39;:</span>
+<span class="c1">#             batch_pert.data = torch.rand_like(batch_pert.data)</span>
+<span class="c1">#         elif self.init_type==&#39;max&#39;:</span>
+<span class="c1">#             batch_pert.data = batch_pert.data + self.norm_bound</span>
+<span class="c1">#         elif self.init_type==&#39;min&#39;:</span>
+<span class="c1">#             batch_pert.data = batch_pert.data - self.norm_bound</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             raise NotImplementedError</span>
+<span class="c1">#</span>
+<span class="c1">#         return self.projection(batch_pert)</span>
+<span class="c1">#</span>
+<span class="c1">#     def attack(self, images, labels, max_eps = 1, min_eps = 0):</span>
+<span class="c1">#         # Set max_eps and min_eps to valid range</span>
+<span class="c1">#</span>
+<span class="c1">#         model = self.model</span>
+<span class="c1">#         model_ref = self.model_ref</span>
+<span class="c1">#</span>
+<span class="c1">#         batch_pert = torch.zeros_like(images, requires_grad=True)</span>
+<span class="c1">#         batch_pert = self.init_pert(batch_pert)</span>
+<span class="c1">#</span>
+<span class="c1">#         for _ in range(self.num_steps):</span>
+<span class="c1">#             pert_image = self.pert_func(images, batch_pert)</span>
+<span class="c1">#             ori_lab = torch.argmax(model.forward(images),axis = 1).long()</span>
+<span class="c1">#             ori_lab_ref = torch.argmax(model_ref.forward(images),axis = 1).long()</span>
+<span class="c1">#</span>
+<span class="c1">#             per_logits = model.forward(pert_image)</span>
+<span class="c1">#             per_logits_ref = model_ref.forward(pert_image)</span>
+<span class="c1">#</span>
+<span class="c1">#             pert_label = torch.argmax(per_logits, dim=1)</span>
+<span class="c1">#             pert_label_ref = torch.argmax(per_logits_ref, dim=1)</span>
+<span class="c1">#</span>
+<span class="c1">#             success_attack = pert_label != ori_lab</span>
+<span class="c1">#             success_attack_ref = pert_label_ref != ori_lab_ref</span>
+<span class="c1">#             common_attack = torch.logical_and(success_attack, success_attack_ref)</span>
+<span class="c1">#             shared_attack = torch.logical_and(common_attack, pert_label == pert_label_ref)</span>
+<span class="c1">#</span>
+<span class="c1">#             # Adversarial loss</span>
+<span class="c1">#             # use early stop or loss clamp to avoid very large loss</span>
+<span class="c1">#             loss_adv = torch.tensor(0.0).to(images.device)</span>
+<span class="c1">#             if torch.logical_not(success_attack).sum()!=0:</span>
+<span class="c1">#                 loss_adv += F.cross_entropy(per_logits, labels, reduction=&#39;none&#39;)[torch.logical_not(success_attack)].sum()</span>
+<span class="c1">#             if torch.logical_not(success_attack_ref).sum()!=0:</span>
+<span class="c1">#                 loss_adv += F.cross_entropy(per_logits_ref, labels, reduction=&#39;none&#39;)[torch.logical_not(success_attack_ref)].sum()</span>
+<span class="c1">#             loss_adv = - loss_adv/2/images.shape[0]</span>
+<span class="c1">#</span>
+<span class="c1">#             # Shared loss</span>
+<span class="c1">#             # JS divergence version (https://en.wikipedia.org/wiki/Jensen%E2%80%93Shannon_divergence)</span>
+<span class="c1">#             p_model = F.softmax(per_logits, dim=1).clamp(min=1e-8)</span>
+<span class="c1">#             p_ref = F.softmax(per_logits_ref, dim=1).clamp(min=1e-8)</span>
+<span class="c1">#             mix_p = 0.5*(p_model+p_ref)</span>
+<span class="c1">#             loss_js = 0.5*(p_model*p_model.log() + p_ref*p_ref.log()) - 0.5*(p_model*mix_p.log() + p_ref*mix_p.log())</span>
+<span class="c1">#             loss_cross = loss_js[torch.logical_not(shared_attack)].sum(dim=1).sum()/images.shape[0]</span>
+<span class="c1">#</span>
+<span class="c1">#             # Update pert</span>
+<span class="c1">#             batch_pert.grad = None</span>
+<span class="c1">#             loss_ae = self.beta_1 * loss_adv + self.beta_2 * loss_cross</span>
+<span class="c1">#             loss_ae.backward()</span>
+<span class="c1">#</span>
+<span class="c1">#             batch_pert.data = batch_pert.data - self.step_size * batch_pert.grad.sign()</span>
+<span class="c1">#</span>
+<span class="c1">#             # Projection</span>
+<span class="c1">#             batch_pert = self.projection(batch_pert)</span>
+<span class="c1">#</span>
+<span class="c1">#             # Optimal: projection to S and clip to [min_eps, max_eps] to ensure the perturbation is valid. It is not necessary for backdoor defense as done in i-BAU.</span>
+<span class="c1">#             # Mannually set the min_eps and max_eps to match the dataset normalization</span>
+<span class="c1">#             # batch_pert.data = torch.clamp(batch_pert.data, min_eps, max_eps)</span>
+<span class="c1">#</span>
+<span class="c1">#             if torch.logical_not(shared_attack).sum()==0:</span>
+<span class="c1">#                 break</span>
+<span class="c1">#         if self.verbose:</span>
+<span class="c1">#             print(f&#39;Maximization End: \n Adv h: {success_attack.sum().item()}, Adv h_0: {success_attack_ref.sum().item()}, Adv Common: {common_attack.sum().item()}, Adv Share: {shared_attack.sum().item()}.\n Loss adv {loss_adv.item():.4f}, Loss share {loss_cross.item():.4f}, Loss total {loss_ae.item():.4f}.\n L1 norm: {torch.sum(batch_pert[0].abs().sum()):.4f}, L2 norm: {torch.norm(batch_pert[0]):.4f}, Linf norm: {torch.max(batch_pert[0].abs()):.4f}&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         return batch_pert.detach()</span>
+
+<div class="viewcode-block" id="sau"><a class="viewcode-back" href="../../generated/defense.sau.html#defense.sau">[docs]</a><span class="k">class</span> <span class="nc">sau</span><span class="p">(</span><span class="n">defense</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&#39;&#39;&#39;Shared adversarial unlearning: Backdoor mitigation by unlearning shared adversarial examples</span>
+
+<span class="sd">    basic sturcture for defense method:</span>
+<span class="sd">    </span>
+<span class="sd">    1. basic setting: args</span>
+<span class="sd">    2. attack result(model, train data, test data)</span>
+<span class="sd">    3. sau defense:</span>
+<span class="sd">        a. get some clean data</span>
+<span class="sd">        b. SAU:</span>
+<span class="sd">            1. generate the shared adversarial examples</span>
+<span class="sd">            2. unlearn the backdoor model by the pertubation</span>
+<span class="sd">    4. test the result and get ASR, ACC, RC</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        parser = argparse.ArgumentParser(description=sys.argv[0])</span>
+<span class="sd">        sau.add_arguments(parser)</span>
+<span class="sd">        args = parser.parse_args()</span>
+<span class="sd">        sau_method = sau(args)</span>
+<span class="sd">        if &quot;result_file&quot; not in args.__dict__:</span>
+<span class="sd">            args.result_file = &#39;defense_test_badnet&#39;</span>
+<span class="sd">        elif args.result_file is None:</span>
+<span class="sd">            args.result_file = &#39;defense_test_badnet&#39;</span>
+<span class="sd">        result = sau_method.defense(args.result_file)</span>
+
+<span class="sd">    .. Note::</span>
+<span class="sd">        @inproceedings{wei2023shared,</span>
+<span class="sd">        title={Shared Adversarial Unlearning: Backdoor Mitigation by Unlearning Shared Adversarial Examples},</span>
+<span class="sd">        author={Wei, Shaokui and Zhang, Mingda and Zha, Hongyuan and Wu, Baoyuan},</span>
+<span class="sd">        booktitle={Thirty-seventh Conference on Neural Information Processing Systems},</span>
+<span class="sd">        year={2023}}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        baisc args: in the base class</span>
+<span class="sd">        n_rounds(str): type of outer loop optimizer utilized</span>
+<span class="sd">        outer_steps(int): the maximum number of unelarning rounds</span>
+<span class="sd">        lmd_1(int): steps for outer loop, the number of unlearning rounds</span>
+<span class="sd">        lmd_2(float): clean acc, L_cl</span>
+<span class="sd">        lmd_3(float): AT acc. By default, lmd_2 = 0 and AT is not used.</span>
+<span class="sd">        beta_1(float):  shared adv risk, L_sar</span>
+<span class="sd">        beta_2(float): L_adv</span>
+<span class="sd">        trigger_norm(float): L_share</span>
+<span class="sd">        pgd_init(float): threshold for PGD. Larger may not be good.</span>
+<span class="sd">        norm_type(str): init type for pgd. zero|random|max|min</span>
+<span class="sd">        adv_lr(str): type of norm used for generating perturbation. L1|L2|L_inf|Reg</span>
+<span class="sd">        adv_steps(float): lr for pgd</span>
+<span class="sd">        train_mode(bool): number of steps for pgd</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+<span class="c1">#         with open(args.yaml_path, &#39;r&#39;) as f:</span>
+<span class="c1">#             defaults = yaml.safe_load(f)</span>
+<span class="c1">#</span>
+<span class="c1">#         defaults.update({k:v for k,v in args.__dict__.items() if v is not None})</span>
+<span class="c1">#</span>
+<span class="c1">#         args.__dict__ = defaults</span>
+<span class="c1">#</span>
+<span class="c1">#         args.terminal_info = sys.argv</span>
+<span class="c1">#</span>
+<span class="c1">#         args.num_classes = get_num_classes(args.dataset)</span>
+<span class="c1">#         args.input_height, args.input_width, args.input_channel = get_input_shape(args.dataset)</span>
+<span class="c1">#         args.img_size = (args.input_height, args.input_width, args.input_channel)</span>
+<span class="c1">#         args.dataset_path = f&quot;{args.dataset_path}/{args.dataset}&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#         self.args = args</span>
+<span class="c1">#</span>
+<span class="c1">#         if &#39;result_file&#39; in args.__dict__ :</span>
+<span class="c1">#             if args.result_file is not None:</span>
+<span class="c1">#                 self.set_result(args.result_file)</span>
+<span class="c1">#</span>
+<span class="c1">#     def add_arguments(parser):</span>
+<span class="c1">#         parser.add_argument(&#39;--device&#39;, type=str, help=&#39;cuda, cpu&#39;)</span>
+<span class="c1">#         parser.add_argument(&quot;-pm&quot;,&quot;--pin_memory&quot;, type=lambda x: str(x) in [&#39;True&#39;, &#39;true&#39;, &#39;1&#39;], help = &quot;dataloader pin_memory&quot;)</span>
+<span class="c1">#         parser.add_argument(&quot;-nb&quot;,&quot;--non_blocking&quot;, type=lambda x: str(x) in [&#39;True&#39;, &#39;true&#39;, &#39;1&#39;], help = &quot;.to(), set the non_blocking = ?&quot;)</span>
+<span class="c1">#         parser.add_argument(&quot;-pf&quot;, &#39;--prefetch&#39;, type=lambda x: str(x) in [&#39;True&#39;, &#39;true&#39;, &#39;1&#39;], help=&#39;use prefetch&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--amp&#39;, type=lambda x: str(x) in [&#39;True&#39;,&#39;true&#39;,&#39;1&#39;])</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--checkpoint_load&#39;, type=str, help=&#39;the location of load model&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--checkpoint_save&#39;, type=str, help=&#39;the location of checkpoint where model is saved&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--log&#39;, type=str, help=&#39;the location of log&#39;)</span>
+<span class="c1">#         parser.add_argument(&quot;--dataset_path&quot;, type=str, help=&#39;the location of data&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--dataset&#39;, type=str, help=&#39;mnist, cifar10, cifar100, gtrsb, tiny&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--result_file&#39;, type=str, help=&#39;the location of result&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--epochs&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&#39;--batch_size&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&quot;--num_workers&quot;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--lr&#39;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--lr_scheduler&#39;, type=str, help=&#39;the scheduler of lr&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--steplr_stepsize&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&#39;--steplr_gamma&#39;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--steplr_milestones&#39;, type=list)</span>
+<span class="c1">#         parser.add_argument(&#39;--model&#39;, type=str, help=&#39;resnet18&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--client_optimizer&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&#39;--sgd_momentum&#39;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--wd&#39;, type=float, help=&#39;weight decay of sgd&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--frequency_save&#39;, type=int,</span>
+<span class="c1">#                         help=&#39; frequency_save, 0 is never&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--random_seed&#39;, type=int, help=&#39;random seed&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--yaml_path&#39;, type=str, default=&quot;./config/defense/sau/config.yaml&quot;, help=&#39;the path of yaml&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#         ###### sau defense parameter ######</span>
+<span class="c1">#         # defense setting</span>
+<span class="c1">#         parser.add_argument(&#39;--ratio&#39;, type=float, help=&#39;the ratio of clean data loader&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--index&#39;, type=str, help=&#39;index of clean data&#39;)</span>
+<span class="c1">#         # hyper params</span>
+<span class="c1">#         parser.add_argument(&#39;--optim&#39;, type=str, default=&#39;Adam&#39;, help=&#39;type of outer loop optimizer utilized&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--n_rounds&#39;, type=int, help=&#39;the maximum number of unelarning rounds&#39;)</span>
+<span class="c1">#         ## Minimization part</span>
+<span class="c1">#         parser.add_argument(&#39;--outer_steps&#39;, default=1, type=int,help=&#39;steps for outer loop, the number of unlearning rounds&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--lmd_1&#39;, type=float,help=&#39;clean acc, L_cl&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--lmd_2&#39;, type=float,help=&#39;AT acc. By default, lmd_2 = 0 and AT is not used.&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--lmd_3&#39;, type=float,help=&#39; shared adv risk, L_sar&#39;)</span>
+<span class="c1">#         ## Maximization part</span>
+<span class="c1">#         parser.add_argument(&#39;--beta_1&#39;, type=float,help=&#39;L_adv&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--beta_2&#39;, type=float,help=&#39;L_share&#39;)</span>
+<span class="c1">#         ### PGD setting</span>
+<span class="c1">#         parser.add_argument(&#39;--trigger_norm&#39;, type=float,help=&#39;threshold for PGD. Larger may not be good.&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--pgd_init&#39;, type=str, help=&#39;init type for pgd. zero|random|max|min&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--norm_type&#39;, type=str,help=&#39;type of norm used for generating perturbation. L1|L2|L_inf|Reg&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--adv_lr&#39;, type=float,help=&#39;lr for pgd&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--adv_steps&#39;, type=int,help=&#39;number of steps for pgd&#39;)</span>
+<span class="c1">#         ## optimization setting</span>
+<span class="c1">#         parser.add_argument(&#39;--train_mode&#39;, action=&#39;store_true&#39;,default=False, help=&#39;Fix BN parameters or not. Fixing BN leads to higher ACC but also higher ASR.&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     def set_result(self, result_file):</span>
+<span class="c1">#         attack_file = &#39;record/&#39; + result_file</span>
+<span class="c1">#         save_path = &#39;record/&#39; + result_file + f&#39;/defense/sau/&#39;</span>
+<span class="c1">#         if not (os.path.exists(save_path)):</span>
+<span class="c1">#             os.makedirs(save_path)</span>
+<span class="c1">#         # assert(os.path.exists(save_path))</span>
+<span class="c1">#         self.args.save_path = save_path</span>
+<span class="c1">#         if self.args.checkpoint_save is None:</span>
+<span class="c1">#             self.args.checkpoint_save = save_path + &#39;checkpoint/&#39;</span>
+<span class="c1">#             if not (os.path.exists(self.args.checkpoint_save)):</span>
+<span class="c1">#                 os.makedirs(self.args.checkpoint_save)</span>
+<span class="c1">#         if self.args.log is None:</span>
+<span class="c1">#             self.args.log = save_path + &#39;log/&#39;</span>
+<span class="c1">#             if not (os.path.exists(self.args.log)):</span>
+<span class="c1">#                 os.makedirs(self.args.log)</span>
+<span class="c1">#         self.result = load_attack_result(attack_file + &#39;/attack_result.pt&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     def set_logger(self):</span>
+<span class="c1">#         args = self.args</span>
+<span class="c1">#         logFormatter = logging.Formatter(</span>
+<span class="c1">#             fmt=&#39;%(asctime)s [%(levelname)-8s] [%(filename)s:%(lineno)d] %(message)s&#39;,</span>
+<span class="c1">#             datefmt=&#39;%Y-%m-%d:%H:%M:%S&#39;,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         logger = logging.getLogger()</span>
+<span class="c1">#</span>
+<span class="c1">#         fileHandler = logging.FileHandler(args.log + &#39;/&#39; + time.strftime(&quot;%Y_%m_%d_%H_%M_%S&quot;, time.localtime()) + &#39;.log&#39;)</span>
+<span class="c1">#         fileHandler.setFormatter(logFormatter)</span>
+<span class="c1">#         logger.addHandler(fileHandler)</span>
+<span class="c1">#</span>
+<span class="c1">#         consoleHandler = logging.StreamHandler()</span>
+<span class="c1">#         consoleHandler.setFormatter(logFormatter)</span>
+<span class="c1">#         logger.addHandler(consoleHandler)</span>
+<span class="c1">#</span>
+<span class="c1">#         logger.setLevel(logging.INFO)</span>
+<span class="c1">#         logging.info(pformat(args.__dict__))</span>
+<span class="c1">#</span>
+<span class="c1">#         try:</span>
+<span class="c1">#             logging.info(pformat(get_git_info()))</span>
+<span class="c1">#         except:</span>
+<span class="c1">#             logging.info(&#39;Getting git info fails.&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     def mitigation(self):</span>
+<span class="c1">#         fix_random(self.args.random_seed)</span>
+<span class="c1">#</span>
+<span class="c1">#         # initialize models</span>
+<span class="c1">#         model = generate_cls_model(self.args.model,self.args.num_classes)</span>
+<span class="c1">#         model.load_state_dict(self.result[&#39;model&#39;])</span>
+<span class="c1">#</span>
+<span class="c1">#         model_ref = generate_cls_model(self.args.model,self.args.num_classes)</span>
+<span class="c1">#         model_ref.load_state_dict(self.result[&#39;model&#39;])</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#         if &quot;,&quot; in self.args.device:</span>
+<span class="c1">#             model = torch.nn.DataParallel(model, device_ids=[int(i) for i in self.args.device[5:].split(&quot;,&quot;)])</span>
+<span class="c1">#             self.args.device = f&#39;cuda:{model.device_ids[0]}&#39;</span>
+<span class="c1">#             model.to(self.args.device)</span>
+<span class="c1">#</span>
+<span class="c1">#             model_ref = torch.nn.DataParallel(model_ref, device_ids=[int(i) for i in self.args.device[5:].split(&quot;,&quot;)])</span>
+<span class="c1">#             self.args.device = f&#39;cuda:{model_ref.device_ids[0]}&#39;</span>
+<span class="c1">#             model_ref.to(self.args.device)</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             model.to(self.args.device)</span>
+<span class="c1">#             model_ref.to(self.args.device)</span>
+<span class="c1">#</span>
+<span class="c1">#         outer_opt, scheduler = argparser_opt_scheduler(model, self.args)</span>
+<span class="c1">#</span>
+<span class="c1">#         # a. get some clean data</span>
+<span class="c1">#         logging.info(&quot;Fetch some samples from clean train dataset.&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#         train_tran = get_transform(self.args.dataset, *([self.args.input_height,self.args.input_width]) , train = False)</span>
+<span class="c1">#</span>
+<span class="c1">#         clean_dataset = prepro_cls_DatasetBD_v2(self.result[&#39;clean_train&#39;].wrapped_dataset)</span>
+<span class="c1">#         data_all_length = len(clean_dataset)</span>
+<span class="c1">#         ran_idx = choose_index(self.args, data_all_length)</span>
+<span class="c1">#         log_index = self.args.log + &#39;index.txt&#39;</span>
+<span class="c1">#         np.savetxt(log_index, ran_idx, fmt=&#39;%d&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         clean_dataset.subset(ran_idx)</span>
+<span class="c1">#</span>
+<span class="c1">#         data_set_without_tran = clean_dataset</span>
+<span class="c1">#         data_set_o = self.result[&#39;clean_train&#39;]</span>
+<span class="c1">#         data_set_o.wrapped_dataset = data_set_without_tran</span>
+<span class="c1">#         data_set_o.wrap_img_transform = train_tran</span>
+<span class="c1">#</span>
+<span class="c1">#         data_loader = torch.utils.data.DataLoader(data_set_o, batch_size=self.args.batch_size, num_workers=self.args.num_workers, shuffle=True, pin_memory=args.pin_memory)</span>
+<span class="c1">#         trainloader = data_loader</span>
+<span class="c1">#</span>
+<span class="c1">#         ## set testing dataset</span>
+<span class="c1">#         test_tran = get_transform(self.args.dataset, *([self.args.input_height,self.args.input_width]) , train = False)</span>
+<span class="c1">#         data_bd_testset = self.result[&#39;bd_test&#39;]</span>
+<span class="c1">#         data_bd_testset.wrap_img_transform = test_tran</span>
+<span class="c1">#         data_bd_loader = torch.utils.data.DataLoader(data_bd_testset, batch_size=self.args.batch_size, num_workers=self.args.num_workers,drop_last=False, shuffle=True,pin_memory=args.pin_memory)</span>
+<span class="c1">#</span>
+<span class="c1">#         data_clean_testset = self.result[&#39;clean_test&#39;]</span>
+<span class="c1">#         data_clean_testset.wrap_img_transform = test_tran</span>
+<span class="c1">#         data_clean_loader = torch.utils.data.DataLoader(data_clean_testset, batch_size=self.args.batch_size, num_workers=self.args.num_workers,drop_last=False, shuffle=True,pin_memory=args.pin_memory)</span>
+<span class="c1">#</span>
+<span class="c1">#         clean_test_loss_list = []</span>
+<span class="c1">#         bd_test_loss_list = []</span>
+<span class="c1">#         ra_test_loss_list = []</span>
+<span class="c1">#         test_acc_list = []</span>
+<span class="c1">#         test_asr_list = []</span>
+<span class="c1">#         test_ra_list = []</span>
+<span class="c1">#</span>
+<span class="c1">#         # b. unlearn the backdoor model by the pertubation</span>
+<span class="c1">#         logging.info(&quot;=&gt; Conducting Defence..&quot;)</span>
+<span class="c1">#         model.eval()</span>
+<span class="c1">#         model_ref.eval()</span>
+<span class="c1">#</span>
+<span class="c1">#         clean_test_loss_avg_over_batch, \</span>
+<span class="c1">#                     bd_test_loss_avg_over_batch, \</span>
+<span class="c1">#                     ra_test_loss_avg_over_batch, \</span>
+<span class="c1">#                     test_acc, \</span>
+<span class="c1">#                     test_asr, \</span>
+<span class="c1">#                     test_ra = self.eval_step(</span>
+<span class="c1">#                         model,</span>
+<span class="c1">#                         data_clean_loader,</span>
+<span class="c1">#                         data_bd_loader,</span>
+<span class="c1">#                         args,</span>
+<span class="c1">#                     )</span>
+<span class="c1">#</span>
+<span class="c1">#         logging.info(&#39;Initial State: clean test loss: {:.4f}, bd test loss: {:.4f}, ra test loss: {:.4f}, test acc: {:.4f}, test asr: {:.4f}, test ra: {:.4f}&#39;.format(clean_test_loss_avg_over_batch, bd_test_loss_avg_over_batch, ra_test_loss_avg_over_batch, test_acc, test_asr, test_ra))</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#         normalization = get_dataset_normalization(args.dataset)</span>
+<span class="c1">#         denormalization = get_dataset_denormalization(normalization)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#         def get_perturbed_image(images, pert, train = True):</span>
+<span class="c1">#             images_wo_trans = denormalization(images) + pert</span>
+<span class="c1">#             images_with_trans = normalization(images_wo_trans)</span>
+<span class="c1">#             return images_with_trans</span>
+<span class="c1">#</span>
+<span class="c1">#         Shared_PGD_Attacker = Shared_PGD(model = model,</span>
+<span class="c1">#                                          model_ref = model_ref,</span>
+<span class="c1">#                                          beta_1 = args.beta_1,</span>
+<span class="c1">#                                          beta_2 = args.beta_2,</span>
+<span class="c1">#                                          norm_bound = args.trigger_norm,</span>
+<span class="c1">#                                          norm_type = args.norm_type,</span>
+<span class="c1">#                                          step_size = args.adv_lr,</span>
+<span class="c1">#                                          num_steps = args.adv_steps,</span>
+<span class="c1">#                                          init_type = args.pgd_init,</span>
+<span class="c1">#                                          loss_func = torch.nn.CrossEntropyLoss(),</span>
+<span class="c1">#                                          pert_func = get_perturbed_image,</span>
+<span class="c1">#                                          verbose = True)</span>
+<span class="c1">#</span>
+<span class="c1">#         agg = Metric_Aggregator()</span>
+<span class="c1">#         for round in range(args.n_rounds):</span>
+<span class="c1">#</span>
+<span class="c1">#             for images, labels, original_index, poison_indicator, original_targets in trainloader:</span>
+<span class="c1">#                 images = images.to(args.device)</span>
+<span class="c1">#                 labels = labels.to(args.device)</span>
+<span class="c1">#</span>
+<span class="c1">#                 max_eps = 1 - denormalization(images)</span>
+<span class="c1">#                 min_eps = -denormalization(images)</span>
+<span class="c1">#</span>
+<span class="c1">#                 batch_pert = Shared_PGD_Attacker.attack(images, labels, max_eps, min_eps)</span>
+<span class="c1">#</span>
+<span class="c1">#                 for _ in range(args.outer_steps):</span>
+<span class="c1">#                     pert_image = get_perturbed_image(images, batch_pert.detach())</span>
+<span class="c1">#</span>
+<span class="c1">#                     if args.train_mode:</span>
+<span class="c1">#                         model.train()</span>
+<span class="c1">#</span>
+<span class="c1">#                     concat_images = torch.cat([images, pert_image], dim=0)</span>
+<span class="c1">#                     concat_logits = model.forward(concat_images)</span>
+<span class="c1">#                     logits, per_logits = torch.split(concat_logits, images.shape[0], dim=0)</span>
+<span class="c1">#                     model.eval()</span>
+<span class="c1">#</span>
+<span class="c1">#                     logits_ref = model_ref(images)</span>
+<span class="c1">#                     per_logits_ref = model_ref.forward(pert_image)</span>
+<span class="c1">#</span>
+<span class="c1">#                     # Get prediction</span>
+<span class="c1">#                     ori_lab = torch.argmax(logits,axis = 1).long()</span>
+<span class="c1">#                     ori_lab_ref = torch.argmax(logits_ref,axis = 1).long()</span>
+<span class="c1">#</span>
+<span class="c1">#                     pert_label = torch.argmax(per_logits, dim=1)</span>
+<span class="c1">#                     pert_label_ref = torch.argmax(per_logits_ref, dim=1)</span>
+<span class="c1">#</span>
+<span class="c1">#                     success_attack = pert_label != labels</span>
+<span class="c1">#                     success_attack_ref = pert_label_ref != labels</span>
+<span class="c1">#                     success_attack_ref = success_attack_ref &amp; (pert_label_ref != ori_lab_ref)</span>
+<span class="c1">#                     common_attack = torch.logical_and(success_attack, success_attack_ref)</span>
+<span class="c1">#                     shared_attack = torch.logical_and(common_attack, pert_label == pert_label_ref)</span>
+<span class="c1">#</span>
+<span class="c1">#                     # Clean loss</span>
+<span class="c1">#                     loss_cl = F.cross_entropy(logits, labels, reduction=&#39;mean&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#                     # AT loss</span>
+<span class="c1">#                     loss_at = F.cross_entropy(per_logits, labels, reduction=&#39;mean&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#                     # Shared loss</span>
+<span class="c1">#                     potential_poison = success_attack_ref</span>
+<span class="c1">#</span>
+<span class="c1">#                     if potential_poison.sum() == 0:</span>
+<span class="c1">#                         loss_shared = torch.tensor(0.0).to(args.device)</span>
+<span class="c1">#                     else:</span>
+<span class="c1">#                         one_hot = F.one_hot(pert_label_ref, num_classes=args.num_classes)</span>
+<span class="c1">#</span>
+<span class="c1">#                         neg_one_hot = 1 - one_hot</span>
+<span class="c1">#                         neg_p = (F.softmax(per_logits, dim = 1)*neg_one_hot).sum(dim = 1)[potential_poison]</span>
+<span class="c1">#                         pos_p = (F.softmax(per_logits, dim = 1)*one_hot).sum(dim = 1)[potential_poison]</span>
+<span class="c1">#</span>
+<span class="c1">#                         # clamp the too small values to avoid nan and discard samples with p&lt;1% to be shared</span>
+<span class="c1">#                         # Note: The below equation combine two identical terms in math. Although they are the same in math, they are different in implementation due to the numerical issue.</span>
+<span class="c1">#                         #       Combining them can reduce the numerical issue.</span>
+<span class="c1">#</span>
+<span class="c1">#                         loss_shared = (-torch.sum(torch.log(1e-6 + neg_p.clamp(max = 0.999))) - torch.sum(torch.log(1 + 1e-6 - pos_p.clamp(min = 0.001))))/2</span>
+<span class="c1">#                         loss_shared = loss_shared/images.shape[0]</span>
+<span class="c1">#</span>
+<span class="c1">#                     # Shared loss</span>
+<span class="c1">#</span>
+<span class="c1">#                     outer_opt.zero_grad()</span>
+<span class="c1">#</span>
+<span class="c1">#                     loss = args.lmd_1*loss_cl + args.lmd_2* loss_at + args.lmd_3*loss_shared</span>
+<span class="c1">#</span>
+<span class="c1">#                     loss.backward()</span>
+<span class="c1">#                     outer_opt.step()</span>
+<span class="c1">#                     model.eval()</span>
+<span class="c1">#</span>
+<span class="c1">#                     # delete the useless variable to save memory</span>
+<span class="c1">#                     del logits, logits_ref, per_logits, per_logits_ref, loss_cl, loss_at, loss_shared, loss</span>
+<span class="c1">#</span>
+<span class="c1">#             clean_test_loss_avg_over_batch, \</span>
+<span class="c1">#             bd_test_loss_avg_over_batch, \</span>
+<span class="c1">#             ra_test_loss_avg_over_batch, \</span>
+<span class="c1">#             test_acc, \</span>
+<span class="c1">#             test_asr, \</span>
+<span class="c1">#             test_ra = self.eval_step(</span>
+<span class="c1">#                 model,</span>
+<span class="c1">#                 data_clean_loader,</span>
+<span class="c1">#                 data_bd_loader,</span>
+<span class="c1">#                 args,</span>
+<span class="c1">#             )</span>
+<span class="c1">#</span>
+<span class="c1">#             agg({</span>
+<span class="c1">#                 &quot;epoch&quot;: round,</span>
+<span class="c1">#</span>
+<span class="c1">#                 &quot;clean_test_loss_avg_over_batch&quot;: clean_test_loss_avg_over_batch,</span>
+<span class="c1">#                 &quot;bd_test_loss_avg_over_batch&quot;: bd_test_loss_avg_over_batch,</span>
+<span class="c1">#                 &quot;ra_test_loss_avg_over_batch&quot;: ra_test_loss_avg_over_batch,</span>
+<span class="c1">#                 &quot;test_acc&quot;: test_acc,</span>
+<span class="c1">#                 &quot;test_asr&quot;: test_asr,</span>
+<span class="c1">#                 &quot;test_ra&quot;: test_ra,</span>
+<span class="c1">#             })</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#             clean_test_loss_list.append(clean_test_loss_avg_over_batch)</span>
+<span class="c1">#             bd_test_loss_list.append(bd_test_loss_avg_over_batch)</span>
+<span class="c1">#             ra_test_loss_list.append(ra_test_loss_avg_over_batch)</span>
+<span class="c1">#             test_acc_list.append(test_acc)</span>
+<span class="c1">#             test_asr_list.append(test_asr)</span>
+<span class="c1">#             test_ra_list.append(test_ra)</span>
+<span class="c1">#</span>
+<span class="c1">#             general_plot_for_epoch(</span>
+<span class="c1">#                 {</span>
+<span class="c1">#                     &quot;Test C-Acc&quot;: test_acc_list,</span>
+<span class="c1">#                     &quot;Test ASR&quot;: test_asr_list,</span>
+<span class="c1">#                     &quot;Test RA&quot;: test_ra_list,</span>
+<span class="c1">#                 },</span>
+<span class="c1">#                 save_path=f&quot;{args.save_path}sau_acc_like_metric_plots.png&quot;,</span>
+<span class="c1">#                 ylabel=&quot;percentage&quot;,</span>
+<span class="c1">#             )</span>
+<span class="c1">#</span>
+<span class="c1">#             general_plot_for_epoch(</span>
+<span class="c1">#                 {</span>
+<span class="c1">#                     &quot;Test Clean Loss&quot;: clean_test_loss_list,</span>
+<span class="c1">#                     &quot;Test Backdoor Loss&quot;: bd_test_loss_list,</span>
+<span class="c1">#                     &quot;Test RA Loss&quot;: ra_test_loss_list,</span>
+<span class="c1">#                 },</span>
+<span class="c1">#                 save_path=f&quot;{args.save_path}sau_loss_metric_plots.png&quot;,</span>
+<span class="c1">#                 ylabel=&quot;percentage&quot;,</span>
+<span class="c1">#             )</span>
+<span class="c1">#</span>
+<span class="c1">#             agg.to_dataframe().to_csv(f&quot;{args.save_path}sau_df.csv&quot;)</span>
+<span class="c1">#         agg.summary().to_csv(f&quot;{args.save_path}sau_df_summary.csv&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#         result = {}</span>
+<span class="c1">#         result[&#39;model&#39;] = model</span>
+<span class="c1">#         save_defense_result(</span>
+<span class="c1">#             model_name=args.model,</span>
+<span class="c1">#             num_classes=args.num_classes,</span>
+<span class="c1">#             model=model.cpu().state_dict(),</span>
+<span class="c1">#             save_path=args.save_path,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         return result</span>
+<span class="c1">#</span>
+<span class="c1">#     def eval_step(</span>
+<span class="c1">#             self,</span>
+<span class="c1">#             netC,</span>
+<span class="c1">#             clean_test_dataloader,</span>
+<span class="c1">#             bd_test_dataloader,</span>
+<span class="c1">#             args,</span>
+<span class="c1">#     ):</span>
+<span class="c1">#         clean_metrics, clean_epoch_predict_list, clean_epoch_label_list = given_dataloader_test(</span>
+<span class="c1">#             netC,</span>
+<span class="c1">#             clean_test_dataloader,</span>
+<span class="c1">#             criterion=torch.nn.CrossEntropyLoss(),</span>
+<span class="c1">#             non_blocking=args.non_blocking,</span>
+<span class="c1">#             device=self.args.device,</span>
+<span class="c1">#             verbose=0,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         clean_test_loss_avg_over_batch = clean_metrics[&#39;test_loss_avg_over_batch&#39;]</span>
+<span class="c1">#         test_acc = clean_metrics[&#39;test_acc&#39;]</span>
+<span class="c1">#         bd_metrics, bd_epoch_predict_list, bd_epoch_label_list = given_dataloader_test(</span>
+<span class="c1">#             netC,</span>
+<span class="c1">#             bd_test_dataloader,</span>
+<span class="c1">#             criterion=torch.nn.CrossEntropyLoss(),</span>
+<span class="c1">#             non_blocking=args.non_blocking,</span>
+<span class="c1">#             device=self.args.device,</span>
+<span class="c1">#             verbose=0,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         bd_test_loss_avg_over_batch = bd_metrics[&#39;test_loss_avg_over_batch&#39;]</span>
+<span class="c1">#         test_asr = bd_metrics[&#39;test_acc&#39;]</span>
+<span class="c1">#</span>
+<span class="c1">#         bd_test_dataloader.dataset.wrapped_dataset.getitem_all_switch = True  # change to return the original label instead</span>
+<span class="c1">#         ra_metrics, ra_epoch_predict_list, ra_epoch_label_list = given_dataloader_test(</span>
+<span class="c1">#             netC,</span>
+<span class="c1">#             bd_test_dataloader,</span>
+<span class="c1">#             criterion=torch.nn.CrossEntropyLoss(),</span>
+<span class="c1">#             non_blocking=args.non_blocking,</span>
+<span class="c1">#             device=self.args.device,</span>
+<span class="c1">#             verbose=0,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         ra_test_loss_avg_over_batch = ra_metrics[&#39;test_loss_avg_over_batch&#39;]</span>
+<span class="c1">#         test_ra = ra_metrics[&#39;test_acc&#39;]</span>
+<span class="c1">#         bd_test_dataloader.dataset.wrapped_dataset.getitem_all_switch = False  # switch back</span>
+<span class="c1">#</span>
+<span class="c1">#         return clean_test_loss_avg_over_batch, \</span>
+<span class="c1">#                 bd_test_loss_avg_over_batch, \</span>
+<span class="c1">#                 ra_test_loss_avg_over_batch, \</span>
+<span class="c1">#                 test_acc, \</span>
+<span class="c1">#                 test_asr, \</span>
+<span class="c1">#                 test_ra</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     def defense(self,result_file):</span>
+<span class="c1">#         self.set_result(result_file)</span>
+<span class="c1">#         self.set_logger()</span>
+<span class="c1">#         result = self.mitigation()</span>
+<span class="c1">#         return result</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     def eval_attack(self, netC, net_ref, clean_test_dataloader, pert, args = None):</span>
+<span class="c1">#         total_success = 0</span>
+<span class="c1">#         total_success_ref = 0</span>
+<span class="c1">#         total_success_common = 0</span>
+<span class="c1">#         total_success_shared = 0</span>
+<span class="c1">#</span>
+<span class="c1">#         total_samples = 0</span>
+<span class="c1">#         for images, labels, *other_info in clean_test_dataloader:</span>
+<span class="c1">#             images = images.to(self.args.device)</span>
+<span class="c1">#             labels = labels.to(self.args.device)</span>
+<span class="c1">#             pert_image = self.get_perturbed_image(images=images, pert=pert)</span>
+<span class="c1">#             outputs = netC(pert_image)</span>
+<span class="c1">#             outputs_ref = net_ref(pert_image)</span>
+<span class="c1">#             _, predicted = torch.max(outputs.data, 1)</span>
+<span class="c1">#             _, predicted_ref = torch.max(outputs_ref.data, 1)</span>
+<span class="c1">#             total_success += (predicted != labels).sum().item()</span>
+<span class="c1">#             total_success_ref += (predicted_ref != labels).sum().item()</span>
+<span class="c1">#             total_success_common += (torch.logical_and(predicted != labels, predicted_ref != labels)).sum().item()</span>
+<span class="c1">#             total_success_shared += (torch.logical_and(predicted != labels, predicted_ref == predicted)).sum().item()</span>
+<span class="c1">#             total_samples += labels.size(0)</span>
+<span class="c1">#</span>
+<span class="c1">#         return total_success/total_samples, total_success_ref/total_samples, total_success_common/total_samples, total_success_shared/total_samples</span>
+<span class="c1">#</span>
+<span class="c1">#     def eval_binary(self, netC, net_ref, bd_test_dataloader, pert, args = None):</span>
+<span class="c1">#         total_success = 0</span>
+<span class="c1">#         total_success_ref = 0</span>
+<span class="c1">#         total_success_common = 0</span>
+<span class="c1">#         total_success_shared = 0</span>
+<span class="c1">#</span>
+<span class="c1">#         total_samples = 0</span>
+<span class="c1">#         for images, labels, *other_info in bd_test_dataloader:</span>
+<span class="c1">#             images = images.to(self.args.device)</span>
+<span class="c1">#             labels = labels.to(self.args.device)</span>
+<span class="c1">#             pert_image = self.get_perturbed_image(images=images, pert=pert)</span>
+<span class="c1">#             outputs = netC(pert_image)</span>
+<span class="c1">#             outputs_ref = net_ref(pert_image)</span>
+<span class="c1">#             _, predicted = torch.max(outputs.data, 1)</span>
+<span class="c1">#             _, predicted_ref = torch.max(outputs_ref.data, 1)</span>
+<span class="c1">#             total_success += (predicted != labels).sum().item()</span>
+<span class="c1">#             total_success_ref += (predicted_ref != labels).sum().item()</span>
+<span class="c1">#             total_success_common += (torch.logical_and(predicted != labels, predicted_ref != labels)).sum().item()</span>
+<span class="c1">#             total_success_shared += (torch.logical_and(predicted != labels, predicted_ref == predicted)).sum().item()</span>
+<span class="c1">#             total_samples += labels.size(0)</span>
+<span class="c1">#</span>
+<span class="c1">#         return total_success/total_samples, total_success_ref/total_samples, total_success_common/total_samples, total_success_shared/total_samples</span>
+<span class="c1">#</span>
+<span class="c1">#     def defense(self,result_file):</span>
+<span class="c1">#         self.set_result(result_file)</span>
+<span class="c1">#         self.set_logger()</span>
+<span class="c1">#         result = self.mitigation()</span>
+<span class="c1">#         return result</span>
+<span class="c1">#</span>
+<span class="c1"># if __name__ == &#39;__main__&#39;:</span>
+<span class="c1">#     parser = argparse.ArgumentParser(description=sys.argv[0])</span>
+<span class="c1">#     sau.add_arguments(parser)</span>
+<span class="c1">#     args = parser.parse_args()</span>
+<span class="c1">#     sau_method = sau(args)</span>
+<span class="c1">#     if &quot;result_file&quot; not in args.__dict__:</span>
+<span class="c1">#         args.result_file = &#39;defense_test_badnet&#39;</span>
+<span class="c1">#     elif args.result_file is None:</span>
+<span class="c1">#         args.result_file = &#39;defense_test_badnet&#39;</span>
+<span class="c1">#     result = sau_method.defense(args.result_file)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SCLBD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

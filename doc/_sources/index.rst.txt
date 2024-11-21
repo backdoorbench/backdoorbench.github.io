@@ -1,0 +1,49 @@
+.. BackdoorBench documentation master file, created by
+   sphinx-quickstart on Mon Mar 20 10:29:06 2023.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to BackdoorBench Tutorials and Documentation
+=====================================================
+
+
+BackdoorBench is a pytorch backdoor learning library, which contains most popular backdoor attack and defense algorithms.
+
+.. comments original size: 626*238
+.. image:: ./_static/img/framework.png
+   :width: 626px
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Get Started
+
+   start/installation
+   start/quickstart
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Tutorials
+
+   tutorial/bddataset
+   tutorial/attack
+   tutorial/defense
+
+.. toctree::
+   :maxdepth: 1
+   :caption: PACKAGE REFERENCE
+
+   modules/attack
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Visualization
+
+   visualization/analysis_readme
+   visualization/Demo_FV
+   
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

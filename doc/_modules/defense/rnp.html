@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>defense.rnp &mdash; BackdoorBench v2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="/static/_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="/static/_static/css/mytheme.css" />
+
+  
+    <link rel="shortcut icon" href="/static/_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="/static/_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="/static/_static/documentation_options.js"></script>
+        <script src="/static/_static/jquery.js"></script>
+        <script src="/static/_static/underscore.js"></script>
+        <script src="/static/_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="/static/_static/doctools.js"></script>
+        <script src="/static/_static/js/version_alert.js"></script>
+    <script src="/static/_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="/static/_static/pyg_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../start/installation.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../start/quickstart.html">Quick Start by Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bddataset.html">Build Your Own Backdoor Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/attack.html">Build Your Own Backdoor Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/defense.html">Build Your Own Backdoor Defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PACKAGE REFERENCE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/attack.html">packages of attack and defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Visualization</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/analysis_readme.html">Analysis Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/Demo_FV.html">Demo_FV</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BackdoorBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">defense.rnp</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for defense.rnp</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+
+<span class="kn">from</span> <span class="nn">defense.base</span> <span class="kn">import</span> <span class="n">defense</span>
+
+
+<span class="c1"># from torch.utils.data import DataLoader, RandomSampler</span>
+<span class="c1"># import pandas as pd</span>
+<span class="c1"># from collections import OrderedDict</span>
+<span class="c1"># import copy</span>
+<span class="c1">#</span>
+<span class="c1"># import utils.defense_utils.rnp.rnp_model as rnp_model</span>
+<span class="c1">#</span>
+<span class="c1"># from utils.aggregate_block.train_settings_generate import argparser_criterion, argparser_opt_scheduler</span>
+<span class="c1"># from utils.trainer_cls import BackdoorModelTrainer, Metric_Aggregator, ModelTrainerCLS, ModelTrainerCLS_v2, PureCleanModelTrainer, all_acc, general_plot_for_epoch</span>
+<span class="c1"># from utils.bd_dataset import prepro_cls_DatasetBD</span>
+<span class="c1"># from utils.choose_index import choose_index</span>
+<span class="c1"># from utils.aggregate_block.fix_random import fix_random</span>
+<span class="c1"># from utils.aggregate_block.model_trainer_generate import generate_cls_model, partially_load_state_dict</span>
+<span class="c1"># from utils.log_assist import get_git_info</span>
+<span class="c1"># from utils.aggregate_block.dataset_and_transform_generate import get_input_shape, get_num_classes, get_transform</span>
+<span class="c1"># from utils.save_load_attack import load_attack_result, save_defense_result</span>
+<span class="c1"># from utils.bd_dataset_v2 import prepro_cls_DatasetBD_v2</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># if torch.cuda.is_available():</span>
+<span class="c1">#     torch.backends.cudnn.enabled = True</span>
+<span class="c1">#     torch.backends.cudnn.benchmark = True</span>
+<span class="c1">#     device = torch.device(&#39;cuda&#39;)</span>
+<span class="c1"># else:</span>
+<span class="c1">#     device = torch.device(&#39;cpu&#39;)</span>
+<span class="c1">#</span>
+<span class="c1"># seed = 98</span>
+<span class="c1"># torch.backends.cudnn.deterministic = True</span>
+<span class="c1"># torch.backends.cudnn.benchmark = False</span>
+<span class="c1"># torch.manual_seed(seed)</span>
+<span class="c1"># np.random.seed(seed)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def load_state_dict(net, orig_state_dict):</span>
+<span class="c1">#     if &#39;state_dict&#39; in orig_state_dict.keys():</span>
+<span class="c1">#         orig_state_dict = orig_state_dict[&#39;state_dict&#39;]</span>
+<span class="c1">#</span>
+<span class="c1">#     new_state_dict = OrderedDict()</span>
+<span class="c1">#     for k, v in net.state_dict().items():</span>
+<span class="c1">#         if k in orig_state_dict.keys():</span>
+<span class="c1">#             new_state_dict[k] = orig_state_dict[k]</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             new_state_dict[k] = v</span>
+<span class="c1">#     net.load_state_dict(new_state_dict)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def clip_mask(unlearned_model, lower=0.0, upper=1.0):</span>
+<span class="c1">#     params = [param for name, param in unlearned_model.named_parameters() if &#39;neuron_mask&#39; in name]</span>
+<span class="c1">#     with torch.no_grad():</span>
+<span class="c1">#         for param in params:</span>
+<span class="c1">#             param.clamp_(lower, upper)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def save_mask_scores(state_dict, file_name):</span>
+<span class="c1">#     mask_values = []</span>
+<span class="c1">#     count = 0</span>
+<span class="c1">#     for name, param in state_dict.items():</span>
+<span class="c1">#         if &#39;neuron_mask&#39; in name:</span>
+<span class="c1">#             for idx in range(param.size(0)):</span>
+<span class="c1">#                 neuron_name = &#39;.&#39;.join(name.split(&#39;.&#39;)[:-1])</span>
+<span class="c1">#                 mask_values.append(&#39;{} \t {} \t {} \t {:.4f} \n&#39;.format(count, neuron_name, idx, param[idx].item()))</span>
+<span class="c1">#                 count += 1</span>
+<span class="c1">#     with open(file_name, &quot;w&quot;) as f:</span>
+<span class="c1">#         f.write(&#39;No \t Layer Name \t Neuron Idx \t Mask Score \n&#39;)</span>
+<span class="c1">#         f.writelines(mask_values)</span>
+<span class="c1">#</span>
+<span class="c1"># def read_data(file_name):</span>
+<span class="c1">#     tempt = pd.read_csv(file_name, sep=&#39;\s+&#39;, skiprows=1, header=None)</span>
+<span class="c1">#     layer = tempt.iloc[:, 1]</span>
+<span class="c1">#     idx = tempt.iloc[:, 2]</span>
+<span class="c1">#     value = tempt.iloc[:, 3]</span>
+<span class="c1">#     mask_values = list(zip(layer, idx, value))</span>
+<span class="c1">#     return mask_values</span>
+<span class="c1">#</span>
+<span class="c1"># def pruning(net, neuron):</span>
+<span class="c1">#     state_dict = net.state_dict()</span>
+<span class="c1">#     weight_name = &#39;{}.{}&#39;.format(neuron[0], &#39;weight&#39;)</span>
+<span class="c1">#     state_dict[weight_name][int(neuron[1])] = 0.0</span>
+<span class="c1">#     net.load_state_dict(state_dict)</span>
+<span class="c1">#</span>
+<span class="c1"># def test(args, model, criterion, data_loader):</span>
+<span class="c1">#     model.eval()</span>
+<span class="c1">#     total_correct = 0</span>
+<span class="c1">#     total_loss = 0.0</span>
+<span class="c1">#     with torch.no_grad():</span>
+<span class="c1">#         for i, (images, labels, *additional_info) in enumerate(data_loader):</span>
+<span class="c1">#             images, labels = images.to(args.device), labels.to(args.device)</span>
+<span class="c1">#             output = model(images)</span>
+<span class="c1">#             total_loss += criterion(output, labels).item()</span>
+<span class="c1">#             pred = output.data.max(1)[1]</span>
+<span class="c1">#             total_correct += pred.eq(labels.data.view_as(pred)).sum()</span>
+<span class="c1">#     loss = total_loss / len(data_loader)</span>
+<span class="c1">#     acc = float(total_correct) / len(data_loader.dataset)</span>
+<span class="c1">#     return loss, acc</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def get_rnp_network(</span>
+<span class="c1">#     model_name: str,</span>
+<span class="c1">#     num_classes: int = 10,</span>
+<span class="c1">#     **kwargs,</span>
+<span class="c1"># ):</span>
+<span class="c1">#</span>
+<span class="c1">#     if model_name == &#39;preactresnet18&#39;:</span>
+<span class="c1">#         # from utils.defense_utils.rnp.rnp_model.preact_rnp import PreActResNet18</span>
+<span class="c1">#         net = PreActResNet18(num_classes = num_classes, **kwargs)</span>
+<span class="c1">#     elif model_name == &#39;vgg19_bn&#39;:</span>
+<span class="c1">#         net = rnp_model.vgg_rnp.vgg19_bn(num_classes = num_classes,  **kwargs)</span>
+<span class="c1">#     elif model_name == &#39;vgg19&#39;:</span>
+<span class="c1">#         net = rnp_model.vgg_rnp.vgg19(num_classes = num_classes,  **kwargs)</span>
+<span class="c1">#     elif model_name == &#39;resnet183&#39;:</span>
+<span class="c1">#         net = rnp_model.resnet_rnp.resnet18(num_classes = num_classes,  **kwargs)</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         raise SystemError(&#39;NO valid model match in function generate_cls_model!&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#     return net</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># class UnlearnModelTrainer(PureCleanModelTrainer):</span>
+<span class="c1">#     def __init__(self, model, clean_threshold):</span>
+<span class="c1">#         super(UnlearnModelTrainer, self).__init__(model)</span>
+<span class="c1">#         # self.teacher = teacher_model</span>
+<span class="c1">#         # self.criterions = criterions</span>
+<span class="c1">#         self.clean_threshold = clean_threshold</span>
+<span class="c1">#</span>
+<span class="c1">#     def train_with_test_each_epoch_on_mix(self,</span>
+<span class="c1">#                                    train_dataloader,</span>
+<span class="c1">#                                    clean_test_dataloader,</span>
+<span class="c1">#                                    bd_test_dataloader,</span>
+<span class="c1">#                                    total_epoch_num,</span>
+<span class="c1">#                                    criterion,</span>
+<span class="c1">#                                    optimizer,</span>
+<span class="c1">#                                    scheduler,</span>
+<span class="c1">#                                    amp,</span>
+<span class="c1">#                                    device,</span>
+<span class="c1">#                                    frequency_save,</span>
+<span class="c1">#                                    save_folder_path,</span>
+<span class="c1">#                                    save_prefix,</span>
+<span class="c1">#                                    prefetch,</span>
+<span class="c1">#                                    prefetch_transform_attr_name,</span>
+<span class="c1">#                                    non_blocking,</span>
+<span class="c1">#                                    ):</span>
+<span class="c1">#</span>
+<span class="c1">#         test_dataloader_dict = {</span>
+<span class="c1">#                 &quot;clean_test_dataloader&quot;:clean_test_dataloader,</span>
+<span class="c1">#                 &quot;bd_test_dataloader&quot;:bd_test_dataloader,</span>
+<span class="c1">#             }</span>
+<span class="c1">#</span>
+<span class="c1">#         self.set_with_dataloader(</span>
+<span class="c1">#             train_dataloader,</span>
+<span class="c1">#             test_dataloader_dict,</span>
+<span class="c1">#             criterion,</span>
+<span class="c1">#             optimizer,</span>
+<span class="c1">#             scheduler,</span>
+<span class="c1">#             device,</span>
+<span class="c1">#             amp,</span>
+<span class="c1">#</span>
+<span class="c1">#             frequency_save,</span>
+<span class="c1">#             save_folder_path,</span>
+<span class="c1">#             save_prefix,</span>
+<span class="c1">#</span>
+<span class="c1">#             prefetch,</span>
+<span class="c1">#             prefetch_transform_attr_name,</span>
+<span class="c1">#             non_blocking,</span>
+<span class="c1">#         )</span>
+<span class="c1">#</span>
+<span class="c1">#         train_loss_list = []</span>
+<span class="c1">#         train_mix_acc_list = []</span>
+<span class="c1">#         clean_test_loss_list = []</span>
+<span class="c1">#         bd_test_loss_list = []</span>
+<span class="c1">#         test_acc_list = []</span>
+<span class="c1">#         test_asr_list = []</span>
+<span class="c1">#         test_ra_list = []</span>
+<span class="c1">#</span>
+<span class="c1">#         for epoch in range(total_epoch_num):</span>
+<span class="c1">#</span>
+<span class="c1">#             train_epoch_loss_avg_over_batch, \</span>
+<span class="c1">#             train_epoch_predict_list, \</span>
+<span class="c1">#             train_epoch_label_list, \</span>
+<span class="c1">#             train_epoch_original_index_list, \</span>
+<span class="c1">#             train_epoch_poison_indicator_list, \</span>
+<span class="c1">#             train_epoch_original_targets_list = self.train_one_epoch_on_mix(verbose=1)</span>
+<span class="c1">#</span>
+<span class="c1">#             train_mix_acc = all_acc(train_epoch_predict_list, train_epoch_label_list)</span>
+<span class="c1">#</span>
+<span class="c1">#             train_bd_idx = torch.where(train_epoch_poison_indicator_list == 1)[0]</span>
+<span class="c1">#             train_clean_idx = torch.where(train_epoch_poison_indicator_list == 0)[0]</span>
+<span class="c1">#</span>
+<span class="c1">#             clean_metrics, \</span>
+<span class="c1">#             clean_test_epoch_predict_list, \</span>
+<span class="c1">#             clean_test_epoch_label_list, \</span>
+<span class="c1">#              = self.test_given_dataloader(test_dataloader_dict[&quot;clean_test_dataloader&quot;], verbose=1)</span>
+<span class="c1">#</span>
+<span class="c1">#             clean_test_loss_avg_over_batch = clean_metrics[&quot;test_loss_avg_over_batch&quot;]</span>
+<span class="c1">#             test_acc = clean_metrics[&quot;test_acc&quot;]</span>
+<span class="c1">#</span>
+<span class="c1">#             bd_metrics, \</span>
+<span class="c1">#             bd_test_epoch_predict_list, \</span>
+<span class="c1">#             bd_test_epoch_label_list, \</span>
+<span class="c1">#             bd_test_epoch_original_index_list, \</span>
+<span class="c1">#             bd_test_epoch_poison_indicator_list, \</span>
+<span class="c1">#             bd_test_epoch_original_targets_list = self.test_given_dataloader_on_mix(test_dataloader_dict[&quot;bd_test_dataloader&quot;], verbose=1)</span>
+<span class="c1">#</span>
+<span class="c1">#             bd_test_loss_avg_over_batch = bd_metrics[&quot;test_loss_avg_over_batch&quot;]</span>
+<span class="c1">#             test_asr = all_acc(bd_test_epoch_predict_list, bd_test_epoch_label_list)</span>
+<span class="c1">#             test_ra = all_acc(bd_test_epoch_predict_list, bd_test_epoch_original_targets_list)</span>
+<span class="c1">#</span>
+<span class="c1">#             self.agg(</span>
+<span class="c1">#                 {</span>
+<span class="c1">#                     &quot;train_epoch_loss_avg_over_batch&quot;: train_epoch_loss_avg_over_batch,</span>
+<span class="c1">#                     &quot;train_acc&quot;: train_mix_acc,</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#                     &quot;clean_test_loss_avg_over_batch&quot;: clean_test_loss_avg_over_batch,</span>
+<span class="c1">#                     &quot;bd_test_loss_avg_over_batch&quot; : bd_test_loss_avg_over_batch,</span>
+<span class="c1">#                     &quot;test_acc&quot; : test_acc,</span>
+<span class="c1">#                     &quot;test_asr&quot; : test_asr,</span>
+<span class="c1">#                     &quot;test_ra&quot; : test_ra,</span>
+<span class="c1">#                 }</span>
+<span class="c1">#             )</span>
+<span class="c1">#</span>
+<span class="c1">#             train_loss_list.append(train_epoch_loss_avg_over_batch)</span>
+<span class="c1">#             train_mix_acc_list.append(train_mix_acc)</span>
+<span class="c1">#</span>
+<span class="c1">#             clean_test_loss_list.append(clean_test_loss_avg_over_batch)</span>
+<span class="c1">#             bd_test_loss_list.append(bd_test_loss_avg_over_batch)</span>
+<span class="c1">#             test_acc_list.append(test_acc)</span>
+<span class="c1">#             test_asr_list.append(test_asr)</span>
+<span class="c1">#             test_ra_list.append(test_ra)</span>
+<span class="c1">#</span>
+<span class="c1">#             try:</span>
+<span class="c1">#                 self.plot_loss(</span>
+<span class="c1">#                     train_loss_list,</span>
+<span class="c1">#                     clean_test_loss_list,</span>
+<span class="c1">#                     bd_test_loss_list,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#</span>
+<span class="c1">#                 self.plot_acc_like_metric(</span>
+<span class="c1">#                     train_mix_acc_list,</span>
+<span class="c1">#                     test_acc_list,</span>
+<span class="c1">#                     test_asr_list,</span>
+<span class="c1">#                     test_ra_list,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#             except:</span>
+<span class="c1">#                 print(&quot;plot error&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#             self.agg_save_dataframe()</span>
+<span class="c1">#</span>
+<span class="c1">#             if train_mix_acc &lt;= self.clean_threshold:</span>
+<span class="c1">#                 break</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#         self.agg_save_summary()</span>
+<span class="c1">#</span>
+<span class="c1">#         return train_loss_list, \</span>
+<span class="c1">#                 train_mix_acc_list, \</span>
+<span class="c1">#                 clean_test_loss_list, \</span>
+<span class="c1">#                 bd_test_loss_list, \</span>
+<span class="c1">#                 test_acc_list, \</span>
+<span class="c1">#                 test_asr_list, \</span>
+<span class="c1">#                 test_ra_list</span>
+<span class="c1">#</span>
+<span class="c1">#     def train_one_epoch_on_mix(self, verbose=0):</span>
+<span class="c1">#         startTime = time.time()</span>
+<span class="c1">#</span>
+<span class="c1">#         batch_loss_list = []</span>
+<span class="c1">#         if verbose == 1:</span>
+<span class="c1">#             batch_predict_list = []</span>
+<span class="c1">#             batch_label_list = []</span>
+<span class="c1">#             batch_original_index_list = []</span>
+<span class="c1">#             batch_poison_indicator_list = []</span>
+<span class="c1">#             batch_original_targets_list = []</span>
+<span class="c1">#</span>
+<span class="c1">#         for batch_idx in range(self.batch_num_per_epoch):</span>
+<span class="c1">#             x, labels, original_index, poison_indicator, original_targets  = self.get_one_batch()</span>
+<span class="c1">#             self.model.train()</span>
+<span class="c1">#             self.model.to(device, non_blocking=self.non_blocking)</span>
+<span class="c1">#</span>
+<span class="c1">#             x, labels = x.to(device, non_blocking=self.non_blocking), labels.to(device, non_blocking=self.non_blocking)</span>
+<span class="c1">#</span>
+<span class="c1">#             with torch.cuda.amp.autocast(enabled=self.amp):</span>
+<span class="c1">#                 log_probs = self.model(x)</span>
+<span class="c1">#                 loss = self.criterion(log_probs, labels.long())</span>
+<span class="c1">#             nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=20, norm_type=2)</span>
+<span class="c1">#             (-loss).backward()</span>
+<span class="c1">#             self.optimizer.step()</span>
+<span class="c1">#             # self.scaler.scale(loss).backward()</span>
+<span class="c1">#             # self.scaler.step(self.optimizer)</span>
+<span class="c1">#             # self.scaler.update()</span>
+<span class="c1">#             self.optimizer.zero_grad()</span>
+<span class="c1">#</span>
+<span class="c1">#             one_batch_loss = loss.item()</span>
+<span class="c1">#             batch_predict = torch.max(log_probs, -1)[1].detach().clone().cpu()</span>
+<span class="c1">#             # one_batch_loss, batch_predict = self.one_forward_backward(x, labels, self.device, verbose)</span>
+<span class="c1">#             batch_loss_list.append(one_batch_loss)</span>
+<span class="c1">#</span>
+<span class="c1">#             if verbose == 1:</span>
+<span class="c1">#                 batch_predict_list.append(batch_predict.detach().clone().cpu())</span>
+<span class="c1">#                 batch_label_list.append(labels.detach().clone().cpu())</span>
+<span class="c1">#                 batch_original_index_list.append(original_index.detach().clone().cpu())</span>
+<span class="c1">#                 batch_poison_indicator_list.append(poison_indicator.detach().clone().cpu())</span>
+<span class="c1">#                 batch_original_targets_list.append(original_targets.detach().clone().cpu())</span>
+<span class="c1">#</span>
+<span class="c1">#         one_epoch_loss = sum(batch_loss_list) / len(batch_loss_list)</span>
+<span class="c1">#         if self.scheduler is not None:</span>
+<span class="c1">#             if isinstance(self.scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):</span>
+<span class="c1">#                 self.scheduler.step(one_epoch_loss)</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 self.scheduler.step()</span>
+<span class="c1">#</span>
+<span class="c1">#         endTime = time.time()</span>
+<span class="c1">#</span>
+<span class="c1">#         logging.info(f&quot;one epoch training part done, use time = {endTime - startTime} s&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#         if verbose == 0:</span>
+<span class="c1">#             return one_epoch_loss, \</span>
+<span class="c1">#                    None, None, None, None, None</span>
+<span class="c1">#         elif verbose == 1:</span>
+<span class="c1">#             return one_epoch_loss, \</span>
+<span class="c1">#                    torch.cat(batch_predict_list), \</span>
+<span class="c1">#                    torch.cat(batch_label_list), \</span>
+<span class="c1">#                    torch.cat(batch_original_index_list), \</span>
+<span class="c1">#                    torch.cat(batch_poison_indicator_list), \</span>
+<span class="c1">#                    torch.cat(batch_original_targets_list)</span>
+<span class="c1">#</span>
+<span class="c1"># class RecoverModelTrainer(PureCleanModelTrainer):</span>
+<span class="c1">#     def __init__(self, model,alpha):</span>
+<span class="c1">#         super(RecoverModelTrainer, self).__init__(model)</span>
+<span class="c1">#         # self.teacher = teacher_model</span>
+<span class="c1">#         # # self.criterions = criterions</span>
+<span class="c1">#         self.alpha = alpha</span>
+<span class="c1">#</span>
+<span class="c1">#     def train_one_epoch_on_mix(self, verbose=0):</span>
+<span class="c1">#         startTime = time.time()</span>
+<span class="c1">#</span>
+<span class="c1">#         batch_loss_list = []</span>
+<span class="c1">#         if verbose == 1:</span>
+<span class="c1">#             batch_predict_list = []</span>
+<span class="c1">#             batch_label_list = []</span>
+<span class="c1">#             batch_original_index_list = []</span>
+<span class="c1">#             batch_poison_indicator_list = []</span>
+<span class="c1">#             batch_original_targets_list = []</span>
+<span class="c1">#</span>
+<span class="c1">#         for batch_idx in range(self.batch_num_per_epoch):</span>
+<span class="c1">#             x, labels, original_index, poison_indicator, original_targets  = self.get_one_batch()</span>
+<span class="c1">#             self.model.train()</span>
+<span class="c1">#             self.model.to(device, non_blocking=self.non_blocking)</span>
+<span class="c1">#</span>
+<span class="c1">#             x, labels = x.to(device, non_blocking=self.non_blocking), labels.to(device, non_blocking=self.non_blocking)</span>
+<span class="c1">#</span>
+<span class="c1">#             with torch.cuda.amp.autocast(enabled=self.amp):</span>
+<span class="c1">#                 log_probs = self.model(x)</span>
+<span class="c1">#                 loss = self.criterion(log_probs, labels.long())</span>
+<span class="c1">#             loss = self.alpha * loss</span>
+<span class="c1">#</span>
+<span class="c1">#             loss.backward()</span>
+<span class="c1">#             self.optimizer.step()</span>
+<span class="c1">#             self.optimizer.zero_grad()</span>
+<span class="c1">#             clip_mask(self.model)</span>
+<span class="c1">#</span>
+<span class="c1">#             one_batch_loss = loss.item()</span>
+<span class="c1">#             batch_predict = torch.max(log_probs, -1)[1].detach().clone().cpu()</span>
+<span class="c1">#             # one_batch_loss, batch_predict = self.one_forward_backward(x, labels, self.device, verbose)</span>
+<span class="c1">#             batch_loss_list.append(one_batch_loss)</span>
+<span class="c1">#</span>
+<span class="c1">#             if verbose == 1:</span>
+<span class="c1">#                 batch_predict_list.append(batch_predict.detach().clone().cpu())</span>
+<span class="c1">#                 batch_label_list.append(labels.detach().clone().cpu())</span>
+<span class="c1">#                 batch_original_index_list.append(original_index.detach().clone().cpu())</span>
+<span class="c1">#                 batch_poison_indicator_list.append(poison_indicator.detach().clone().cpu())</span>
+<span class="c1">#                 batch_original_targets_list.append(original_targets.detach().clone().cpu())</span>
+<span class="c1">#</span>
+<span class="c1">#         one_epoch_loss = sum(batch_loss_list) / len(batch_loss_list)</span>
+<span class="c1">#         if self.scheduler is not None:</span>
+<span class="c1">#             if isinstance(self.scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):</span>
+<span class="c1">#                 self.scheduler.step(one_epoch_loss)</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 self.scheduler.step()</span>
+<span class="c1">#</span>
+<span class="c1">#         endTime = time.time()</span>
+<span class="c1">#</span>
+<span class="c1">#         logging.info(f&quot;one epoch training part done, use time = {endTime - startTime} s&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#         if verbose == 0:</span>
+<span class="c1">#             return one_epoch_loss, \</span>
+<span class="c1">#                    None, None, None, None, None</span>
+<span class="c1">#         elif verbose == 1:</span>
+<span class="c1">#             return one_epoch_loss, \</span>
+<span class="c1">#                    torch.cat(batch_predict_list), \</span>
+<span class="c1">#                    torch.cat(batch_label_list), \</span>
+<span class="c1">#                    torch.cat(batch_original_index_list), \</span>
+<span class="c1">#                    torch.cat(batch_poison_indicator_list), \</span>
+<span class="c1">#                    torch.cat(batch_original_targets_list)</span>
+
+<div class="viewcode-block" id="rnp"><a class="viewcode-back" href="../../generated/defense.rnp.html#defense.rnp">[docs]</a><span class="k">class</span> <span class="nc">rnp</span><span class="p">(</span><span class="n">defense</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Reconstructive Neuron Pruning for Backdoor Defense</span>
+<span class="sd">    </span>
+<span class="sd">    basic structure: </span>
+<span class="sd">    </span>
+<span class="sd">    1. config args, save_path, fix random seed</span>
+<span class="sd">    2. load the backdoor attack data and backdoor test data</span>
+<span class="sd">    3. load the backdoor model</span>
+<span class="sd">    4. rnp defense:</span>
+<span class="sd">        a. unlearn the backdoor model and save the unlearned model</span>
+<span class="sd">        b. recover the unlearned model and record the mask value</span>
+<span class="sd">        c. prune the backdoor model by the mask value</span>
+<span class="sd">    5. test the result and get ASR, ACC, RC </span>
+<span class="sd">       </span>
+<span class="sd">    .. code-block:: python</span>
+<span class="sd">    </span>
+<span class="sd">        parser = argparse.ArgumentParser(description=sys.argv[0])</span>
+<span class="sd">        rnp.add_arguments(parser)</span>
+<span class="sd">        args = parser.parse_args()</span>
+<span class="sd">        rnp_method = rnp(args)</span>
+<span class="sd">        if &quot;result_file&quot; not in args.__dict__:</span>
+<span class="sd">            args.result_file = &#39;one_epochs_debug_badnet_attack&#39;</span>
+<span class="sd">        elif args.result_file is None:</span>
+<span class="sd">            args.result_file = &#39;one_epochs_debug_badnet_attack&#39;</span>
+<span class="sd">        result = rnp_method.defense(args.result_file)</span>
+<span class="sd">    </span>
+<span class="sd">    .. Note::</span>
+<span class="sd">        @article{li2023reconstructive,</span>
+<span class="sd">        title={Reconstructive Neuron Pruning for Backdoor Defense},</span>
+<span class="sd">        author={Li, Yige and Lyu, Xixiang and Ma, Xingjun and Koren, Nodens and Lyu, Lingjuan and Li, Bo and Jiang, Yu-Gang},</span>
+<span class="sd">        journal={arXiv preprint arXiv:2305.14876},</span>
+<span class="sd">        year={2023}}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        baisc args: in the base class</span>
+<span class="sd">        alpha (float): the weight of the loss of the unlearned model during recovering</span>
+<span class="sd">        clean_threshold (float): the threshold of the clean accuracy of the unlearned model</span>
+<span class="sd">        unlearning_lr (float): the learning rate of the unlearning model</span>
+<span class="sd">        recovering_lr (float): the learning rate of the recovering model</span>
+<span class="sd">        unlearning_epochs (int): the number of epochs of the unlearning model</span>
+<span class="sd">        recovering_epochs (int): the number of epochs of the recovering model</span>
+<span class="sd">        mask_file (str): the file of the mask value (default: None)</span>
+<span class="sd">        pruning_by (str): the method of pruning (default: threshold) </span>
+<span class="sd">        pruning_max (float): the maximum value of the pruning (default: 0.90)   </span>
+<span class="sd">        pruning_step (float): the step size of the pruning (default: 0.05)</span>
+<span class="sd">        pruning_number (float): the default value of the pruning (default: 0.70)</span>
+<span class="sd">        acc_ratio (float): the tolerance ratio of the clean accuracy (default: 0.95)</span>
+<span class="sd">        ratio (float): the ratio of the clean data loader (default: 0.1)</span>
+<span class="sd">        index (str): the index of the clean data (default: None)</span>
+<span class="sd">        schedule (list int): the schedule of the learning rate (default: [10, 20])   </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+<span class="c1">#         with open(args.yaml_path, &#39;r&#39;) as f:</span>
+<span class="c1">#             defaults = yaml.safe_load(f)</span>
+<span class="c1">#</span>
+<span class="c1">#         defaults.update({k:v for k,v in args.__dict__.items() if v is not None})</span>
+<span class="c1">#</span>
+<span class="c1">#         args.__dict__ = defaults</span>
+<span class="c1">#</span>
+<span class="c1">#         args.terminal_info = sys.argv</span>
+<span class="c1">#</span>
+<span class="c1">#         args.num_classes = get_num_classes(args.dataset)</span>
+<span class="c1">#         args.input_height, args.input_width, args.input_channel = get_input_shape(args.dataset)</span>
+<span class="c1">#         args.img_size = (args.input_height, args.input_width, args.input_channel)</span>
+<span class="c1">#         args.dataset_path = f&quot;{args.dataset_path}/{args.dataset}&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#         self.args = args</span>
+<span class="c1">#</span>
+<span class="c1">#         if &#39;result_file&#39; in args.__dict__ :</span>
+<span class="c1">#             if args.result_file is not None:</span>
+<span class="c1">#                 self.set_result(args.result_file)</span>
+<span class="c1">#</span>
+<span class="c1">#     def add_arguments(parser):</span>
+<span class="c1">#         parser.add_argument(&#39;--device&#39;, type=str, help=&#39;cuda, cpu&#39;)</span>
+<span class="c1">#         parser.add_argument(&quot;-pm&quot;,&quot;--pin_memory&quot;, type=lambda x: str(x) in [&#39;True&#39;, &#39;true&#39;, &#39;1&#39;], help = &quot;dataloader pin_memory&quot;)</span>
+<span class="c1">#         parser.add_argument(&quot;-nb&quot;,&quot;--non_blocking&quot;, type=lambda x: str(x) in [&#39;True&#39;, &#39;true&#39;, &#39;1&#39;], help = &quot;.to(), set the non_blocking = ?&quot;)</span>
+<span class="c1">#         parser.add_argument(&quot;-pf&quot;, &#39;--prefetch&#39;, type=lambda x: str(x) in [&#39;True&#39;, &#39;true&#39;, &#39;1&#39;], help=&#39;use prefetch&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--amp&#39;, default = False, type=lambda x: str(x) in [&#39;True&#39;,&#39;true&#39;,&#39;1&#39;])</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--checkpoint_load&#39;, type=str, help=&#39;the location of load model&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--checkpoint_save&#39;, type=str, help=&#39;the location of checkpoint where model is saved&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--log&#39;, type=str, help=&#39;the location of log&#39;)</span>
+<span class="c1">#         parser.add_argument(&quot;--dataset_path&quot;, type=str, help=&#39;the location of data&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--dataset&#39;, type=str, help=&#39;mnist, cifar10, cifar100, gtrsb, tiny&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--result_file&#39;, type=str, help=&#39;the location of result&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--epochs&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&#39;--batch_size&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&quot;--num_workers&quot;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--lr&#39;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--lr_scheduler&#39;, type=str, help=&#39;the scheduler of lr&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--steplr_stepsize&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&#39;--steplr_gamma&#39;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--steplr_milestones&#39;, type=list)</span>
+<span class="c1">#         parser.add_argument(&#39;--model&#39;, type=str, help=&#39;resnet18&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--client_optimizer&#39;, type=int)</span>
+<span class="c1">#         parser.add_argument(&#39;--sgd_momentum&#39;, type=float)</span>
+<span class="c1">#         parser.add_argument(&#39;--wd&#39;, type=float, help=&#39;weight decay of sgd&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--frequency_save&#39;, type=int,</span>
+<span class="c1">#                         help=&#39; frequency_save, 0 is never&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--random_seed&#39;, type=int, help=&#39;random seed&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--yaml_path&#39;, type=str, default=&quot;./config/defense/rnp/config.yaml&quot;, help=&#39;the path of yaml&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         #set the parameter for the rnp defense</span>
+<span class="c1">#         # parser.add_argument(&#39;--acc_ratio&#39;, type=float, help=&#39;the tolerance ration of the clean accuracy&#39;)</span>
+<span class="c1">#         # parser.add_argument(&#39;--ratio&#39;, type=float, help=&#39;the ratio of clean data loader&#39;)</span>
+<span class="c1">#         # parser.add_argument(&#39;--print_every&#39;, type=int, help=&#39;print results every few iterations&#39;)</span>
+<span class="c1">#         # parser.add_argument(&#39;--nb_iter&#39;, type=int, help=&#39;the number of iterations for training&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         # parser.add_argument(&#39;--anp_eps&#39;, type=float)</span>
+<span class="c1">#         # parser.add_argument(&#39;--anp_steps&#39;, type=int)</span>
+<span class="c1">#         # parser.add_argument(&#39;--anp_alpha&#39;, type=float)</span>
+<span class="c1">#</span>
+<span class="c1">#         # parser.add_argument(&#39;--pruning_by&#39;, type=str, choices=[&#39;number&#39;, &#39;threshold&#39;])</span>
+<span class="c1">#         # parser.add_argument(&#39;--pruning_max&#39;, type=float, help=&#39;the maximum number/threshold for pruning&#39;)</span>
+<span class="c1">#         # parser.add_argument(&#39;--pruning_step&#39;, type=float, help=&#39;the step size for evaluating the pruning&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         # parser.add_argument(&#39;--pruning_number&#39;, type=float, help=&#39;the default number/threshold for pruning&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         # parser.add_argument(&#39;--index&#39;, type=str, help=&#39;index of clean data&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--alpha&#39;, type=float, default=0.2)</span>
+<span class="c1">#         parser.add_argument(&#39;--clean_threshold&#39;, type=float, default=0.20, help=&#39;threshold of unlearning accuracy&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--unlearning_lr&#39;, type=float, default=0.01, help=&#39;the learning rate for neuron unlearning&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--recovering_lr&#39;, type=float, default=0.2, help=&#39;the learning rate for mask optimization&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--unlearning_epochs&#39;, type=int, default=20, help=&#39;the number of epochs for unlearning&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--recovering_epochs&#39;, type=int, default=20, help=&#39;the number of epochs for recovering&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--mask_file&#39;, type=str, default=None, help=&#39;The text file containing the mask values&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--pruning_by&#39;, type=str, default=&#39;threshold&#39;, choices=[&#39;number&#39;, &#39;threshold&#39;])</span>
+<span class="c1">#         parser.add_argument(&#39;--pruning_max&#39;, type=float, default=0.90, help=&#39;the maximum number/threshold for pruning&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--pruning_step&#39;, type=float, default=0.05, help=&#39;the step size for evaluating the pruning&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--pruning_number&#39;, type=float,  default=0.70, help=&#39;the default number/threshold for pruning&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--acc_ratio&#39;, type=float, help=&#39;the tolerance ration of the clean accuracy&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--ratio&#39;, type=float, help=&#39;the ratio of clean data loader&#39;)</span>
+<span class="c1">#         parser.add_argument(&#39;--index&#39;, type=str, help=&#39;index of clean data&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         parser.add_argument(&#39;--schedule&#39;, type=int, nargs=&#39;+&#39;, default=[10, 20],</span>
+<span class="c1">#                         help=&#39;Decrease learning rate at these epochs.&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#     def set_result(self, result_file):</span>
+<span class="c1">#         attack_file = &#39;record/&#39; + result_file</span>
+<span class="c1">#         save_path = &#39;record/&#39; + result_file + &#39;/defense/rnp/&#39;</span>
+<span class="c1">#         if not (os.path.exists(save_path)):</span>
+<span class="c1">#             os.makedirs(save_path)</span>
+<span class="c1">#         # assert(os.path.exists(save_path))</span>
+<span class="c1">#         self.args.save_path = save_path</span>
+<span class="c1">#         if self.args.checkpoint_save is None:</span>
+<span class="c1">#             self.args.checkpoint_save = save_path + &#39;checkpoint/&#39;</span>
+<span class="c1">#             if not (os.path.exists(self.args.checkpoint_save)):</span>
+<span class="c1">#                 os.makedirs(self.args.checkpoint_save)</span>
+<span class="c1">#         if self.args.log is None:</span>
+<span class="c1">#             self.args.log = save_path + &#39;log/&#39;</span>
+<span class="c1">#             if not (os.path.exists(self.args.log)):</span>
+<span class="c1">#                 os.makedirs(self.args.log)</span>
+<span class="c1">#         self.result = load_attack_result(attack_file + &#39;/attack_result.pt&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#     def set_trainer(self, model, mode = &#39;normal&#39;, **params):</span>
+<span class="c1">#         if mode == &#39;unlearn&#39;:</span>
+<span class="c1">#             self.trainer = UnlearnModelTrainer(</span>
+<span class="c1">#                 model,</span>
+<span class="c1">#                 **params,</span>
+<span class="c1">#             )</span>
+<span class="c1">#         elif mode == &#39;recover&#39;:</span>
+<span class="c1">#             self.trainer = RecoverModelTrainer(</span>
+<span class="c1">#                 model,</span>
+<span class="c1">#                 **params,</span>
+<span class="c1">#             )</span>
+<span class="c1">#         elif mode == &#39;normal&#39;:</span>
+<span class="c1">#             self.trainer = PureCleanModelTrainer(</span>
+<span class="c1">#                 model,</span>
+<span class="c1">#             )</span>
+<span class="c1">#     def set_logger(self):</span>
+<span class="c1">#         args = self.args</span>
+<span class="c1">#         logFormatter = logging.Formatter(</span>
+<span class="c1">#             fmt=&#39;%(asctime)s [%(levelname)-8s] [%(filename)s:%(lineno)d] %(message)s&#39;,</span>
+<span class="c1">#             datefmt=&#39;%Y-%m-%d:%H:%M:%S&#39;,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         logger = logging.getLogger()</span>
+<span class="c1">#</span>
+<span class="c1">#         fileHandler = logging.FileHandler(args.log + &#39;/&#39; + time.strftime(&quot;%Y_%m_%d_%H_%M_%S&quot;, time.localtime()) + &#39;.log&#39;)</span>
+<span class="c1">#         fileHandler.setFormatter(logFormatter)</span>
+<span class="c1">#         logger.addHandler(fileHandler)</span>
+<span class="c1">#</span>
+<span class="c1">#         consoleHandler = logging.StreamHandler()</span>
+<span class="c1">#         consoleHandler.setFormatter(logFormatter)</span>
+<span class="c1">#         logger.addHandler(consoleHandler)</span>
+<span class="c1">#</span>
+<span class="c1">#         logger.setLevel(logging.INFO)</span>
+<span class="c1">#         logging.info(pformat(args.__dict__))</span>
+<span class="c1">#</span>
+<span class="c1">#         try:</span>
+<span class="c1">#             logging.info(pformat(get_git_info()))</span>
+<span class="c1">#         except:</span>
+<span class="c1">#             logging.info(&#39;Getting git info fails.&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#     def set_devices(self):</span>
+<span class="c1">#         self.device = torch.device(</span>
+<span class="c1">#             (</span>
+<span class="c1">#                 f&quot;cuda:{[int(i) for i in self.args.device[5:].split(&#39;,&#39;)][0]}&quot; if &quot;,&quot; in self.args.device else self.args.device</span>
+<span class="c1">#                 # since DataParallel only allow .to(&quot;cuda&quot;)</span>
+<span class="c1">#             ) if torch.cuda.is_available() else &quot;cpu&quot;</span>
+<span class="c1">#         )</span>
+<span class="c1">#</span>
+<span class="c1">#     def evaluate_by_number(self, args, model, mask_values, pruning_max, pruning_step, criterion,test_dataloader_dict, best_asr, acc_ori, save = True):</span>
+<span class="c1">#         results = []</span>
+<span class="c1">#         nb_max = int(np.ceil(pruning_max))</span>
+<span class="c1">#         nb_step = int(np.ceil(pruning_step))</span>
+<span class="c1">#         model_best = copy.deepcopy(model)</span>
+<span class="c1">#</span>
+<span class="c1">#         number_list = []</span>
+<span class="c1">#         clean_test_loss_list = []</span>
+<span class="c1">#         bd_test_loss_list = []</span>
+<span class="c1">#         test_acc_list = []</span>
+<span class="c1">#         test_asr_list = []</span>
+<span class="c1">#         test_ra_list = []</span>
+<span class="c1">#</span>
+<span class="c1">#         agg = Metric_Aggregator()</span>
+<span class="c1">#         for start in range(0, nb_max + 1, nb_step):</span>
+<span class="c1">#             i = start</span>
+<span class="c1">#             for i in range(start, start + nb_step):</span>
+<span class="c1">#                 pruning(model, mask_values[i])</span>
+<span class="c1">#             layer_name, neuron_idx, value = mask_values[i][0], mask_values[i][1], mask_values[i][2]</span>
+<span class="c1">#             # cl_loss, cl_acc = test(args, model=model, criterion=criterion, data_loader=clean_loader)</span>
+<span class="c1">#             # po_loss, po_acc = test(args, model=model, criterion=criterion, data_loader=poison_loader)</span>
+<span class="c1">#             # logging.info(&#39;{} \t {} \t {} \t {} \t {:.4f} \t {:.4f} \t {:.4f} \t {:.4f}&#39;.format(</span>
+<span class="c1">#             #     i+1, layer_name, neuron_idx, value, po_loss, po_acc, cl_loss, cl_acc))</span>
+<span class="c1">#             # results.append(&#39;{} \t {} \t {} \t {} \t {:.4f} \t {:.4f} \t {:.4f} \t {:.4f}&#39;.format(</span>
+<span class="c1">#             #     i+1, layer_name, neuron_idx, value, po_loss, po_acc, cl_loss, cl_acc))</span>
+<span class="c1">#             self.set_trainer(model)</span>
+<span class="c1">#             self.trainer.set_with_dataloader(</span>
+<span class="c1">#                 ### the train_dataload has nothing to do with the backdoor defense</span>
+<span class="c1">#                 train_dataloader = test_dataloader_dict[&#39;bd_test_dataloader&#39;],</span>
+<span class="c1">#                 test_dataloader_dict = test_dataloader_dict,</span>
+<span class="c1">#</span>
+<span class="c1">#                 criterion = criterion,</span>
+<span class="c1">#                 optimizer = None,</span>
+<span class="c1">#                 scheduler = None,</span>
+<span class="c1">#                 device = self.args.device,</span>
+<span class="c1">#                 amp = self.args.amp,</span>
+<span class="c1">#</span>
+<span class="c1">#                 frequency_save = self.args.frequency_save,</span>
+<span class="c1">#                 save_folder_path = self.args.save_path,</span>
+<span class="c1">#                 save_prefix = &#39;rnp&#39;,</span>
+<span class="c1">#</span>
+<span class="c1">#                 prefetch = self.args.prefetch,</span>
+<span class="c1">#                 prefetch_transform_attr_name = &quot;ori_image_transform_in_loading&quot;,</span>
+<span class="c1">#                 non_blocking = self.args.non_blocking,</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#                 )</span>
+<span class="c1">#             clean_test_loss_avg_over_batch, \</span>
+<span class="c1">#                     bd_test_loss_avg_over_batch, \</span>
+<span class="c1">#                     test_acc, \</span>
+<span class="c1">#                     test_asr, \</span>
+<span class="c1">#                     test_ra = self.trainer.test_current_model(</span>
+<span class="c1">#                 test_dataloader_dict, args.device,</span>
+<span class="c1">#             )</span>
+<span class="c1">#             number_list.append(start)</span>
+<span class="c1">#             clean_test_loss_list.append(clean_test_loss_avg_over_batch)</span>
+<span class="c1">#             bd_test_loss_list.append(bd_test_loss_avg_over_batch)</span>
+<span class="c1">#             test_acc_list.append(test_acc)</span>
+<span class="c1">#             test_asr_list.append(test_asr)</span>
+<span class="c1">#             test_ra_list.append(test_ra)</span>
+<span class="c1">#             # cl_loss, cl_acc = test(args, model=model, criterion=criterion, data_loader=clean_loader)</span>
+<span class="c1">#             # po_loss, po_acc = test(args, model=model, criterion=criterion, data_loader=poison_loader)</span>
+<span class="c1">#             # logging.info(&#39;{:.2f} \t {} \t {} \t {} \t {:.4f} \t {:.4f} \t {:.4f} \t {:.4f}&#39;.format(</span>
+<span class="c1">#             #     start, layer_name, neuron_idx, threshold, po_loss, po_acc, cl_loss, cl_acc))</span>
+<span class="c1">#             # results.append(&#39;{:.2f} \t {} \t {} \t {} \t {:.4f} \t {:.4f} \t {:.4f} \t {:.4f}\n&#39;.format(</span>
+<span class="c1">#             #     start, layer_name, neuron_idx, threshold, po_loss, po_acc, cl_loss, cl_acc))</span>
+<span class="c1">#             if save:</span>
+<span class="c1">#                 agg({</span>
+<span class="c1">#                     &#39;number&#39;: start,</span>
+<span class="c1">#                     # &#39;layer_name&#39;: layer_name,</span>
+<span class="c1">#                     # &#39;neuron_idx&#39;: neuron_idx,</span>
+<span class="c1">#                     &#39;value&#39;: value,</span>
+<span class="c1">#                     &quot;clean_test_loss_avg_over_batch&quot;: clean_test_loss_avg_over_batch,</span>
+<span class="c1">#                     &quot;bd_test_loss_avg_over_batch&quot;: bd_test_loss_avg_over_batch,</span>
+<span class="c1">#                     &quot;test_acc&quot;: test_acc,</span>
+<span class="c1">#                     &quot;test_asr&quot;: test_asr,</span>
+<span class="c1">#                     &quot;test_ra&quot;: test_ra,</span>
+<span class="c1">#                 })</span>
+<span class="c1">#                 general_plot_for_epoch(</span>
+<span class="c1">#                     {</span>
+<span class="c1">#                         &quot;Test C-Acc&quot;: test_acc_list,</span>
+<span class="c1">#                         &quot;Test ASR&quot;: test_asr_list,</span>
+<span class="c1">#                         &quot;Test RA&quot;: test_ra_list,</span>
+<span class="c1">#                     },</span>
+<span class="c1">#                     save_path=f&quot;{args.save_path}number_acc_like_metric_plots.png&quot;,</span>
+<span class="c1">#                     ylabel=&quot;percentage&quot;,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#</span>
+<span class="c1">#                 general_plot_for_epoch(</span>
+<span class="c1">#                     {</span>
+<span class="c1">#                         &quot;Test Clean Loss&quot;: clean_test_loss_list,</span>
+<span class="c1">#                         &quot;Test Backdoor Loss&quot;: bd_test_loss_list,</span>
+<span class="c1">#                     },</span>
+<span class="c1">#                     save_path=f&quot;{args.save_path}number_loss_metric_plots.png&quot;,</span>
+<span class="c1">#                     ylabel=&quot;percentage&quot;,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#</span>
+<span class="c1">#                 general_plot_for_epoch(</span>
+<span class="c1">#                     {</span>
+<span class="c1">#                         &quot;number&quot;: number_list,</span>
+<span class="c1">#                     },</span>
+<span class="c1">#                     save_path=f&quot;{args.save_path}number_plots.png&quot;,</span>
+<span class="c1">#                     ylabel=&quot;percentage&quot;,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#</span>
+<span class="c1">#                 agg.to_dataframe().to_csv(f&quot;{args.save_path}number_df.csv&quot;)</span>
+<span class="c1">#             if abs(test_acc - acc_ori)/acc_ori &lt; args.acc_ratio:</span>
+<span class="c1">#                 if test_asr &lt; best_asr:</span>
+<span class="c1">#                     model_best = copy.deepcopy(model)</span>
+<span class="c1">#                     best_asr = test_asr</span>
+<span class="c1">#         return results, model_best</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     def evaluate_by_threshold(self, args, model, mask_values, pruning_max, pruning_step, criterion, test_dataloader_dict, best_asr, acc_ori, save = True):</span>
+<span class="c1">#         results = []</span>
+<span class="c1">#         thresholds = np.arange(0, pruning_max + pruning_step, pruning_step)</span>
+<span class="c1">#         start = 0</span>
+<span class="c1">#         model_best = copy.deepcopy(model)</span>
+<span class="c1">#</span>
+<span class="c1">#         clean_test_loss_list = []</span>
+<span class="c1">#         bd_test_loss_list = []</span>
+<span class="c1">#         test_acc_list = []</span>
+<span class="c1">#         test_asr_list = []</span>
+<span class="c1">#         test_ra_list = []</span>
+<span class="c1">#</span>
+<span class="c1">#         agg = Metric_Aggregator()</span>
+<span class="c1">#         for threshold in thresholds:</span>
+<span class="c1">#             idx = start</span>
+<span class="c1">#             for idx in range(start, len(mask_values)):</span>
+<span class="c1">#                 if float(mask_values[idx][2]) &lt;= threshold:</span>
+<span class="c1">#                     pruning(model, mask_values[idx])</span>
+<span class="c1">#                     start += 1</span>
+<span class="c1">#                 else:</span>
+<span class="c1">#                     break</span>
+<span class="c1">#             layer_name, neuron_idx, value = mask_values[idx][0], mask_values[idx][1], mask_values[idx][2]</span>
+<span class="c1">#             self.set_trainer(model)</span>
+<span class="c1">#             self.trainer.set_with_dataloader(</span>
+<span class="c1">#                 ### the train_dataload has nothing to do with the backdoor defense</span>
+<span class="c1">#                 train_dataloader = test_dataloader_dict[&#39;bd_test_dataloader&#39;],</span>
+<span class="c1">#                 test_dataloader_dict = test_dataloader_dict,</span>
+<span class="c1">#</span>
+<span class="c1">#                 criterion = criterion,</span>
+<span class="c1">#                 optimizer = None,</span>
+<span class="c1">#                 scheduler = None,</span>
+<span class="c1">#                 device = self.args.device,</span>
+<span class="c1">#                 amp = self.args.amp,</span>
+<span class="c1">#</span>
+<span class="c1">#                 frequency_save = self.args.frequency_save,</span>
+<span class="c1">#                 save_folder_path = self.args.save_path,</span>
+<span class="c1">#                 save_prefix = &#39;rnp&#39;,</span>
+<span class="c1">#</span>
+<span class="c1">#                 prefetch = self.args.prefetch,</span>
+<span class="c1">#                 prefetch_transform_attr_name = &quot;ori_image_transform_in_loading&quot;,</span>
+<span class="c1">#                 non_blocking = self.args.non_blocking,</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#                 )</span>
+<span class="c1">#             clean_test_loss_avg_over_batch, \</span>
+<span class="c1">#                     bd_test_loss_avg_over_batch, \</span>
+<span class="c1">#                     test_acc, \</span>
+<span class="c1">#                     test_asr, \</span>
+<span class="c1">#                     test_ra = self.trainer.test_current_model(</span>
+<span class="c1">#                 test_dataloader_dict, args.device,</span>
+<span class="c1">#             )</span>
+<span class="c1">#             clean_test_loss_list.append(clean_test_loss_avg_over_batch)</span>
+<span class="c1">#             bd_test_loss_list.append(bd_test_loss_avg_over_batch)</span>
+<span class="c1">#             test_acc_list.append(test_acc)</span>
+<span class="c1">#             test_asr_list.append(test_asr)</span>
+<span class="c1">#             test_ra_list.append(test_ra)</span>
+<span class="c1">#             # cl_loss, cl_acc = test(args, model=model, criterion=criterion, data_loader=clean_loader)</span>
+<span class="c1">#             # po_loss, po_acc = test(args, model=model, criterion=criterion, data_loader=poison_loader)</span>
+<span class="c1">#             # logging.info(&#39;{:.2f} \t {} \t {} \t {} \t {:.4f} \t {:.4f} \t {:.4f} \t {:.4f}&#39;.format(</span>
+<span class="c1">#             #     start, layer_name, neuron_idx, threshold, po_loss, po_acc, cl_loss, cl_acc))</span>
+<span class="c1">#             # results.append(&#39;{:.2f} \t {} \t {} \t {} \t {:.4f} \t {:.4f} \t {:.4f} \t {:.4f}\n&#39;.format(</span>
+<span class="c1">#             #     start, layer_name, neuron_idx, threshold, po_loss, po_acc, cl_loss, cl_acc))</span>
+<span class="c1">#             if save:</span>
+<span class="c1">#                 agg({</span>
+<span class="c1">#                     &#39;threshold&#39;: threshold,</span>
+<span class="c1">#                     # &#39;layer_name&#39;: layer_name,</span>
+<span class="c1">#                     # &#39;neuron_idx&#39;: neuron_idx,</span>
+<span class="c1">#                     &#39;value&#39;: value,</span>
+<span class="c1">#                     &quot;clean_test_loss_avg_over_batch&quot;: clean_test_loss_avg_over_batch,</span>
+<span class="c1">#                     &quot;bd_test_loss_avg_over_batch&quot;: bd_test_loss_avg_over_batch,</span>
+<span class="c1">#                     &quot;test_acc&quot;: test_acc,</span>
+<span class="c1">#                     &quot;test_asr&quot;: test_asr,</span>
+<span class="c1">#                     &quot;test_ra&quot;: test_ra,</span>
+<span class="c1">#                 })</span>
+<span class="c1">#                 general_plot_for_epoch(</span>
+<span class="c1">#                     {</span>
+<span class="c1">#                         &quot;Test C-Acc&quot;: test_acc_list,</span>
+<span class="c1">#                         &quot;Test ASR&quot;: test_asr_list,</span>
+<span class="c1">#                         &quot;Test RA&quot;: test_ra_list,</span>
+<span class="c1">#                     },</span>
+<span class="c1">#                     save_path=f&quot;{args.save_path}threshold_acc_like_metric_plots.png&quot;,</span>
+<span class="c1">#                     ylabel=&quot;percentage&quot;,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#</span>
+<span class="c1">#                 general_plot_for_epoch(</span>
+<span class="c1">#                     {</span>
+<span class="c1">#                         &quot;Test Clean Loss&quot;: clean_test_loss_list,</span>
+<span class="c1">#                         &quot;Test Backdoor Loss&quot;: bd_test_loss_list,</span>
+<span class="c1">#                     },</span>
+<span class="c1">#                     save_path=f&quot;{args.save_path}threshold_loss_metric_plots.png&quot;,</span>
+<span class="c1">#                     ylabel=&quot;percentage&quot;,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#</span>
+<span class="c1">#                 general_plot_for_epoch(</span>
+<span class="c1">#                     {</span>
+<span class="c1">#                         &quot;threshold&quot;: thresholds,</span>
+<span class="c1">#                     },</span>
+<span class="c1">#                     save_path=f&quot;{args.save_path}threshold_plots.png&quot;,</span>
+<span class="c1">#                     ylabel=&quot;percentage&quot;,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#</span>
+<span class="c1">#                 agg.to_dataframe().to_csv(f&quot;{args.save_path}threshold_df.csv&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#             if abs(test_acc - acc_ori)/acc_ori &lt; args.acc_ratio:</span>
+<span class="c1">#                 if test_asr &lt; best_asr:</span>
+<span class="c1">#                     model_best = copy.deepcopy(model)</span>
+<span class="c1">#                     best_asr = test_asr</span>
+<span class="c1">#         return results, model_best</span>
+<span class="c1">#</span>
+<span class="c1">#     def mitigation(self):</span>
+<span class="c1">#         self.set_devices()</span>
+<span class="c1">#         fix_random(self.args.random_seed)</span>
+<span class="c1">#</span>
+<span class="c1">#         args = self.args</span>
+<span class="c1">#         result = self.result</span>
+<span class="c1">#         # a. train the mask of old model</span>
+<span class="c1">#         train_tran = get_transform(self.args.dataset, *([self.args.input_height,self.args.input_width]) , train = True)</span>
+<span class="c1">#         clean_dataset = prepro_cls_DatasetBD_v2(self.result[&#39;clean_train&#39;].wrapped_dataset)</span>
+<span class="c1">#         data_all_length = len(clean_dataset)</span>
+<span class="c1">#         ran_idx = choose_index(self.args, data_all_length)</span>
+<span class="c1">#         log_index = self.args.log + &#39;index.txt&#39;</span>
+<span class="c1">#         np.savetxt(log_index, ran_idx, fmt=&#39;%d&#39;)</span>
+<span class="c1">#         clean_dataset.subset(ran_idx)</span>
+<span class="c1">#         data_set_without_tran = clean_dataset</span>
+<span class="c1">#         data_set_o = self.result[&#39;clean_train&#39;]</span>
+<span class="c1">#         data_set_o.wrapped_dataset = data_set_without_tran</span>
+<span class="c1">#         data_set_o.wrap_img_transform = train_tran</span>
+<span class="c1">#         data_loader = torch.utils.data.DataLoader(data_set_o, batch_size=self.args.batch_size, num_workers=self.args.num_workers, shuffle=True, pin_memory=args.pin_memory)</span>
+<span class="c1">#         trainloader = data_loader</span>
+<span class="c1">#</span>
+<span class="c1">#         test_tran = get_transform(self.args.dataset, *([self.args.input_height,self.args.input_width]) , train = False)</span>
+<span class="c1">#         data_bd_testset = self.result[&#39;bd_test&#39;]</span>
+<span class="c1">#         data_bd_testset.wrap_img_transform = test_tran</span>
+<span class="c1">#         data_bd_loader = torch.utils.data.DataLoader(data_bd_testset, batch_size=self.args.batch_size, num_workers=self.args.num_workers,drop_last=False, shuffle=True,pin_memory=args.pin_memory)</span>
+<span class="c1">#</span>
+<span class="c1">#         data_clean_testset = self.result[&#39;clean_test&#39;]</span>
+<span class="c1">#         data_clean_testset.wrap_img_transform = test_tran</span>
+<span class="c1">#         data_clean_loader = torch.utils.data.DataLoader(data_clean_testset, batch_size=self.args.batch_size, num_workers=self.args.num_workers,drop_last=False, shuffle=True,pin_memory=args.pin_memory)</span>
+<span class="c1">#</span>
+<span class="c1">#         test_dataloader_dict = {}</span>
+<span class="c1">#         test_dataloader_dict[&quot;clean_test_dataloader&quot;] = data_clean_loader</span>
+<span class="c1">#         test_dataloader_dict[&quot;bd_test_dataloader&quot;] = data_bd_loader</span>
+<span class="c1">#</span>
+<span class="c1">#         state_dict = self.result[&#39;model&#39;]</span>
+<span class="c1">#         net = get_rnp_network(args.model, num_classes=args.num_classes, norm_layer=None)</span>
+<span class="c1">#         load_state_dict(net, orig_state_dict=state_dict)</span>
+<span class="c1">#         net = net.to(args.device)</span>
+<span class="c1">#         criterion = torch.nn.CrossEntropyLoss().to(args.device)</span>
+<span class="c1">#</span>
+<span class="c1">#         optimizer = torch.optim.SGD(net.parameters(), lr=args.unlearning_lr, momentum=0.9, weight_decay=5e-4)</span>
+<span class="c1">#         scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=args.schedule, gamma=0.1)</span>
+<span class="c1">#</span>
+<span class="c1">#         self.set_trainer(net, mode = &#39;unlearn&#39;, clean_threshold = args.clean_threshold)</span>
+<span class="c1">#         self.trainer.train_with_test_each_epoch_on_mix(</span>
+<span class="c1">#             trainloader,</span>
+<span class="c1">#             data_clean_loader,</span>
+<span class="c1">#             data_bd_loader,</span>
+<span class="c1">#             args.unlearning_epochs,</span>
+<span class="c1">#             criterion=criterion,</span>
+<span class="c1">#             optimizer=optimizer,</span>
+<span class="c1">#             scheduler=scheduler,</span>
+<span class="c1">#             device=self.args.device,</span>
+<span class="c1">#             frequency_save=args.frequency_save,</span>
+<span class="c1">#             save_folder_path=args.save_path,</span>
+<span class="c1">#             save_prefix=&#39;rnp&#39;,</span>
+<span class="c1">#             amp=args.amp,</span>
+<span class="c1">#             prefetch=args.prefetch,</span>
+<span class="c1">#             prefetch_transform_attr_name=&quot;ori_image_transform_in_loading&quot;, # since we use the preprocess_bd_dataset</span>
+<span class="c1">#             non_blocking=args.non_blocking,</span>
+<span class="c1">#         )</span>
+<span class="c1">#</span>
+<span class="c1">#         unlearn_model_state_dict = copy.deepcopy(net.cpu().state_dict())</span>
+<span class="c1">#</span>
+<span class="c1">#         del net</span>
+<span class="c1">#         torch.cuda.empty_cache()</span>
+<span class="c1">#         unlearned_model = get_rnp_network(args.model, num_classes=args.num_classes, norm_layer=rnp_model.MaskBatchNorm2d)</span>
+<span class="c1">#         load_state_dict(unlearned_model, orig_state_dict=unlearn_model_state_dict)</span>
+<span class="c1">#         unlearned_model = unlearned_model.to(device)</span>
+<span class="c1">#         parameters = list(unlearned_model.named_parameters())</span>
+<span class="c1">#         mask_params = [v for n, v in parameters if &quot;neuron_mask&quot; in n]</span>
+<span class="c1">#         mask_optimizer = torch.optim.SGD(mask_params, lr=args.recovering_lr, momentum=0.9)</span>
+<span class="c1">#</span>
+<span class="c1">#         self.set_trainer(unlearned_model, mode = &#39;recover&#39;, alpha = args.alpha)</span>
+<span class="c1">#         self.trainer.train_with_test_each_epoch_on_mix(</span>
+<span class="c1">#             trainloader,</span>
+<span class="c1">#             data_clean_loader,</span>
+<span class="c1">#             data_bd_loader,</span>
+<span class="c1">#             args.recovering_epochs,</span>
+<span class="c1">#             criterion=criterion,</span>
+<span class="c1">#             optimizer=mask_optimizer,</span>
+<span class="c1">#             scheduler=None,</span>
+<span class="c1">#             device=self.args.device,</span>
+<span class="c1">#             frequency_save=args.frequency_save,</span>
+<span class="c1">#             save_folder_path=args.save_path,</span>
+<span class="c1">#             save_prefix=&#39;rnp&#39;,</span>
+<span class="c1">#             amp=args.amp,</span>
+<span class="c1">#             prefetch=args.prefetch,</span>
+<span class="c1">#             prefetch_transform_attr_name=&quot;ori_image_transform_in_loading&quot;, # since we use the preprocess_bd_dataset</span>
+<span class="c1">#             non_blocking=args.non_blocking,</span>
+<span class="c1">#         )</span>
+<span class="c1">#</span>
+<span class="c1">#         save_mask_scores(unlearned_model.state_dict(), os.path.join(args.save_path, &#39;mask_values.txt&#39;))</span>
+<span class="c1">#</span>
+<span class="c1">#         del unlearned_model</span>
+<span class="c1">#</span>
+<span class="c1">#         net_prune = generate_cls_model(self.args.model,self.args.num_classes)</span>
+<span class="c1">#         net_prune.load_state_dict(self.result[&#39;model&#39;])</span>
+<span class="c1">#         net_prune.to(self.args.device)</span>
+<span class="c1">#</span>
+<span class="c1">#         mask_values = read_data(args.save_path + &#39;mask_values.txt&#39;)</span>
+<span class="c1">#         mask_values = sorted(mask_values, key=lambda x: float(x[2]))</span>
+<span class="c1">#</span>
+<span class="c1">#         model = copy.deepcopy(net_prune)</span>
+<span class="c1">#</span>
+<span class="c1">#         cl_loss, cl_acc = test(args, model=net_prune, criterion=criterion, data_loader=data_clean_loader)</span>
+<span class="c1">#         po_loss, po_acc = test(args, model=net_prune, criterion=criterion, data_loader=data_bd_loader)</span>
+<span class="c1">#         if args.pruning_by == &#39;threshold&#39;:</span>
+<span class="c1">#             results, model_pru = self.evaluate_by_threshold(</span>
+<span class="c1">#                 args, net_prune, mask_values, pruning_max=args.pruning_max, pruning_step=args.pruning_step,</span>
+<span class="c1">#                 criterion=criterion, test_dataloader_dict=test_dataloader_dict, best_asr=po_acc, acc_ori=cl_acc</span>
+<span class="c1">#             )</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             results, model_pru = self.evaluate_by_number(</span>
+<span class="c1">#                 args, net_prune, mask_values, pruning_max=args.pruning_max, pruning_step=args.pruning_step,</span>
+<span class="c1">#                 criterion=criterion, test_dataloader_dict=test_dataloader_dict, best_asr=po_acc, acc_ori=cl_acc</span>
+<span class="c1">#             )</span>
+<span class="c1">#         file_name = os.path.join(args.save_path, &#39;pruning_by_{}.txt&#39;.format(args.pruning_by))</span>
+<span class="c1">#         with open(file_name, &quot;w&quot;) as f:</span>
+<span class="c1">#             f.write(&#39;No \t Layer Name \t Neuron Idx \t Mask \t PoisonLoss \t PoisonACC \t CleanLoss \t CleanACC\n&#39;)</span>
+<span class="c1">#             f.writelines(results)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#         if &#39;pruning_number&#39; in args.__dict__:</span>
+<span class="c1">#             if args.pruning_by == &#39;threshold&#39;:</span>
+<span class="c1">#                 _, _ = self.evaluate_by_threshold(</span>
+<span class="c1">#                     args, model, mask_values, pruning_max=args.pruning_number, pruning_step=args.pruning_number,</span>
+<span class="c1">#                     criterion=criterion, test_dataloader_dict=test_dataloader_dict, best_asr=po_acc, acc_ori=cl_acc, save=False</span>
+<span class="c1">#                 )</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 _, _ = self.evaluate_by_number(</span>
+<span class="c1">#                     args, model, mask_values, pruning_max=args.pruning_number, pruning_step=args.pruning_number,</span>
+<span class="c1">#                     criterion=criterion, test_dataloader_dict=test_dataloader_dict, best_asr=po_acc, acc_ori=cl_acc, save=False</span>
+<span class="c1">#                 )</span>
+<span class="c1">#             self.set_trainer(model)</span>
+<span class="c1">#             self.trainer.set_with_dataloader(</span>
+<span class="c1">#                 ### the train_dataload has nothing to do with the backdoor defense</span>
+<span class="c1">#                 train_dataloader = trainloader,</span>
+<span class="c1">#                 test_dataloader_dict = test_dataloader_dict,</span>
+<span class="c1">#</span>
+<span class="c1">#                 criterion = criterion,</span>
+<span class="c1">#                 optimizer = None,</span>
+<span class="c1">#                 scheduler = None,</span>
+<span class="c1">#                 device = self.args.device,</span>
+<span class="c1">#                 amp = self.args.amp,</span>
+<span class="c1">#</span>
+<span class="c1">#                 frequency_save = self.args.frequency_save,</span>
+<span class="c1">#                 save_folder_path = self.args.save_path,</span>
+<span class="c1">#                 save_prefix = &#39;rnp&#39;,</span>
+<span class="c1">#</span>
+<span class="c1">#                 prefetch = self.args.prefetch,</span>
+<span class="c1">#                 prefetch_transform_attr_name = &quot;ori_image_transform_in_loading&quot;,</span>
+<span class="c1">#                 non_blocking = self.args.non_blocking,</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#                 )</span>
+<span class="c1">#             agg = Metric_Aggregator()</span>
+<span class="c1">#             clean_test_loss_avg_over_batch, \</span>
+<span class="c1">#                     bd_test_loss_avg_over_batch, \</span>
+<span class="c1">#                     test_acc, \</span>
+<span class="c1">#                     test_asr, \</span>
+<span class="c1">#                     test_ra = self.trainer.test_current_model(</span>
+<span class="c1">#                 test_dataloader_dict, self.args.device,</span>
+<span class="c1">#             )</span>
+<span class="c1">#             agg({</span>
+<span class="c1">#                     &quot;clean_test_loss_avg_over_batch&quot;: clean_test_loss_avg_over_batch,</span>
+<span class="c1">#                     &quot;bd_test_loss_avg_over_batch&quot;: bd_test_loss_avg_over_batch,</span>
+<span class="c1">#                     &quot;test_acc&quot;: test_acc,</span>
+<span class="c1">#                     &quot;test_asr&quot;: test_asr,</span>
+<span class="c1">#                     &quot;test_ra&quot;: test_ra,</span>
+<span class="c1">#                 })</span>
+<span class="c1">#             agg.to_dataframe().to_csv(f&quot;{args.save_path}rnp_df_summary.csv&quot;)</span>
+<span class="c1">#             result = {}</span>
+<span class="c1">#             result[&#39;model&#39;] = model</span>
+<span class="c1">#             save_defense_result(</span>
+<span class="c1">#                 model_name=args.model,</span>
+<span class="c1">#                 num_classes=args.num_classes,</span>
+<span class="c1">#                 model=model.cpu().state_dict(),</span>
+<span class="c1">#                 save_path=args.save_path,</span>
+<span class="c1">#             )</span>
+<span class="c1">#</span>
+<span class="c1">#             return result</span>
+<span class="c1">#</span>
+<span class="c1">#         ### TODO  add all threshold estimate</span>
+<span class="c1">#         # self.set_trainer(model_pru)</span>
+<span class="c1">#         # self.trainer.set_with_dataloader(</span>
+<span class="c1">#         #     ### the train_dataload has nothing to do with the backdoor defense</span>
+<span class="c1">#         #     train_dataloader = trainloader,</span>
+<span class="c1">#         #     test_dataloader_dict = test_dataloader_dict,</span>
+<span class="c1">#</span>
+<span class="c1">#         #     criterion = criterion,</span>
+<span class="c1">#         #     optimizer = None,</span>
+<span class="c1">#         #     scheduler = None,</span>
+<span class="c1">#         #     device = self.args.device,</span>
+<span class="c1">#         #     amp = self.args.amp,</span>
+<span class="c1">#</span>
+<span class="c1">#         #     frequency_save = self.args.frequency_save,</span>
+<span class="c1">#         #     save_folder_path = self.args.save_path,</span>
+<span class="c1">#         #     save_prefix = &#39;rnp&#39;,</span>
+<span class="c1">#</span>
+<span class="c1">#         #     prefetch = self.args.prefetch,</span>
+<span class="c1">#         #     prefetch_transform_attr_name = &quot;ori_image_transform_in_loading&quot;,</span>
+<span class="c1">#         #     non_blocking = self.args.non_blocking,</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#         #     )</span>
+<span class="c1">#         # agg = Metric_Aggregator()</span>
+<span class="c1">#         # clean_test_loss_avg_over_batch, \</span>
+<span class="c1">#         #         bd_test_loss_avg_over_batch, \</span>
+<span class="c1">#         #         test_acc, \</span>
+<span class="c1">#         #         test_asr, \</span>
+<span class="c1">#         #         test_ra = self.trainer.test_current_model(</span>
+<span class="c1">#         #     test_dataloader_dict, self.args.device,</span>
+<span class="c1">#         # )</span>
+<span class="c1">#         # agg({</span>
+<span class="c1">#         #         &quot;clean_test_loss_avg_over_batch&quot;: clean_test_loss_avg_over_batch,</span>
+<span class="c1">#         #         &quot;bd_test_loss_avg_over_batch&quot;: bd_test_loss_avg_over_batch,</span>
+<span class="c1">#         #         &quot;test_acc&quot;: test_acc,</span>
+<span class="c1">#         #         &quot;test_asr&quot;: test_asr,</span>
+<span class="c1">#         #         &quot;test_ra&quot;: test_ra,</span>
+<span class="c1">#         #     })</span>
+<span class="c1">#         # agg.to_dataframe().to_csv(f&quot;{args.save_path}rnp_df_summary.csv&quot;)</span>
+<span class="c1">#         # result = {}</span>
+<span class="c1">#         # result[&#39;model&#39;] = model_pru</span>
+<span class="c1">#         # save_defense_result(</span>
+<span class="c1">#         #     model_name=args.model,</span>
+<span class="c1">#         #     num_classes=args.num_classes,</span>
+<span class="c1">#         #     model=model_pru.cpu().state_dict(),</span>
+<span class="c1">#         #     save_path=args.save_path,</span>
+<span class="c1">#         # )</span>
+<span class="c1">#         # return result</span>
+<span class="c1">#</span>
+<span class="c1">#     def defense(self,result_file):</span>
+<span class="c1">#         self.set_result(result_file)</span>
+<span class="c1">#         self.set_logger()</span>
+<span class="c1">#         result = self.mitigation()</span>
+<span class="c1">#         return result</span>
+<span class="c1">#</span>
+<span class="c1"># if __name__ == &#39;__main__&#39;:</span>
+<span class="c1">#     parser = argparse.ArgumentParser(description=sys.argv[0])</span>
+<span class="c1">#     rnp.add_arguments(parser)</span>
+<span class="c1">#     args = parser.parse_args()</span>
+<span class="c1">#     anp_method = rnp(args)</span>
+<span class="c1">#     if &quot;result_file&quot; not in args.__dict__:</span>
+<span class="c1">#         args.result_file = &#39;defense_test_badnet&#39;</span>
+<span class="c1">#     elif args.result_file is None:</span>
+<span class="c1">#         args.result_file = &#39;defense_test_badnet&#39;</span>
+<span class="c1">#     result = anp_method.defense(args.result_file)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SCLBD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>packages of attack and defense &mdash; BackdoorBench v2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="/static/_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="/static/_static/css/mytheme.css" />
+
+  
+    <link rel="shortcut icon" href="/static/_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="/static/_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="/static/_static/documentation_options.js"></script>
+        <script src="/static/_static/jquery.js"></script>
+        <script src="/static/_static/underscore.js"></script>
+        <script src="/static/_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="/static/_static/doctools.js"></script>
+        <script src="/static/_static/js/version_alert.js"></script>
+    <script src="/static/_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="attack.BadNet" href="../generated/attack.BadNet.html" />
+    <link rel="prev" title="Build Your Own Backdoor Defense" href="../tutorial/defense.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="/static/_static/pyg_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/quickstart.html">Quick Start by Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/bddataset.html">Build Your Own Backdoor Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/attack.html">Build Your Own Backdoor Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/defense.html">Build Your Own Backdoor Defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PACKAGE REFERENCE</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">packages of attack and defense</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#attack-methods">attack Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#defense-methods">defense Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inference-time-detection-methods">inference-time detection Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pretraining-detection-methods">pretraining detection Methods</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Visualization</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../visualization/analysis_readme.html">Analysis Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualization/Demo_FV.html">Demo_FV</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BackdoorBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">packages of attack and defense</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/attack.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="packages-of-attack-and-defense">
+<h1>packages of attack and defense<a class="headerlink" href="#packages-of-attack-and-defense" title="Permalink to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#attack-methods" id="id1">attack Methods</a></p></li>
+<li><p><a class="reference internal" href="#defense-methods" id="id2">defense Methods</a></p></li>
+<li><p><a class="reference internal" href="#inference-time-detection-methods" id="id3">inference-time detection Methods</a></p></li>
+<li><p><a class="reference internal" href="#pretraining-detection-methods" id="id4">pretraining detection Methods</a></p></li>
+</ul>
+</nav>
+<section id="attack-methods">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">attack Methods</a><a class="headerlink" href="#attack-methods" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/attack.BadNet.html#attack.BadNet" title="attack.BadNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BadNet</span></code></a></p></td>
+<td><p>Badnets: Identifying vulnerabilities in the machine learning model supply chain.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/attack.Blended.html#attack.Blended" title="attack.Blended"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Blended</span></code></a></p></td>
+<td><p>Targeted Backdoor Attacks on Deep Learning Systems Using Data Poisoning</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/attack.Blind.html#attack.Blind" title="attack.Blind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Blind</span></code></a></p></td>
+<td><p>Blind Backdoors in Deep Learning Models</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/attack.Bpp.html#attack.Bpp" title="attack.Bpp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bpp</span></code></a></p></td>
+<td><p>BppAttack: Stealthy and Efficient Trojan Attacks Against Deep Neural Networks via Image Quantization and Contrastive Adversarial Learning</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/attack.CTRL.html#attack.CTRL" title="attack.CTRL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTRL</span></code></a></p></td>
+<td><p>An Embarrassingly Simple Backdoor Attack on Self-supervised Learning</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/attack.InputAware.html#attack.InputAware" title="attack.InputAware"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputAware</span></code></a></p></td>
+<td><p>Input-aware dynamic backdoor attack</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/attack.LabelConsistent.html#attack.LabelConsistent" title="attack.LabelConsistent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LabelConsistent</span></code></a></p></td>
+<td><p>Label-Consistent Backdoor Attacks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/attack.LowFrequency.html#attack.LowFrequency" title="attack.LowFrequency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LowFrequency</span></code></a></p></td>
+<td><p>Rethinking the backdoor attacks' triggers: A frequency perspective</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/attack.LIRA.html#attack.LIRA" title="attack.LIRA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LIRA</span></code></a></p></td>
+<td><p>LIRA: Learnable, Imperceptible and Robust Backdoor Attacks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/attack.PoisonInk.html#attack.PoisonInk" title="attack.PoisonInk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PoisonInk</span></code></a></p></td>
+<td><p>Poison ink: Robust and invisible backdoor attack</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/attack.NormalCase.html#attack.NormalCase" title="attack.NormalCase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NormalCase</span></code></a></p></td>
+<td><p>Normal training case (Train a clean model with clean data)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/attack.Refool.html#attack.Refool" title="attack.Refool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Refool</span></code></a></p></td>
+<td><p>Reflection Backdoor: A Natural Backdoor Attack on Deep Neural Networks</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/attack.SIG.html#attack.SIG" title="attack.SIG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SIG</span></code></a></p></td>
+<td><p>A new backdoor attack in CNNs by training set corruption without label poisoning</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/attack.SSBA.html#attack.SSBA" title="attack.SSBA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SSBA</span></code></a></p></td>
+<td><p>Invisible backdoor attack with sample-specific triggers</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/attack.TrojanNN.html#attack.TrojanNN" title="attack.TrojanNN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrojanNN</span></code></a></p></td>
+<td><p>Trojaning Attack on Neural Networks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/attack.Wanet.html#attack.Wanet" title="attack.Wanet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Wanet</span></code></a></p></td>
+<td><p>WaNet - Imperceptible Warping-based Backdoor Attack</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="defense-methods">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">defense Methods</a><a class="headerlink" href="#defense-methods" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/defense.abl.html#defense.abl" title="defense.abl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abl</span></code></a></p></td>
+<td><p>Anti-backdoor learning: Training clean models on poisoned data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/defense.ac.html#defense.ac" title="defense.ac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ac</span></code></a></p></td>
+<td><p>Detecting Backdoor Attacks on Deep Neural Networks by Activation Clustering</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/defense.anp.html#defense.anp" title="defense.anp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">anp</span></code></a></p></td>
+<td><p>Adversarial Neuron Pruning Purifies Backdoored Deep Models</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/defense.bnp.html#defense.bnp" title="defense.bnp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bnp</span></code></a></p></td>
+<td><p>Pre-activation Distributions Expose Backdoor Neurons</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/defense.clp.html#defense.clp" title="defense.clp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clp</span></code></a></p></td>
+<td><p>Data-free backdoor removal based on channel lipschitzness</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/defense.d_br.html#defense.d_br" title="defense.d_br"><code class="xref py py-obj docutils literal notranslate"><span class="pre">d_br</span></code></a></p></td>
+<td><p>Effective backdoor defense by exploiting sensitivity of poisoned samples</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/defense.d_st.html#defense.d_st" title="defense.d_st"><code class="xref py py-obj docutils literal notranslate"><span class="pre">d_st</span></code></a></p></td>
+<td><p>Effective backdoor defense by exploiting sensitivity of poisoned samples</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/defense.dbd.html#defense.dbd" title="defense.dbd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dbd</span></code></a></p></td>
+<td><p>Backdoor Defense Via Decoupling The Training Process</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/defense.ep.html#defense.ep" title="defense.ep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ep</span></code></a></p></td>
+<td><p>Pre-activation Distributions Expose Backdoor Neurons</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/defense.fp.html#defense.fp" title="defense.fp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fp</span></code></a></p></td>
+<td><p>Fine-Pruning: Defending Against Backdooring Attacks on Deep Neural Networks</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/defense.ft.html#defense.ft" title="defense.ft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ft</span></code></a></p></td>
+<td><p>Basic class for ft defense method.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/defense.ft_sam.html#defense.ft_sam" title="defense.ft_sam"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ft_sam</span></code></a></p></td>
+<td><p>Enhancing Fine-Tuning Based Backdoor Defense with Sharpness-Aware Minimization</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/defense.i_bau.html#defense.i_bau" title="defense.i_bau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">i_bau</span></code></a></p></td>
+<td><p>Adversarial unlearning of backdoors via implicit hypergradient</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/defense.mbns.html#defense.mbns" title="defense.mbns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mbns</span></code></a></p></td>
+<td><p>Pre-activation Distributions Expose Backdoor Neurons</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/defense.mcr.html#defense.mcr" title="defense.mcr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mcr</span></code></a></p></td>
+<td><p>Bridging mode connectivity in loss landscapes and adversarial robustness</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/defense.nab.html#defense.nab" title="defense.nab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nab</span></code></a></p></td>
+<td><p>Beating Backdoor Attack at Its Own Game</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/defense.nad.html#defense.nad" title="defense.nad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nad</span></code></a></p></td>
+<td><p>Neural Attention Distillation: Erasing Backdoor Triggers From Deep Neural Networks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/defense.nc.html#defense.nc" title="defense.nc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nc</span></code></a></p></td>
+<td><p>Neural Cleanse: Identifying And Mitigating Backdoor Attacks In Neural Networks</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/defense.npd.html#defense.npd" title="defense.npd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">npd</span></code></a></p></td>
+<td><p>Neural polarizer: A lightweight and effective backdoor defense via purifying poisoned features</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/defense.rnp.html#defense.rnp" title="defense.rnp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rnp</span></code></a></p></td>
+<td><p>Reconstructive Neuron Pruning for Backdoor Defense</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/defense.sau.html#defense.sau" title="defense.sau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sau</span></code></a></p></td>
+<td><p>Shared adversarial unlearning: Backdoor mitigation by unlearning shared adversarial examples</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/defense.spectral.html#defense.spectral" title="defense.spectral"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral</span></code></a></p></td>
+<td><p>Spectral Signatures in Backdoor Attacks</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="inference-time-detection-methods">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">inference-time detection Methods</a><a class="headerlink" href="#inference-time-detection-methods" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/detection_infer.strip.html#detection_infer.strip" title="detection_infer.strip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strip</span></code></a></p></td>
+<td><p>STRIP: A Defence Against Trojan Attacks on Deep Neural Networks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/detection_infer.teco.html#detection_infer.teco" title="detection_infer.teco"><code class="xref py py-obj docutils literal notranslate"><span class="pre">teco</span></code></a></p></td>
+<td><p>Detecting Backdoors During the Inference Stage Based on Corruption Robustness Consistency</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pretraining-detection-methods">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">pretraining detection Methods</a><a class="headerlink" href="#pretraining-detection-methods" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/detection_pretrain.strip.html#detection_pretrain.strip" title="detection_pretrain.strip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strip</span></code></a></p></td>
+<td><p>STRIP: A Defence Against Trojan Attacks on Deep Neural Networks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/detection_pretrain.beatrix.html#detection_pretrain.beatrix" title="detection_pretrain.beatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">beatrix</span></code></a></p></td>
+<td><p>The Beatrix Resurrections: Robust Backdoor Detection via Gram Matrices</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/detection_pretrain.scan.html#detection_pretrain.scan" title="detection_pretrain.scan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scan</span></code></a></p></td>
+<td><p>Demon in the Variant: Statistical Analysis of DNNs for Robust Backdoor Contamination Detection</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/detection_pretrain.spectre.html#detection_pretrain.spectre" title="detection_pretrain.spectre"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectre</span></code></a></p></td>
+<td><p>SPECTRE: Defending Against Backdoor Attacks Using Robust Statistics</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../generated/detection_pretrain.spectral.html#detection_pretrain.spectral" title="detection_pretrain.spectral"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectral</span></code></a></p></td>
+<td><p>Spectral Signatures in Backdoor Attacks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../generated/detection_pretrain.ac.html#detection_pretrain.ac" title="detection_pretrain.ac"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ac</span></code></a></p></td>
+<td><p>Detecting Backdoor Attacks on Deep Neural Networks by Activation Clustering</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../tutorial/defense.html" class="btn btn-neutral float-left" title="Build Your Own Backdoor Defense" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../generated/attack.BadNet.html" class="btn btn-neutral float-right" title="attack.BadNet" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SCLBD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

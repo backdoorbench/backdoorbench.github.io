@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build Your Own Backdoor Attack &mdash; BackdoorBench v2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="/static/_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="/static/_static/css/mytheme.css" />
+
+  
+    <link rel="shortcut icon" href="/static/_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="/static/_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="/static/_static/documentation_options.js"></script>
+        <script src="/static/_static/jquery.js"></script>
+        <script src="/static/_static/underscore.js"></script>
+        <script src="/static/_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="/static/_static/doctools.js"></script>
+        <script src="/static/_static/js/version_alert.js"></script>
+    <script src="/static/_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Build Your Own Backdoor Defense" href="defense.html" />
+    <link rel="prev" title="Build Your Own Backdoor Dataset" href="bddataset.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="/static/_static/pyg_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/quickstart.html">Quick Start by Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bddataset.html">Build Your Own Backdoor Dataset</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Build Your Own Backdoor Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defense.html">Build Your Own Backdoor Defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PACKAGE REFERENCE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/attack.html">packages of attack and defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Visualization</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../visualization/analysis_readme.html">Analysis Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualization/Demo_FV.html">Demo_FV</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BackdoorBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Build Your Own Backdoor Attack</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorial/attack.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="build-your-own-backdoor-attack">
+<h1>Build Your Own Backdoor Attack<a class="headerlink" href="#build-your-own-backdoor-attack" title="Permalink to this heading"></a></h1>
+<p>This is a simple demonstration of how to build a backdoor attack using our framework.</p>
+<p>We take the default case of creating a data poisoning attack as an example. (We inherit from the BadNet class in ./attack/badnet.py and create your own attack)</p>
+<ul>
+<li><p>Hyperparameter setting and basic configuration</p>
+<ul>
+<li><p>First by inheriting from the NormalCase class, we have basic training hyperaparameters in args. You can add more into the parser for your specific usages.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_args</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Then we add the hyperparameters for the backdoor attack</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_bd_args</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>We load the default clean and backdoor hyperparameters into our args</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_bd_yaml_to_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_yaml_to_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>After all above we parse the args and initial all save path and other log settings</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Backdoor dataset generation</p>
+<ul>
+<li><p>We first load the clean dataset</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">train_dataset_without_transform</span><span class="p">,</span> \
+<span class="n">train_img_transform</span><span class="p">,</span> \
+<span class="n">train_label_transform</span><span class="p">,</span> \
+<span class="n">test_dataset_without_transform</span><span class="p">,</span> \
+<span class="n">test_img_transform</span><span class="p">,</span> \
+<span class="n">test_label_transform</span><span class="p">,</span> \
+<span class="n">clean_train_dataset_with_transform</span><span class="p">,</span> \
+<span class="n">clean_train_dataset_targets</span><span class="p">,</span> \
+<span class="n">clean_test_dataset_with_transform</span><span class="p">,</span> \
+<span class="n">clean_test_dataset_targets</span> \
+    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">benign_prepare</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p>Then we can get image trigger injection functions and label manipulation function</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">train_bd_img_transform</span><span class="p">,</span> <span class="n">test_bd_img_transform</span> <span class="o">=</span> <span class="n">bd_attack_img_trans_generate</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="n">bd_label_transform</span> <span class="o">=</span> <span class="n">bd_attack_label_trans_generate</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><cite>bd_attack_img_trans_generate()</cite> is at <cite>backdoorbench/utils/aggregate_block/bd_attack_generate.py</cite>, you can add you trigger injection function here and call them by <cite>args.attack</cite></p></li>
+<li><p><cite>bd_attack_label_trans_generate</cite> is also at <cite>backdoorbench/utils/aggregate_block/bd_attack_generate.py</cite>, we already implement basic all-to-one and all-to-all, you can add your own label manipulation function.</p></li>
+</ul>
+</li>
+<li><p>We utilize the <cite>bd_label_transform</cite> to select which sample being poisoned</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">train_poison_index</span> <span class="o">=</span> <span class="n">generate_poison_index_from_label_transform</span><span class="p">(</span>
+  <span class="n">clean_train_dataset_targets</span><span class="p">,</span>
+  <span class="n">label_transform</span><span class="o">=</span><span class="n">bd_label_transform</span><span class="p">,</span>
+  <span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+  <span class="n">pratio</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pratio</span> <span class="k">if</span> <span class="s1">&#39;pratio&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="vm">__dict__</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">p_num</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">p_num</span> <span class="k">if</span> <span class="s1">&#39;p_num&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="vm">__dict__</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Here the pratio and p_num can be used to poison by fraction or poison by exact sample number</p></li>
+</ul>
+</li>
+<li><p>All preparation is done, we carry out it by calling the <cite>prepro_cls_DatasetBD_v2</cite> dataset.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_train_dataset</span> <span class="o">=</span> <span class="n">prepro_cls_DatasetBD_v2</span><span class="p">(</span>
+  <span class="n">deepcopy</span><span class="p">(</span><span class="n">train_dataset_without_transform</span><span class="p">),</span>
+  <span class="n">poison_indicator</span><span class="o">=</span><span class="n">train_poison_index</span><span class="p">,</span>
+  <span class="n">bd_image_pre_transform</span><span class="o">=</span><span class="n">train_bd_img_transform</span><span class="p">,</span>
+  <span class="n">bd_label_pre_transform</span><span class="o">=</span><span class="n">bd_label_transform</span><span class="p">,</span>
+  <span class="n">save_folder_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">save_path</span><span class="si">}</span><span class="s2">/bd_train_dataset&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul>
+<li><p>The test dataset follows the same procedure, but remember we do not want target class in bd_test. So one step more is to do subset.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_test_dataset</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span>
+  <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">test_poison_index</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Notice that we need to warp the dataset with training/test transformation by calling <cite>dataset_wrapper_with_transform</cite>. We drop the transformation is for data manipulation convenience.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_test_dataset_with_transform</span> <span class="o">=</span> <span class="n">dataset_wrapper_with_transform</span><span class="p">(</span>
+  <span class="n">bd_test_dataset</span><span class="p">,</span>
+  <span class="n">test_img_transform</span><span class="p">,</span>
+  <span class="n">test_label_transform</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Backdoor model training</p>
+<ul>
+<li><p>First we need to configure the model and device, we support both single machine and DataParrallel mode.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">generate_cls_model</span><span class="p">(</span>
+<span class="n">model_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+<span class="n">num_classes</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span>
+<span class="n">image_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+  <span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;cuda:</span><span class="si">{</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">args</span><span class="o">.</span><span class="n">device</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">device</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">device</span>
+    <span class="c1"># since DataParallel only allow .to(&quot;cuda&quot;)</span>
+  <span class="p">)</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">device</span><span class="p">:</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">DataParallel</span><span class="p">(</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">,</span>
+    <span class="n">device_ids</span><span class="o">=</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">device</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>  <span class="c1"># eg. &quot;cuda:2,3,7&quot; -&gt; [2,3,7]</span>
+  <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Further we set training critertion, optimizer, and scheduler</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">criterion</span> <span class="o">=</span> <span class="n">argparser_criterion</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span> <span class="o">=</span> <span class="n">argparser_opt_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Finally, we pu them all together and pass to <cite>BackdoorModelTrainer</cite>, this class handle both training and output plots, metric informations. You can find them in your save path.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">trainer</span><span class="o">.</span><span class="n">train_with_test_each_epoch_on_mix</span><span class="p">(</span>
+  <span class="n">DataLoader</span><span class="p">(</span><span class="n">bd_train_dataset_with_transform</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+         <span class="n">pin_memory</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pin_memory</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span> <span class="p">),</span>
+  <span class="n">DataLoader</span><span class="p">(</span><span class="n">clean_test_dataset_with_transform</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+         <span class="n">pin_memory</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pin_memory</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span> <span class="p">),</span>
+  <span class="n">DataLoader</span><span class="p">(</span><span class="n">bd_test_dataset_with_transform</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+         <span class="n">pin_memory</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">pin_memory</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span> <span class="p">),</span>
+  <span class="n">args</span><span class="o">.</span><span class="n">epochs</span><span class="p">,</span>
+  <span class="n">criterion</span><span class="o">=</span><span class="n">criterion</span><span class="p">,</span>
+  <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+  <span class="n">scheduler</span><span class="o">=</span><span class="n">scheduler</span><span class="p">,</span>
+  <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+  <span class="n">frequency_save</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">frequency_save</span><span class="p">,</span>
+  <span class="n">save_folder_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">save_path</span><span class="p">,</span>
+  <span class="n">save_prefix</span><span class="o">=</span><span class="s1">&#39;attack&#39;</span><span class="p">,</span>
+  <span class="n">amp</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">amp</span><span class="p">,</span>
+  <span class="n">prefetch</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">prefetch</span><span class="p">,</span>
+  <span class="n">prefetch_transform_attr_name</span><span class="o">=</span><span class="s2">&quot;ori_image_transform_in_loading&quot;</span><span class="p">,</span>  <span class="c1"># since we use the preprocess_bd_dataset</span>
+  <span class="n">non_blocking</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">non_blocking</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Backdoor model saving</p>
+<ul>
+<li><p>This is handled by <cite>save_attack_result</cite>, you should give it the basic setting information for further loading.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">save_attack_result</span><span class="p">(</span>
+  <span class="n">model_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+  <span class="n">num_classes</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span>
+  <span class="n">model</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+  <span class="n">data_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dataset_path</span><span class="p">,</span>
+  <span class="n">img_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">img_size</span><span class="p">,</span>
+  <span class="n">clean_data</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dataset</span><span class="p">,</span>
+  <span class="n">bd_train</span><span class="o">=</span><span class="n">bd_train_dataset_with_transform</span><span class="p">,</span>
+  <span class="n">bd_test</span><span class="o">=</span><span class="n">bd_test_dataset_with_transform</span><span class="p">,</span>
+  <span class="n">save_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">save_path</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Notice that some training controllable attack may not have bd_train, since they are batch-wise poisoning, so you can pass None to it. And if it is None, you saved attack can still being loaded in defenses that do not need bd_train.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="bddataset.html" class="btn btn-neutral float-left" title="Build Your Own Backdoor Dataset" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="defense.html" class="btn btn-neutral float-right" title="Build Your Own Backdoor Defense" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SCLBD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+﻿defense.d\_br
+=============
+
+.. currentmodule:: defense
+
+.. autoclass:: d_br
+   :show-inheritance:
+   :members:
+   :inherited-members:
+   :special-members: __cat_dim__, __inc__

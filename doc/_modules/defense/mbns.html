@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>defense.mbns &mdash; BackdoorBench v2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="/static/_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="/static/_static/css/mytheme.css" />
+
+  
+    <link rel="shortcut icon" href="/static/_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="/static/_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="/static/_static/documentation_options.js"></script>
+        <script src="/static/_static/jquery.js"></script>
+        <script src="/static/_static/underscore.js"></script>
+        <script src="/static/_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="/static/_static/doctools.js"></script>
+        <script src="/static/_static/js/version_alert.js"></script>
+    <script src="/static/_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="/static/_static/pyg_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../start/installation.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../start/quickstart.html">Quick Start by Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bddataset.html">Build Your Own Backdoor Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/attack.html">Build Your Own Backdoor Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/defense.html">Build Your Own Backdoor Defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PACKAGE REFERENCE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/attack.html">packages of attack and defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Visualization</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/analysis_readme.html">Analysis Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualization/Demo_FV.html">Demo_FV</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BackdoorBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">defense.mbns</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for defense.mbns</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This file is modified based on the following source:</span>
+<span class="sd">link : https://github.com/RJ-T/NIPS2022_EP_BNP.</span>
+<span class="sd">The defense method is called mbns or bnp.</span>
+
+<span class="sd">The update include:</span>
+<span class="sd">	1. data preprocess and dataset setting</span>
+<span class="sd">	2. model setting</span>
+<span class="sd">	3. args and config</span>
+<span class="sd">	4. save process</span>
+<span class="sd">	5. new standard: robust accuracy</span>
+<span class="sd">	6. reconstruct the layer norm for convnext and transformer</span>
+<span class="sd">	7. draw the corresponding images of asr and acc according to different proportions</span>
+<span class="sd">basic sturcture for defense method:</span>
+<span class="sd">	1. basic setting: args</span>
+<span class="sd">	2. attack result(model, train data, test data)</span>
+<span class="sd">	3. dde defense:</span>
+<span class="sd">		a. calculate the entropy of each norm layer</span>
+<span class="sd">		b. prune the model depend on the mask</span>
+<span class="sd">	4. test the result and get ASR, ACC, RC</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">defense.base</span> <span class="kn">import</span> <span class="n">defense</span>
+
+
+
+<div class="viewcode-block" id="mbns"><a class="viewcode-back" href="../../generated/defense.mbns.html#defense.mbns">[docs]</a><span class="k">class</span> <span class="nc">mbns</span><span class="p">(</span><span class="n">defense</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Pre-activation Distributions Expose Backdoor Neurons</span>
+
+<span class="sd">    basic structure:</span>
+
+<span class="sd">    1. config args, save_path, fix random seed</span>
+<span class="sd">    2. load the backdoor attack data and backdoor test data</span>
+<span class="sd">    3. bnp defense:</span>
+<span class="sd">        a. calculate the KL divergence of each norm layer between clean data and poisoned data</span>
+<span class="sd">        b. prune the model depend on the KL divergence with the threshold u</span>
+<span class="sd">    4. test the result and get ASR, ACC, RC</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        parser = argparse.ArgumentParser(description=sys.argv[0])</span>
+<span class="sd">        mbns.add_arguments(parser)</span>
+<span class="sd">        args = parser.parse_args()</span>
+<span class="sd">        mbns_method = mbns(args)</span>
+<span class="sd">        if &quot;result_file&quot; not in args.__dict__:</span>
+<span class="sd">            args.result_file = &#39;one_epochs_debug_badnet_attack&#39;</span>
+<span class="sd">        elif args.result_file is None:</span>
+<span class="sd">            args.result_file = &#39;one_epochs_debug_badnet_attack&#39;</span>
+<span class="sd">        result = mbns_method.defense(args.result_file)</span>
+
+<span class="sd">    .. Note::</span>
+<span class="sd">        @article{zheng2022pre,</span>
+<span class="sd">        title={Pre-activation Distributions Expose Backdoor Neurons},</span>
+<span class="sd">        author={Zheng, Runkai and Tang, Rongjun and Li, Jianze and Liu, Li},</span>
+<span class="sd">        journal={Advances in Neural Information Processing Systems},</span>
+<span class="sd">        volume={35},</span>
+<span class="sd">        pages={18667--18680},</span>
+<span class="sd">        year={2022}}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        baisc args: in the base class</span>
+<span class="sd">        u (float): the u in the bnp defense</span>
+<span class="sd">        u_min (float): the default minimum value of u</span>
+<span class="sd">        u_max (float): the default maximum value of u</span>
+<span class="sd">        u_num (float): the default number of u</span>
+<span class="sd">        ratio (float): the ratio of clean data loader</span>
+<span class="sd">        index (str): index of clean data</span>
+
+<span class="sd">    Update:</span>
+<span class="sd">        All threshold evaluation results will be saved in the save_path folder as a picture, and the selected fixed threshold model results will be saved to defense_result.pt</span>
+
+<span class="sd">		&quot;&quot;&quot;</span></div>
+
+    
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SCLBD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

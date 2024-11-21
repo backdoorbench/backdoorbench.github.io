@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>attack.LowFrequency &mdash; BackdoorBench v2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="/static/_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="/static/_static/css/mytheme.css" />
+
+  
+    <link rel="shortcut icon" href="/static/_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="/static/_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="/static/_static/documentation_options.js"></script>
+        <script src="/static/_static/jquery.js"></script>
+        <script src="/static/_static/underscore.js"></script>
+        <script src="/static/_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="/static/_static/doctools.js"></script>
+        <script src="/static/_static/js/version_alert.js"></script>
+    <script src="/static/_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="attack.LIRA" href="attack.LIRA.html" />
+    <link rel="prev" title="attack.LabelConsistent" href="attack.LabelConsistent.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="/static/_static/pyg_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Install and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/quickstart.html">Quick Start by Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/bddataset.html">Build Your Own Backdoor Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/attack.html">Build Your Own Backdoor Attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/defense.html">Build Your Own Backdoor Defense</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PACKAGE REFERENCE</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../modules/attack.html">packages of attack and defense</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../modules/attack.html#attack-methods">attack Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/attack.html#defense-methods">defense Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/attack.html#inference-time-detection-methods">inference-time detection Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/attack.html#pretraining-detection-methods">pretraining detection Methods</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Visualization</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../visualization/analysis_readme.html">Analysis Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualization/Demo_FV.html">Demo_FV</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BackdoorBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules/attack.html">packages of attack and defense</a></li>
+      <li class="breadcrumb-item active">attack.LowFrequency</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/attack.LowFrequency.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="attack-lowfrequency">
+<h1>attack.LowFrequency<a class="headerlink" href="#attack-lowfrequency" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="attack.LowFrequency">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LowFrequency</span></span><a class="reference internal" href="../_modules/attack/lf.html#LowFrequency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#attack.LowFrequency" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="attack.BadNet.html#attack.BadNet" title="attack.badnet.BadNet"><code class="xref py py-class docutils literal notranslate"><span class="pre">BadNet</span></code></a></p>
+<p>Rethinking the backdoor attacks’ triggers: A frequency perspective</p>
+<p>link : <a class="reference external" href="https://github.com/YiZeng623/frequency-backdoor">https://github.com/YiZeng623/frequency-backdoor</a></p>
+<p>basic structure:</p>
+<ol class="arabic simple">
+<li><p>config args, save_path, fix random seed</p></li>
+<li><p>set the clean train data and clean test data</p></li>
+<li><p>set the attack img transform and label transform</p></li>
+<li><p>set the backdoor attack data and backdoor test data</p></li>
+<li><p>set the device, model, criterion, optimizer, training schedule.</p></li>
+<li><p>attack or use the model to do finetune with 5% clean data</p></li>
+<li><p>save the attack result for defense</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">attack</span> <span class="o">=</span> <span class="n">LowFrequency</span><span class="p">()</span>
+<span class="n">attack</span><span class="o">.</span><span class="n">attack</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>&#64;inproceedings{zeng2021rethinking_lf,
+title={Rethinking the backdoor attacks’ triggers: A frequency perspective},
+author={Zeng, Yi and Park, Won and Mao, Z Morley and Jia, Ruoxi},
+booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision},
+year={2021}}</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attack</strong> (<em>string</em>) – name of attack, use to match the transform and set the saving prefix of path.</p></li>
+<li><p><strong>attack_target</strong> (<em>Int</em>) – target class No. in all2one attack</p></li>
+<li><p><strong>attack_label_trans</strong> (<em>str</em>) – which type of label modification in backdoor attack</p></li>
+<li><p><strong>pratio</strong> (<em>float</em>) – the poison rate</p></li>
+<li><p><strong>bd_yaml_path</strong> (<em>string</em>) – path for yaml file provide additional default attributes</p></li>
+<li><p><strong>lowFrequencyPatternPath</strong> (<em>string</em>) – path for low frequency pattern</p></li>
+<li><p><strong>resource_folder_path</strong> (<em>string</em>) – where the resource folder is</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – Additional attributes.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="attack.LabelConsistent.html" class="btn btn-neutral float-left" title="attack.LabelConsistent" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="attack.LIRA.html" class="btn btn-neutral float-right" title="attack.LIRA" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, SCLBD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
