@@ -26,19 +26,21 @@
     <style>
         /* Logo 样式 */
         .navbar-brand .logo {
-            height: 50px;
+            height: 50px; /* 高度 */
             display: inline-block;
-            vertical-align: middle;
+            vertical-align: middle; /* 对齐 */
         }
 
+        /* 导航栏背景颜色 */
         .navbar {
             background-color: white !important;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 阴影 */
         }
 
+        /* 导航栏文字颜色 */
         .navbar-nav .nav-link {
             color: black !important;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease; /* 颜色变化 */
         }
 
         .header-container {
@@ -51,11 +53,25 @@
             text-align: center;
         }
 
-        .container {
-            padding: 20px;
+        /* 导航栏边距 */
+        .container-fluid {
+            padding-left: 15px;
+            padding-right: 15px;
         }
 
-        /* 按钮样式 */
+        /* 主标题 */
+        .header-container h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        /* 副标题 */
+        .header-container p {
+            font-size: 1.5rem;
+            color: black;
+            margin-top: 10px;
+        }
+
         .btn-custom {
             display: inline-block;
             padding: 10px 20px;
@@ -73,6 +89,32 @@
             background-color: #7e57c2;
             color: white;
             text-decoration: none;
+        }
+
+        /* 按钮通用样式 */
+        .btn-outline-custom {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #7e57c2;
+            border: 2px solid #7e57c2;
+            border-radius: 5px; /* 圆角 */
+            background-color: transparent;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* 鼠标悬停效果 */
+        .btn-outline-custom:hover {
+            background-color: #7e57c2; /* 背景 */
+            color: white; /* 字体 */
+            text-decoration: none;
+        }
+
+        .btn-outline-custom + .btn-outline-custom {
+            margin-left: 10px;
         }
 
         pre, code {
