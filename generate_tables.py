@@ -36,7 +36,7 @@ def get_value(df, model,attack,defense):
 
    
 
-path='tables/backdoor_results.xlsx'
+path='tables/results.csv'
 datasets=['GTSRB','CIFAR100','tiny']
 pratios=['10%','5%','1%','0.5%','0.1%']
 
