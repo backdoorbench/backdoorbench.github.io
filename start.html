@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://kit.fontawesome.com/15106f0a68.js" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <title>BackdoorBench</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+        content="BackdoorBench is a comprehensive benchmark for evaluating backdoor attacks and defenses.">
+    <meta name="keywords" content="Backdoor Benchmark, Backdoor Attack, Backdoor Defense, AI Security, Adversarial">
+    <meta name="author" content="BackdoorBench">
+    <link rel="icon" href="image/favicon.ico">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="/static/css/typora.css">
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">
+
+
+
+    <style>
+        /* Logo 样式 */
+        .navbar-brand .logo {
+            height: 50px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .navbar {
+            background-color: white !important;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-nav .nav-link {
+            color: black !important;
+            transition: color 0.3s ease;
+        }
+
+        .header-container {
+            background-image: url('image/bg_network.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #ffffff;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        /* 按钮样式 */
+        .btn-custom {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #7e57c2;
+            text-decoration: none;
+            border: 2px solid #7e57c2;
+            border-radius: 20px;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #7e57c2;
+            color: white;
+            text-decoration: none;
+        }
+
+        pre, code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+
+        pre.line-numbers {
+            position: relative;
+            padding-left: 3em; /* 为行号留空间 */
+        }
+
+        .line-numbers .line-numbers-rows {
+            width: 3em;
+            text-align: right;
+            line-height: 1.5;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-brand">
+                <img src="image/logo.png" alt="Logo 1" class="logo">
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#content"
+                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="content">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html"><b>Home</b></a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/doc/index">Docs</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="model_zoo.html">Model Zoo</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Leaderboard
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="leaderboard-cifar10.html">CIFAR-10</a>
+                            <a class="dropdown-item" href="leaderboard-cifar100.html">CIFAR-100</a>
+                            <a class="dropdown-item" href="leaderboard-gtsrb.html">GTSRB</a>
+                            <a class="dropdown-item" href="leaderboard-tinyimagenet.html">Tiny ImageNet</a>
+                        </div>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="people.html">Team</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/SCLBD/backdoorbench" target="_blank">Github</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <div class="typora-export-content">
+            <div id="write">
+                <h2 id="overview">Overview</h2>
+                <p>BackdoorBench is a comprehensive benchmark of backdoor learning, which studies the adversarial
+                    vulnerability of deep learning models in the training stage. It aims to provide
+                    <strong style="font-weight: 900;">easy implementations</strong> of mainstream backdoor attack and defense methods. Currently,
+                    we support:</p>
+                <p align="center">
+                    <img src="image/framework.png" class="img-responsive" alt="Framework" width="90%">
+                </p>
+
+                <ul>
+                    <li><strong>Methods</strong>
+                        <ul>
+                            <li>8 Backdoor attack methods:
+                                <a href="https://machine-learning-and-security.github.io/papers/mlsec17_paper_51.pdf"
+                                    target="_blank">BadNets</a>,
+                                <a href="https://arxiv.org/abs/1712.05526v1" target="_blank">Blended</a>,
+                                <a href="https://arxiv.org/abs/1912.02771" target="_blank">Label Consistent</a>,
+                                <a href="https://ieeexplore.ieee.org/document/8802997" target="_blank">SIG</a>,
+                                <a href="https://openaccess.thecvf.com/content/ICCV2021/papers/Zeng_Rethinking_the_Backdoor_Attacks_Triggers_A_Frequency_Perspective_ICCV_2021_paper.pdf"
+                                    target="_blank">Low Frequency</a>,
+                                <a href="https://openaccess.thecvf.com/content/ICCV2021/papers/Li_Invisible_Backdoor_Attack_With_Sample-Specific_Triggers_ICCV_2021_paper.pdf"
+                                    target="_blank">SSBA</a>,
+                                <a href="https://proceedings.neurips.cc/paper/2020/file/234e691320c0ad5b45ee3c96d0d7b8f8-Paper.pdf"
+                                    target="_blank">Input-aware</a>,
+                                <a href="https://openreview.net/pdf?id=eEn8KTtJOx" target="_blank">WaNet</a>.
+                            </li>
+                            <li>9 Backdoor defense methods: FT, <a
+                                    href="https://proceedings.neurips.cc/paper/2018/file/280cf18baf4311c92aa5a042336587d3-Paper.pdf"
+                                    target="_blank">Spectral</a>,
+                                <a href="http://ceur-ws.org/Vol-2301/paper_18.pdf" target="_blank">AC</a>,
+                                <a href="https://link.springer.com/chapter/10.1007/978-3-030-00470-5_13"
+                                    target="_blank">FP</a>,
+                                <a href="https://proceedings.neurips.cc/paper/2021/file/7d38b1e9bd793d3f45e0e212a729a93c-Paper.pdf"
+                                    target="_blank">ABL</a>.
+                                <a href="https://openreview.net/pdf?id=9l0K4OM-oXE"
+                                    target="_blank">NAD</a>.
+                                <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8835365"
+                                    target="_blank">NC</a>.
+                                <a href="https://arxiv.org/pdf/2202.03423.pdf"
+                                    target="_blank">DBD</a>.
+                                <a href="https://proceedings.neurips.cc/paper/2021/file/8cbe9ce23f42628c98f80fa0fac8b19a-Paper.pdf"
+                                    target="_blank">ANP</a>.
+                            </li>
+                        </ul>
+                    </li>
+                    <li><strong>Datasets:</strong> CIFAR-10, CIFAR100, GTSRB, Tiny ImageNet</li>
+                    <li><strong>Models:</strong> PreAct-Resnet18, VGG19, DenseNet-161, MobileNetV3-Large, EfficientNet-B3
+                    </li>
+                </ul>
+                <p>For detailed structure and implementation details, refer to
+                    <a href="docs/detailed_structure.md" target="_blank">detailed_structure.md</a>.
+                </p>
+                <p>We also provide a <a href="https://backdoorbench.github.io/index.html" target="_blank"><strong style="font-weight: 900;">public
+                            leaderboard</strong></a> of evaluating above backdoor attacks against above backdoor defense
+                    methods.</p>
+                <p>BackdoorBench will be continuously updated to track the latest advances of backdoor learning. The implementations of more backdoor methods, as well as their evaluations are on the way. <strong style="font-weight: 900;">You are
+                    welcome to contribute your backdoor methods to BackdoorBench.</strong></p>
+                
+                    <h2 id="requirements">Requirements</h2>
+                    <p>You can run the following script to configure the necessary environment:</p>
+                    <pre class="line-numbers"><code class="language-bash">sh ./sh/install.sh</code></pre>
+
+                    <p>Detailed packages:</p>
+                    <pre class="line-numbers"><code class="language-bash">pytorch==1.11
+torchvision==0.12
+keras==2.7.0
+opencv-python==4.5.4.60
+pandas==1.3.5
+Pillow==8.4.0
+scikit-learn==1.0.2
+scikit-image==0.18.3
+torch==1.10.0
+torchaudio==0.10.0
+torchvision==0.11.1
+tqdm==4.61.0</code></pre>
+                        
+            
+                    <h3 id="usage">Usage</h3>
+                    <p>Please first to make a folder for record, all experiment results with save to record folder as default. And make folder for data to put supported datasets.</p>
+                    <pre class="line-numbers"><code class="language-bash">mkdir record
+mkdir data
+mkdir data/cifar10
+mkdir data/cifar100
+mkdir data/gtsrb
+mkdir data/tiny</code></pre>
+            
+                    <p>Please note that due to RAM issue, you may fail training on ImageNet. For ImageNet, please refer to the <code>for_imagenet</code> folder for a low-RAM alternative.</p>
+            
+                    <h3 id="attack">Attack</h3>
+                    <p>This is a demo script for running BadNets attack on CIFAR-10:</p>
+                    <pre class="line-numbers"><code class="language-bash">python ./attack/badnet_attack.py --yaml_path ../config/attack/badnet/cifar10.yaml --dataset cifar10 --dataset_path ../data --save_folder_name badnet_0_1</code></pre>
+
+                    <p>After attack, you will get a folder with all files saved in <code>./record/</code>, including <code>attack_result.pt</code> for attack model and backdoored data, which will be used by the following defense methods.</p>
+                    <p>If you want to change the attack methods, dataset, save folder location, you should specify both the attack method script in <code>../attack</code> and the YAML config file to use different attack methods.</p>
+                    <p>The detailed descriptions for each attack may be put into the <code>add_args</code> function in each script.</p>
+
+                    <h3 id="defense">Defense</h3>
+                    <p>This is a demo script for running AC defense on CIFAR-10 for BadNets attack. Before defense you need to run badnet attack on cifar-10 at first. Then you use the folder name as result_file.</p>
+                    <pre class="line-numbers"><code class="language-bash">python ./defense/ac/ac.py --result_file badnet_0_1 --yaml_path ./config/defense/ac/cifar10.yaml --dataset cifar10</code></pre>
+                    <p>If you want to change the defense methods and the setting for defense, you should specify both the attack method script in <code>../defense</code> and the YAML config file to use different defense methods.</p>
+            
+                    <h2 id="supported-attacks">Supported Attacks</h2>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th>&nbsp;</th>
+                            <th><span>File name</span></th>
+                            <th><span>Paper</span></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><span>BadNets</span></td>
+                            <td><a href='./attack/badnets_attack.py'><span>badnets_attack.py</span></a></td>
+                            <td><a
+                                href='https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=&amp;cad=rja&amp;uact=8&amp;ved=2ahUKEwir55bv0-X2AhVJIjQIHYTjAMgQFnoECCEQAQ&amp;url=https%3A%2F%2Fmachine-learning-and-security.github.io%2Fpapers%2Fmlsec17_paper_51.pdf&amp;usg=AOvVaw1Cu3kPaD0a4jgvwkPCX63j'><span>BadNets:
+                                  Identifying Vulnerabilities in the Machine Learning Model Supply Chain</span></a><span> IEEE Access 2019</span></td>
+                          </tr>
+                          <tr>
+                            <td><span>Blended</span></td>
+                            <td><a href='./attack/blended_attack.py'><span>blended_attack.py</span></a></td>
+                            <td><a href='https://arxiv.org/abs/1712.05526v1'><span>Targeted Backdoor Attacks on Deep Learning Systems Using Data Poisoning</span></a><span> Arxiv 2017</span></td>
+                          </tr>
+                          <tr>
+                            <td><span>Label Consistent</span></td>
+                            <td><a href='./attack/lc_attack.py'><span>lc_attack.py</span></a></td>
+                            <td><a
+                                href='https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=&amp;cad=rja&amp;uact=8&amp;ved=2ahUKEwjvwKTx2bH4AhXCD0QIHVMWApkQFnoECAsQAQ&amp;url=https%3A%2F%2Farxiv.org%2Fabs%2F1912.02771&amp;usg=AOvVaw0NbPR9lguGTsEn3ZWtPBDR'><span>Label-Consistent
+                                  Backdoor Attacks</span></a><span> Arxiv 2019</span></td>
+                          </tr>
+                          <tr>
+                            <td><span>SIG</span></td>
+                            <td><a href='./attack/sig_attack.py'><span>sig_attack.py</span></a></td>
+                            <td><a href='https://ieeexplore.ieee.org/document/8802997'><span>A new backdoor attack in cnns by training set corruption</span></a><span> ICIP 2019</span></td>
+                          </tr>
+                          <tr>
+                            <td><span>Low Frequency</span></td>
+                            <td><a href='./attack/lf_attack.py'><span>lf_attack.py</span></a></td>
+                            <td><a href='https://openaccess.thecvf.com/content/ICCV2021/papers/Zeng_Rethinking_the_Backdoor_Attacks_Triggers_A_Frequency_Perspective_ICCV_2021_paper.pdf'><span>Rethinking the
+                                  Backdoor Attacks’ Triggers: A Frequency Perspective</span></a><span> ICCV2021</span></td>
+                          </tr>
+                          <tr>
+                            <td><span>SSBA</span></td>
+                            <td><a href='./attack/ssba_attack.py'><span>ssba_attack.py</span></a></td>
+                            <td><a href='https://openaccess.thecvf.com/content/ICCV2021/papers/Li_Invisible_Backdoor_Attack_With_Sample-Specific_Triggers_ICCV_2021_paper.pdf'><span>Invisible Backdoor Attack
+                                  with Sample-Specific Triggers</span></a><span> ICCV 2021</span></td>
+                          </tr>
+                          <tr>
+                            <td><span>Input-aware</span></td>
+                            <td><a href='./attack/inputaware_attack.py'><span>inputaware_attack.py</span></a></td>
+                            <td><a href='https://proceedings.neurips.cc/paper/2020/file/234e691320c0ad5b45ee3c96d0d7b8f8-Paper.pdf'><span>Input-Aware Dynamic Backdoor Attack</span></a><span> NeurIPS
+                                2020</span></td>
+                          </tr>
+                          <tr>
+                            <td><span>WaNet</span></td>
+                            <td><a href='./attack/wanet_attack.py'><span>wanet_attack.py</span></a></td>
+                            <td><a href='https://openreview.net/pdf?id=eEn8KTtJOx'><span>WaNet -- Imperceptible Warping-Based Backdoor Attack</span></a><span> ICLR 2021</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    <p><span>For SSBA, the file we used with 1-bit embedded in the images is given at </span><a href='https://drive.google.com/drive/folders/1QU771F2_1mKgfNQZm3OMCyegu2ONJiU2?usp=sharing' target='_blank'
+                        class='url'>https://drive.google.com/drive/folders/1QU771F2_1mKgfNQZm3OMCyegu2ONJiU2?usp=sharing</a><span> .</span></p>
+                    <p><span>For LC attack the file we used is at </span><a href='https://drive.google.com/drive/folders/1Qhj5vXX7kX74IWdrQDwguWsV8UvJmzF4' target='_blank'
+                        class='url'>https://drive.google.com/drive/folders/1Qhj5vXX7kX74IWdrQDwguWsV8UvJmzF4</a><span> .</span></p>
+                    <p><span>For LF attack the file we used is at </span><a href='https://drive.google.com/drive/folders/16JrANmjDtvGc3lZ_Cv4lKEODFjRebmvk' target='_blank'
+                        class='url'>https://drive.google.com/drive/folders/16JrANmjDtvGc3lZ_Cv4lKEODFjRebmvk</a><span> .</span></p>
+
+                    <h2 id="supported-defenses">Supported Defenses</h2>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th style='text-align:left;'>&nbsp;</th>
+                            <th style='text-align:left;'><span>File name</span></th>
+                            <th style='text-align:left;'><span>Paper</span></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td style='text-align:left;'><span>FT</span></td>
+                            <td style='text-align:left;'><a href='./defense/ft/ft.py'><span>ft.py</span></a></td>
+                            <td style='text-align:left;'><span>standard fine-tuning</span></td>
+                          </tr>
+                          <tr>
+                            <td style='text-align:left;'><span>FP</span></td>
+                            <td style='text-align:left;'><a href='./defense/fp/fp.py'><span>fp.py</span></a></td>
+                            <td style='text-align:left;'><a href='https://link.springer.com/chapter/10.1007/978-3-030-00470-5_13'><span>Fine-Pruning: Defending Against Backdooring Attacks on Deep Neural
+                                  Networks</span></a><span> RAID 2018</span></td>
+                          </tr>
+                          <tr>
+                            <td style='text-align:left;'><span>NAD</span></td>
+                            <td style='text-align:left;'><a href='./defense/nad/nad.py'><span>nad.py</span></a></td>
+                            <td style='text-align:left;'><a href='https://openreview.net/pdf?id=9l0K4OM-oXE'><span>Neural Attention Distillation: Erasing Backdoor Triggers From Deep Neural
+                                  Networks</span></a><span> ICLR 2021</span></td>
+                          </tr>
+                          <tr>
+                            <td style='text-align:left;'><span>NC</span></td>
+                            <td style='text-align:left;'><a href='./defense/nc/nc.py'><span>nc.py</span></a></td>
+                            <td style='text-align:left;'><a href='https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8835365'><span>Neural Cleanse: Identifying And Mitigating Backdoor Attacks In Neural
+                                  Networks</span></a><span>, IEEE S&amp;P 2019</span></td>
+                          </tr>
+                          <tr>
+                            <td style='text-align:left;'><span>ANP</span></td>
+                            <td style='text-align:left;'><a href='./defense/anp/anp.py'><span>anp.py</span></a></td>
+                            <td style='text-align:left;'><a href='https://proceedings.neurips.cc/paper/2021/file/8cbe9ce23f42628c98f80fa0fac8b19a-Paper.pdf'><span>Adversarial Neuron Pruning Purifies
+                                  Backdoored Deep Models</span></a><span> NeurIPS 2021</span></td>
+                          </tr>
+                          <tr>
+                            <td style='text-align:left;'><span>AC</span></td>
+                            <td style='text-align:left;'><a href='./defense/ac/ac.py'><span>ac.py</span></a></td>
+                            <td style='text-align:left;'><a href='http://ceur-ws.org/Vol-2301/paper_18.pdf'><span>Detecting Backdoor Attacks on Deep Neural Networks by Activation Clustering</span></a><span>
+                                ceur-ws 2018</span></td>
+                          </tr>
+                          <tr>
+                            <td style='text-align:left;'><span>Spectral</span></td>
+                            <td style='text-align:left;'><a href='./defense/spectral/spectral.py'><span>spectral.py</span></a></td>
+                            <td style='text-align:left;'><a href='https://proceedings.neurips.cc/paper/2018/file/280cf18baf4311c92aa5a042336587d3-Paper.pdf'><span>Spectral Signatures in Backdoor
+                                  Attacks</span></a><span> NeurIPS 2018</span></td>
+                          </tr>
+                          <tr>
+                            <td style='text-align:left;'><span>ABL</span></td>
+                            <td style='text-align:left;'><a href='./defense/abl/abl.py'><span>abl.py</span></a></td>
+                            <td style='text-align:left;'><a href='https://proceedings.neurips.cc/paper/2021/file/7d38b1e9bd793d3f45e0e212a729a93c-Paper.pdf'><span>Anti-Backdoor Learning: Training Clean Models
+                                  on Poisoned Data</span></a><span> NeurIPS 2021</span></td>
+                          </tr>
+                          <tr>
+                            <td style='text-align:left;'><span>DBD</span></td>
+                            <td style='text-align:left;'><a href='./defense/dbd/dbd.py'><span>dbd.py</span></a></td>
+                            <td style='text-align:left;'><a href='https://arxiv.org/pdf/2202.03423.pdf'><span>Backdoor Defense Via Decoupling The Training Process</span></a><span> ICLR 2022</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+            
+                    <h2 id="copyright">Copyright</h2>
+                    <p><span>This repository is licensed by </span><a href='https://www.cuhk.edu.cn/en'><span>The Chinese University of Hong Kong, Shenzhen</span></a><span> and </span><a
+                        href='http://www.sribd.cn/en'><span>Shenzhen Research Institute of Big Data</span></a><span> under Creative Commons Attribution-NonCommercial 4.0 International Public License (identified
+                        as </span><a href='https://spdx.org/licenses/'><span>CC BY-NC-4.0 in SPDX</span></a><span>). More details about the license could be found in </span><a
+                        href='./LICENSE'><span>LICENSE</span></a><span>.</span></p>
+                    <p><span>This project is built by the Secure Computing Lab of Big Data (</span><a href='http://scl.sribd.cn/index.html'><span>SCLBD</span></a><span>) at The Chinese University of Hong Kong,
+                        Shenzhen and Shenzhen Research Institute of Big Data, directed by Professor </span><a href='https://sites.google.com/site/baoyuanwu2015/home'><span>Baoyuan Wu</span></a><span>. SCLBD
+                        focuses on research of trustworthy AI, including backdoor learning, adversarial examples, federated learning, fairness, etc.</span></p>
+                    <p><span>If any suggestion or comment, please contact us at </span><a href='mailto:wubaoyuan@cuhk.edu.cn' target='_blank' class='url'>wubaoyuan@cuhk.edu.cn</a><span>.</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <p class="text-center">BackdoorBench@2023 <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2023006778号-1</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+
+</html>
