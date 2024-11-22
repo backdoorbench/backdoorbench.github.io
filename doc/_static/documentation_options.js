@@ -1,5 +1,5 @@
 var DOCUMENTATION_OPTIONS = {
-    URL_ROOT: "./",
+    URL_ROOT: "/doc/",
     VERSION: 'v2',
     LANGUAGE: 'en',
     COLLAPSE_INDEX: false,
