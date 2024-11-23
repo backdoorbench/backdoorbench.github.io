@@ -137,12 +137,6 @@
           .then(response => response.text())
           .then(html => {
               document.getElementById('navbar').innerHTML = html;
-
-              const navbarContainer = document.querySelector('#navbar .container-fluid');
-              if (navbarContainer) {
-                  navbarContainer.style.paddingLeft = '15px !important';
-                  navbarContainer.style.paddingRight = '15px !important';
-              }
           })
           .catch(error => console.error('Error loading navbar:', error));
   </script>
