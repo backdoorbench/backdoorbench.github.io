@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://kit.fontawesome.com/15106f0a68.js" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <title>BackdoorBench</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+        content="BackdoorBench is a comprehensive benchmark for evaluating backdoor attacks and defenses.">
+    <meta name="keywords" content="Backdoor Benchmark, Backdoor Attack, Backdoor Defense, AI Security, Adversarial">
+    <meta name="author" content="BackdoorBench">
+    <link rel="icon" href="image/favicon.ico">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <style>
+        /* Logo 样式 */
+        .navbar-brand .logo {
+            height: 50px; /* 高度 */
+            display: inline-block;
+            vertical-align: middle; /* 对齐 */
+        }
+
+        /* 导航栏背景颜色 */
+        .navbar {
+            background-color: white !important;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 阴影 */
+        }
+
+        /* 导航栏文字颜色 */
+        .navbar-nav .nav-link {
+            color: black !important;
+            transition: color 0.3s ease; /* 颜色变化 */
+        }
+
+        .header-container {
+            background-image: url('image/bg_network.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #ffffff;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        /* 导航栏边距 */
+        .container-fluid {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        /* 主标题 */
+        .header-container h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        /* 副标题 */
+        .header-container p {
+            font-size: 1.5rem;
+            color: black;
+            margin-top: 10px;
+        }
+
+        .btn-custom {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #7e57c2;
+            text-decoration: none;
+            border: 2px solid #7e57c2;
+            border-radius: 20px;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #7e57c2;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* 按钮通用样式 */
+        .btn-outline-custom {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #7e57c2;
+            border: 2px solid #7e57c2;
+            border-radius: 5px; /* 圆角 */
+            background-color: transparent;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* 鼠标悬停效果 */
+        .btn-outline-custom:hover {
+            background-color: #7e57c2; /* 背景 */
+            color: white; /* 字体 */
+            text-decoration: none;
+        }
+
+        .btn-outline-custom + .btn-outline-custom {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-brand">
+                <img src="image/logo.png" alt="Logo 1" class="logo">
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#content"
+                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="content">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html"><b>Home</b></a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://backdoorbench.github.io/docs/">Docs</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="model_zoo.html">Model Zoo</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Leaderboard
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="leaderboard-cifar10.html">CIFAR-10</a>
+                            <a class="dropdown-item" href="leaderboard-cifar100.html">CIFAR-100</a>
+                            <a class="dropdown-item" href="leaderboard-gtsrb.html">GTSRB</a>
+                            <a class="dropdown-item" href="leaderboard-tinyimagenet.html">Tiny ImageNet</a>
+                        </div>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="people.html">Team</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/SCLBD/backdoorbench" target="_blank">Github</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <br />
+    <br />
+
+    <div class="container" align="justify">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 thumb">
+                <h4>CIFAR-10 Leaderboard</h4>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 thumb">
+                <!-- <h6>Use the tabs below to navigate to the corresponding leaderboard for each task. </h6> -->
+
+                <p>The CIFAR-10 leaderboard compiles results from different backdoor defense methods against different
+                    backdoor
+                    attack methods. For different poisoning ratio settings, please use the tabs below to navigate to the
+                    corresponding leaderboard, which measures the robustness of a model.</p>
+
+                <p>
+                    <b>Metric:</b>
+                <ul>
+                    <li><b>C-Acc</b> (<b>C</b>lean <b>Acc</b>uracy): The ratio of clean samples that are identified as
+                        their ground-truth classes,, which reflects the healthiness of a model.</li>
+                    <li><b>ASR</b> (<b>A</b>ttack <b>S</b>uccess <b>R</b>ate): The ratio of poisoned samples that are
+                        identified as the target class, which manifests the immunity of a model.</li>
+                    <li><b>R-Acc</b> (<b>R</b>obust <b>Acc</b>uracy): The ratio of poisoned samples that are identified as
+                        their ground-truth classes, which measures the robustness of a model.</li>
+
+                </ul>
+                </p>
+            </div>
+        </div>
+
+        <br />
+
+        <!-- 表格内容在这里填写 -->
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 thumb">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="cifar10-10-tab" data-toggle="tab" href="#cifar10-10" role="tab"
+                            aria-controls="cifar10-10" aria-selected="true">Poisoning Ratio = 10%</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="cifar10-5-tab" data-toggle="tab" href="#cifar10-5" role="tab"
+                            aria-controls="cifar10-5" aria-selected="false">5%</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="cifar10-1-tab" data-toggle="tab" href="#cifar10-1" role="tab"
+                            aria-controls="cifar10-1" aria-selected="false">1%</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="cifar10-0_5-tab" data-toggle="tab" href="#cifar10-0_5" role="tab"
+                            aria-controls="cifar10-0_5" aria-selected="false">0.5%</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="cifar10-0_1-tab" data-toggle="tab" href="#cifar10-0_1" role="tab"
+                            aria-controls="cifar10-0_1" aria-selected="false">0.1%</a>
+                    </li>
+                </ul>
+
+                <br />
+
+                <!-- 表格内容在这里填写 -->
+                <div class="tab-content" id="myTabContent">
+
+                    <!-- cifar-10 poison ratio=10% -->
+                    <div class="tab-pane fade show active" id="cifar10-10" role="tabpanel"
+                        aria-labelledby="cifar10-10-tab">
+
+
+                        <div style="overflow: auto; width: 100%;">
+                            <!-- TODO -->
+                            <table style="overflow: auto; width: 100%;"
+                                class="table table-hover sortable  performanceTableWide" id="cifar10-10-results">
+                                <col>
+                                <col>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <thead>
+                                    <tr>
+                                        <th class="sorttable_nosort"></th>
+                                        <th class="sorttable_nosort">Backdoor&nbsp;&nbsp;&nbsp;Defense&nbsp;&rarr;</th>
+                                        <th class="sorttable_nosort" colspan="3">No&nbsp;&nbsp;&nbsp;defense</th>
+                                        <th class="sorttable_nosort" colspan="3">FT</th>
+                                        <th class="sorttable_nosort" colspan="3">FP</th>
+                                        <th class="sorttable_nosort" colspan="3">NAD</th>
+                                        <th class="sorttable_nosort" colspan="3">NC</th>
+                                        <th class="sorttable_nosort" colspan="3">ANP</th>
+                                        <th class="sorttable_nosort" colspan="3">AC</th>
+                                        <th class="sorttable_nosort" colspan="3">Spectral</th>
+                                        <th class="sorttable_nosort" colspan="3">ABL</th>
+                                        <th class="sorttable_nosort" colspan="3">DBD</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="sorttable_nosort" scope="col" rowspan="2">
+                                            Targeted&nbsp;Model</th>
+                                        <th class="sorttable_nosort" scope="col" rowspan="2">Backdoor&nbsp;Attack&darr;
+                                        </th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody><tr><td>PreAct-Resnet18</td> <td>BadNets</td><td>91.32</td><td>95.03</td><td>4.67</td><td>89.96</td><td>1.48</td><td>89.39</td><td>91.31</td><td>57.13</td><td>41.62</td><td>89.87</td><td>2.14</td><td>88.71</td><td>89.05</td><td>1.27</td><td>89.16</td><td>84.17</td><td>0.73</td><td>84.04</td><td>88.8</td><td>86.23</td><td>13.28</td><td>89.98</td><td>92.41</td><td>7.2</td><td>83.32</td><td>0.0</td><td>89.02</td><td>89.65</td><td>1.28</td><td>89.17</td></tr><tr><td>PreAct-Resnet18</td> <td>Blended</td><td>93.47</td><td>99.92</td><td>0.08</td><td>92.78</td><td>96.11</td><td>3.57</td><td>93.17</td><td>99.26</td><td>0.73</td><td>92.17</td><td>97.69</td><td>2.14</td><td>93.47</td><td>99.92</td><td>0.08</td><td>86.58</td><td>2.19</td><td>61.17</td><td>88.52</td><td>99.72</td><td>0.28</td><td>90.35</td><td>99.84</td><td>0.14</td><td>77.3</td><td>0.73</td><td>64.52</td><td>69.91</td><td>99.98</td><td>0.02</td></tr><tr><td>PreAct-Resnet18</td> <td>LC</td><td>84.59</td><td>99.92</td><td>0.07</td><td>90.6</td><td>11.53</td><td>59.74</td><td>89.53</td><td>0.46</td><td>13.32</td><td>90.42</td><td>10.5</td><td>59.7</td><td>90.28</td><td>6.87</td><td>62.24</td><td>83.98</td><td>4.12</td><td>54.69</td><td>81.28</td><td>98.78</td><td>0.86</td><td>84.13</td><td>99.53</td><td>0.42</td><td>65.31</td><td>0.0</td><td>52.69</td><td>61.71</td><td>0.0</td><td>54.01</td></tr><tr><td>PreAct-Resnet18</td> <td>SIG</td><td>84.48</td><td>98.27</td><td>1.72</td><td>90.8</td><td>2.37</td><td>69.74</td><td>89.1</td><td>26.2</td><td>20.61</td><td>90.02</td><td>10.66</td><td>64.2</td><td>84.48</td><td>98.27</td><td>1.72</td><td>77.97</td><td>0.01</td><td>48.8</td><td>82.41</td><td>94.61</td><td>5.17</td><td>83.01</td><td>92.27</td><td>7.4</td><td>57.8</td><td>0.0</td><td>59.97</td><td>60.67</td><td>100.0</td><td>0.0</td></tr><tr><td>PreAct-Resnet18</td> <td>LF</td><td>93.19</td><td>99.28</td><td>0.71</td><td>92.37</td><td>78.44</td><td>19.42</td><td>92.9</td><td>98.97</td><td>1.02</td><td>92.37</td><td>47.83</td><td>47.49</td><td>91.62</td><td>1.41</td><td>87.48</td><td>85.15</td><td>0.6</td><td>82.72</td><td>88.92</td><td>98.09</td><td>1.72</td><td>92.58</td><td>98.67</td><td>1.28</td><td>81.72</td><td>0.21</td><td>84.81</td><td>50.98</td><td>99.7</td><td>0.08</td></tr><tr><td>PreAct-Resnet18</td> <td>SSBA</td><td>92.88</td><td>97.86</td><td>1.99</td><td>92.14</td><td>74.79</td><td>23.31</td><td>92.54</td><td>83.5</td><td>15.36</td><td>91.91</td><td>77.4</td><td>20.86</td><td>90.99</td><td>0.58</td><td>87.04</td><td>86.54</td><td>0.39</td><td>79.87</td><td>90.0</td><td>96.23</td><td>3.53</td><td>89.63</td><td>90.5</td><td>8.71</td><td>80.79</td><td>0.0</td><td>84.66</td><td>63.5</td><td>99.51</td><td>0.39</td></tr><tr><td>PreAct-Resnet18</td> <td>Input-aware</td><td>90.67</td><td>98.26</td><td>1.66</td><td>93.12</td><td>1.72</td><td>90.53</td><td>91.74</td><td>0.04</td><td>44.54</td><td>93.18</td><td>1.68</td><td>91.12</td><td>92.61</td><td>0.76</td><td>90.87</td><td>90.36</td><td>1.64</td><td>86.99</td><td>91.48</td><td>88.62</td><td>10.61</td><td>91.39</td><td>90.43</td><td>9.13</td><td>63.19</td><td>90.16</td><td>5.77</td><td>78.6</td><td>8.54</td><td>75.28</td></tr><tr><td>PreAct-Resnet18</td> <td>WaNet</td><td>91.25</td><td>89.73</td><td>9.76</td><td>93.48</td><td>17.1</td><td>78.29</td><td>91.46</td><td>1.09</td><td>69.73</td><td>93.17</td><td>22.98</td><td>72.69</td><td>91.8</td><td>7.53</td><td>85.09</td><td>85.73</td><td>0.43</td><td>86.5</td><td>91.93</td><td>96.8</td><td>3.06</td><td>91.94</td><td>90.17</td><td>9.37</td><td>83.19</td><td>0.0</td><td>85.86</td><td>80.9</td><td>6.61</td><td>77.61</td></tr><tr><td>VGG19</td> <td>BadNets</td><td>89.36</td><td>95.93</td><td>3.81</td><td>88.08</td><td>25.42</td><td>69.68</td><td>89.23</td><td>92.61</td><td>6.82</td><td>87.51</td><td>38.17</td><td>58.3</td><td>87.86</td><td>1.0</td><td>88.01</td><td>NA</td><td>NA</td><td>NA</td><td>86.25</td><td>94.37</td><td>5.17</td><td>88.07</td><td>91.67</td><td>7.78</td><td>85.13</td><td>93.92</td><td>5.5</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>Blended</td><td>90.17</td><td>99.12</td><td>0.82</td><td>88.76</td><td>94.37</td><td>5.22</td><td>90.07</td><td>99.11</td><td>0.82</td><td>88.35</td><td>93.08</td><td>6.33</td><td>85.92</td><td>1.79</td><td>74.13</td><td>NA</td><td>NA</td><td>NA</td><td>87.58</td><td>98.13</td><td>1.76</td><td>89.18</td><td>99.76</td><td>0.23</td><td>88.61</td><td>99.48</td><td>0.46</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>LC</td><td>82.21</td><td>97.46</td><td>1.78</td><td>85.85</td><td>7.41</td><td>56.07</td><td>85.35</td><td>96.84</td><td>2.29</td><td>85.34</td><td>6.43</td><td>56.57</td><td>82.21</td><td>97.46</td><td>1.78</td><td>NA</td><td>NA</td><td>NA</td><td>77.89</td><td>35.71</td><td>39.92</td><td>80.65</td><td>73.09</td><td>18.9</td><td>80.73</td><td>98.11</td><td>1.21</td><td>10.0</td><td>0.0</td><td>11.1</td></tr><tr><td>VGG19</td> <td>SIG</td><td>81.69</td><td>99.8</td><td>0.12</td><td>86.89</td><td>98.16</td><td>1.68</td><td>84.52</td><td>99.93</td><td>0.07</td><td>86.01</td><td>99.18</td><td>0.77</td><td>81.69</td><td>99.8</td><td>0.12</td><td>NA</td><td>NA</td><td>NA</td><td>79.6</td><td>99.94</td><td>0.06</td><td>80.27</td><td>97.77</td><td>1.89</td><td>80.53</td><td>99.81</td><td>0.16</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>LF</td><td>88.94</td><td>93.93</td><td>5.62</td><td>87.88</td><td>62.84</td><td>33.01</td><td>88.98</td><td>91.8</td><td>7.46</td><td>87.85</td><td>59.38</td><td>35.01</td><td>85.35</td><td>9.99</td><td>72.79</td><td>NA</td><td>NA</td><td>NA</td><td>83.07</td><td>89.39</td><td>8.59</td><td>87.88</td><td>92.83</td><td>6.44</td><td>87.89</td><td>93.17</td><td>6.0</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>SSBA</td><td>89.48</td><td>91.86</td><td>7.29</td><td>88.2</td><td>46.28</td><td>47.83</td><td>89.4</td><td>89.66</td><td>9.22</td><td>87.65</td><td>37.54</td><td>54.58</td><td>89.48</td><td>91.86</td><td>7.29</td><td>NA</td><td>NA</td><td>NA</td><td>88.62</td><td>92.26</td><td>6.98</td><td>89.61</td><td>92.6</td><td>6.81</td><td>87.66</td><td>8.69</td><td>78.41</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>Input-aware</td><td>77.69</td><td>94.59</td><td>4.79</td><td>74.74</td><td>13.39</td><td>57.97</td><td>78.62</td><td>86.77</td><td>11.79</td><td>75.7</td><td>23.36</td><td>54.71</td><td>77.67</td><td>94.58</td><td>4.79</td><td>NA</td><td>NA</td><td>NA</td><td>83.52</td><td>82.57</td><td>15.2</td><td>87.22</td><td>84.71</td><td>13.58</td><td>88.3</td><td>86.48</td><td>12.0</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>WaNet</td><td>88.43</td><td>88.9</td><td>10.3</td><td>91.03</td><td>30.04</td><td>64.93</td><td>89.61</td><td>73.39</td><td>24.57</td><td>90.82</td><td>44.93</td><td>51.18</td><td>88.43</td><td>88.89</td><td>10.3</td><td>NA</td><td>NA</td><td>NA</td><td>87.96</td><td>92.56</td><td>7.02</td><td>87.76</td><td>96.24</td><td>3.53</td><td>86.29</td><td>91.77</td><td>7.22</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>EfficientNet-B3</td> <td>BadNets</td><td>57.48</td><td>9.51</td><td>55.59</td><td>53.69</td><td>5.09</td><td>52.96</td><td>57.97</td><td>3.88</td><td>57.46</td><td>55.29</td><td>4.5</td><td>54.68</td><td>57.48</td><td>9.53</td><td>55.58</td><td>57.48</td><td>9.53</td><td>55.58</td><td>39.76</td><td>17.28</td><td>36.51</td><td>37.64</td><td>15.5</td><td>36.11</td><td>36.44</td><td>8.51</td><td>36.29</td><td>54.44</td><td>94.26</td><td>3.91</td></tr><tr><td>EfficientNet-B3</td> <td>Blended</td><td>65.11</td><td>87.76</td><td>8.01</td><td>61.16</td><td>8.6</td><td>44.66</td><td>65.21</td><td>59.03</td><td>24.14</td><td>62.76</td><td>11.86</td><td>46.32</td><td>59.93</td><td>3.87</td><td>51.8</td><td>65.11</td><td>87.76</td><td>8.01</td><td>34.58</td><td>63.32</td><td>15.88</td><td>53.68</td><td>70.81</td><td>17.58</td><td>18.14</td><td>1.91</td><td>15.51</td><td>52.1</td><td>99.94</td><td>0.04</td></tr><tr><td>EfficientNet-B3</td> <td>LC</td><td>62.09</td><td>1.61</td><td>47.72</td><td>60.68</td><td>7.34</td><td>42.04</td><td>64.07</td><td>7.02</td><td>44.89</td><td>62.51</td><td>7.22</td><td>42.8</td><td>57.32</td><td>7.1</td><td>41.63</td><td>62.09</td><td>1.61</td><td>47.73</td><td>26.55</td><td>0.0</td><td>28.11</td><td>45.53</td><td>0.04</td><td>42.14</td><td>22.42</td><td>0.03</td><td>23.32</td><td>60.13</td><td>0.0</td><td>53.02</td></tr><tr><td>EfficientNet-B3</td> <td>SIG</td><td>58.14</td><td>99.71</td><td>0.13</td><td>56.92</td><td>3.98</td><td>24.03</td><td>58.83</td><td>0.12</td><td>10.84</td><td>58.27</td><td>3.63</td><td>25.83</td><td>58.15</td><td>99.71</td><td>0.13</td><td>58.15</td><td>99.71</td><td>0.13</td><td>46.07</td><td>99.16</td><td>0.26</td><td>52.64</td><td>98.14</td><td>0.76</td><td>11.79</td><td>9.58</td><td>32.02</td><td>45.49</td><td>99.96</td><td>0.04</td></tr><tr><td>EfficientNet-B3</td> <td>LF</td><td>56.95</td><td>80.06</td><td>10.51</td><td>53.91</td><td>26.43</td><td>31.87</td><td>56.71</td><td>64.11</td><td>18.17</td><td>55.09</td><td>34.42</td><td>30.13</td><td>52.09</td><td>16.62</td><td>37.49</td><td>53.01</td><td>67.98</td><td>15.43</td><td>34.42</td><td>72.51</td><td>9.41</td><td>52.27</td><td>68.96</td><td>15.03</td><td>41.86</td><td>32.03</td><td>32.39</td><td>50.48</td><td>99.21</td><td>0.58</td></tr><tr><td>EfficientNet-B3</td> <td>SSBA</td><td>55.76</td><td>24.4</td><td>45.5</td><td>53.42</td><td>7.1</td><td>49.32</td><td>56.49</td><td>6.07</td><td>52.97</td><td>54.7</td><td>6.91</td><td>50.72</td><td>55.77</td><td>24.4</td><td>45.49</td><td>55.77</td><td>24.4</td><td>45.49</td><td>29.94</td><td>29.13</td><td>25.88</td><td>49.67</td><td>13.8</td><td>45.66</td><td>27.37</td><td>15.74</td><td>24.19</td><td>51.82</td><td>99.27</td><td>0.59</td></tr><tr><td>EfficientNet-B3</td> <td>Input-aware</td><td>70.01</td><td>94.96</td><td>2.34</td><td>67.84</td><td>50.37</td><td>17.97</td><td>65.61</td><td>7.03</td><td>15.66</td><td>70.3</td><td>48.93</td><td>22.64</td><td>67.47</td><td>54.81</td><td>8.14</td><td>70.01</td><td>29.92</td><td>27.78</td><td>47.2</td><td>99.39</td><td>0.07</td><td>42.22</td><td>98.13</td><td>0.26</td><td>17.3</td><td>16.47</td><td>17.13</td><td>54.13</td><td>100.0</td><td>0.0</td></tr><tr><td>EfficientNet-B3</td> <td>WaNet</td><td>71.73</td><td>7.93</td><td>69.33</td><td>70.8</td><td>3.59</td><td>67.96</td><td>25.27</td><td>7.43</td><td>26.2</td><td>73.23</td><td>3.14</td><td>70.88</td><td>71.74</td><td>7.93</td><td>69.33</td><td>71.74</td><td>7.93</td><td>69.33</td><td>37.78</td><td>14.34</td><td>35.28</td><td>52.44</td><td>7.11</td><td>51.91</td><td>37.97</td><td>7.66</td><td>35.89</td><td>58.83</td><td>18.44</td><td>54.87</td></tr><tr><td>MobileNetV3-Large</td> <td>BadNets</td><td>82.45</td><td>93.39</td><td>5.84</td><td>77.99</td><td>3.0</td><td>77.0</td><td>82.36</td><td>93.97</td><td>5.32</td><td>79.02</td><td>4.57</td><td>76.22</td><td>75.19</td><td>2.53</td><td>74.62</td><td>82.04</td><td>3.72</td><td>80.87</td><td>70.46</td><td>89.98</td><td>7.77</td><td>78.12</td><td>92.83</td><td>5.93</td><td>76.57</td><td>83.59</td><td>13.33</td><td>57.21</td><td>86.84</td><td>9.67</td></tr><tr><td>MobileNetV3-Large</td> <td>Blended</td><td>83.43</td><td>98.76</td><td>1.13</td><td>78.94</td><td>12.27</td><td>53.93</td><td>83.13</td><td>1.46</td><td>19.52</td><td>79.88</td><td>18.81</td><td>52.72</td><td>77.59</td><td>3.53</td><td>65.72</td><td>75.56</td><td>95.02</td><td>3.97</td><td>71.48</td><td>95.08</td><td>3.33</td><td>79.18</td><td>98.16</td><td>1.46</td><td>76.0</td><td>79.02</td><td>15.63</td><td>51.67</td><td>99.64</td><td>0.31</td></tr><tr><td>MobileNetV3-Large</td> <td>LC</td><td>75.53</td><td>98.67</td><td>0.84</td><td>76.39</td><td>6.47</td><td>49.82</td><td>80.78</td><td>0.12</td><td>11.78</td><td>78.13</td><td>5.92</td><td>50.24</td><td>76.0</td><td>6.64</td><td>48.94</td><td>70.21</td><td>69.12</td><td>14.1</td><td>65.83</td><td>95.94</td><td>2.13</td><td>73.47</td><td>98.62</td><td>0.86</td><td>66.66</td><td>99.98</td><td>0.02</td><td>56.71</td><td>0.0</td><td>49.44</td></tr><tr><td>MobileNetV3-Large</td> <td>SIG</td><td>77.13</td><td>98.7</td><td>1.04</td><td>78.09</td><td>2.51</td><td>42.93</td><td>82.0</td><td>0.0</td><td>17.41</td><td>79.1</td><td>1.87</td><td>37.86</td><td>77.13</td><td>98.7</td><td>1.04</td><td>73.49</td><td>78.3</td><td>14.4</td><td>67.85</td><td>99.33</td><td>0.46</td><td>73.47</td><td>97.99</td><td>1.33</td><td>63.2</td><td>90.66</td><td>5.63</td><td>48.42</td><td>100.0</td><td>0.0</td></tr><tr><td>MobileNetV3-Large</td> <td>LF</td><td>82.73</td><td>96.63</td><td>1.77</td><td>77.92</td><td>24.54</td><td>44.76</td><td>82.22</td><td>0.6</td><td>13.33</td><td>78.98</td><td>10.08</td><td>57.0</td><td>82.73</td><td>96.63</td><td>1.77</td><td>75.45</td><td>5.44</td><td>58.76</td><td>72.37</td><td>96.33</td><td>2.32</td><td>79.61</td><td>96.58</td><td>2.42</td><td>75.32</td><td>64.92</td><td>25.42</td><td>51.4</td><td>99.37</td><td>0.49</td></tr><tr><td>MobileNetV3-Large</td> <td>SSBA</td><td>81.84</td><td>85.06</td><td>12.16</td><td>77.8</td><td>6.94</td><td>68.71</td><td>82.14</td><td>62.99</td><td>29.57</td><td>78.35</td><td>9.51</td><td>68.06</td><td>75.95</td><td>3.96</td><td>71.43</td><td>76.26</td><td>58.59</td><td>30.71</td><td>67.79</td><td>57.71</td><td>29.01</td><td>76.85</td><td>72.18</td><td>21.61</td><td>76.22</td><td>31.27</td><td>50.26</td><td>53.93</td><td>97.93</td><td>1.51</td></tr><tr><td>MobileNetV3-Large</td> <td>Input-aware</td><td>77.35</td><td>89.17</td><td>9.12</td><td>78.2</td><td>7.09</td><td>62.23</td><td>79.8</td><td>3.32</td><td>57.37</td><td>79.82</td><td>4.46</td><td>64.8</td><td>76.77</td><td>4.37</td><td>67.01</td><td>77.35</td><td>89.17</td><td>9.12</td><td>71.36</td><td>69.29</td><td>21.37</td><td>78.58</td><td>75.03</td><td>19.74</td><td>73.96</td><td>78.38</td><td>15.32</td><td>50.01</td><td>99.98</td><td>0.01</td></tr><tr><td>MobileNetV3-Large</td> <td>WaNet</td><td>78.0</td><td>70.88</td><td>24.8</td><td>80.4</td><td>4.14</td><td>77.22</td><td>24.71</td><td>9.89</td><td>20.82</td><td>81.81</td><td>3.56</td><td>78.97</td><td>78.0</td><td>70.88</td><td>24.8</td><td>78.57</td><td>4.71</td><td>76.3</td><td>69.61</td><td>43.82</td><td>41.47</td><td>77.59</td><td>53.23</td><td>36.92</td><td>59.83</td><td>58.71</td><td>29.79</td><td>58.66</td><td>12.3</td><td>54.99</td></tr><tr><td>DenseNet-161</td> <td>BadNets</td><td>84.33</td><td>89.68</td><td>9.1</td><td>83.59</td><td>32.7</td><td>56.87</td><td>85.16</td><td>87.51</td><td>10.81</td><td>82.28</td><td>68.73</td><td>26.47</td><td>83.1</td><td>1.84</td><td>82.36</td><td>76.53</td><td>0.29</td><td>79.92</td><td>73.17</td><td>79.32</td><td>16.6</td><td>81.13</td><td>87.71</td><td>10.59</td><td>76.32</td><td>1.02</td><td>79.38</td><td>67.41</td><td>15.23</td><td>64.12</td></tr><tr><td>DenseNet-161</td> <td>Blended</td><td>86.37</td><td>98.79</td><td>1.04</td><td>84.39</td><td>81.83</td><td>14.74</td><td>85.95</td><td>98.98</td><td>0.88</td><td>83.69</td><td>72.82</td><td>19.6</td><td>83.17</td><td>1.01</td><td>72.9</td><td>78.93</td><td>2.06</td><td>65.93</td><td>75.45</td><td>94.31</td><td>4.23</td><td>82.06</td><td>97.01</td><td>2.44</td><td>67.81</td><td>2.16</td><td>73.28</td><td>56.66</td><td>99.53</td><td>0.4</td></tr><tr><td>DenseNet-161</td> <td>LC</td><td>78.68</td><td>78.06</td><td>13.88</td><td>83.58</td><td>9.12</td><td>52.66</td><td>83.91</td><td>41.49</td><td>36.56</td><td>82.34</td><td>8.68</td><td>52.36</td><td>81.45</td><td>7.33</td><td>52.31</td><td>80.16</td><td>20.92</td><td>47.42</td><td>68.92</td><td>15.27</td><td>45.64</td><td>77.02</td><td>40.88</td><td>36.48</td><td>58.79</td><td>19.9</td><td>39.38</td><td>72.36</td><td>0.0</td><td>60.77</td></tr><tr><td>DenseNet-161</td> <td>SIG</td><td>78.63</td><td>98.67</td><td>1.23</td><td>83.49</td><td>19.3</td><td>49.21</td><td>83.23</td><td>27.57</td><td>38.66</td><td>82.7</td><td>18.47</td><td>48.69</td><td>81.62</td><td>7.99</td><td>43.91</td><td>74.25</td><td>2.64</td><td>45.37</td><td>69.85</td><td>98.34</td><td>1.33</td><td>75.61</td><td>98.71</td><td>1.18</td><td>43.47</td><td>0.0</td><td>60.47</td><td>45.4</td><td>96.77</td><td>3.1</td></tr><tr><td>DenseNet-161</td> <td>LF</td><td>84.32</td><td>91.7</td><td>6.9</td><td>83.07</td><td>62.07</td><td>31.2</td><td>83.93</td><td>92.04</td><td>6.42</td><td>82.51</td><td>62.29</td><td>30.13</td><td>81.11</td><td>10.73</td><td>67.6</td><td>78.5</td><td>6.73</td><td>70.53</td><td>72.91</td><td>83.24</td><td>12.26</td><td>80.61</td><td>88.47</td><td>9.2</td><td>64.4</td><td>23.01</td><td>53.82</td><td>59.62</td><td>98.29</td><td>1.46</td></tr><tr><td>DenseNet-161</td> <td>SSBA</td><td>84.18</td><td>84.13</td><td>13.39</td><td>83.76</td><td>32.84</td><td>55.9</td><td>84.26</td><td>83.76</td><td>13.49</td><td>82.8</td><td>29.79</td><td>57.22</td><td>81.68</td><td>8.49</td><td>71.78</td><td>76.82</td><td>1.23</td><td>74.62</td><td>71.94</td><td>60.54</td><td>29.57</td><td>79.68</td><td>75.13</td><td>20.34</td><td>68.13</td><td>0.59</td><td>77.33</td><td>67.25</td><td>97.62</td><td>1.93</td></tr><tr><td>DenseNet-161</td> <td>Input-aware</td><td>84.46</td><td>94.41</td><td>5.18</td><td>86.77</td><td>2.69</td><td>82.02</td><td>85.15</td><td>22.34</td><td>60.34</td><td>86.47</td><td>10.31</td><td>76.64</td><td>84.45</td><td>94.41</td><td>5.18</td><td>84.03</td><td>4.06</td><td>75.08</td><td>74.19</td><td>89.66</td><td>7.73</td><td>81.64</td><td>91.82</td><td>6.68</td><td>63.79</td><td>13.14</td><td>51.26</td><td>74.12</td><td>77.45</td><td>17.14</td></tr><tr><td>DenseNet-161</td> <td>WaNet</td><td>84.61</td><td>73.81</td><td>22.72</td><td>87.52</td><td>2.34</td><td>84.48</td><td>85.72</td><td>24.61</td><td>64.71</td><td>87.3</td><td>6.26</td><td>81.16</td><td>87.1</td><td>1.86</td><td>85.07</td><td>84.21</td><td>1.24</td><td>83.69</td><td>72.07</td><td>41.99</td><td>43.37</td><td>80.04</td><td>65.82</td><td>28.01</td><td>30.37</td><td>97.74</td><td>1.58</td><td>65.25</td><td>10.98</td><td>62.0</td></tr></tbody>
+</table>
+                        </div>
+                    </div>
+
+                    <!-- cifar-10 poison ratio=5% -->
+                    <div class="tab-pane fade " id="cifar10-5" role="tabpanel" aria-labelledby="cifar10-5-tab">
+
+                        <div style="overflow: auto; width: 100%;">
+                            <!-- TODO -->
+                            <table style="overflow: auto; width: 100%;"
+                                class="table table-hover sortable  performanceTableWide" id="cifar10-10-results">
+                                <col>
+                                <col>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <thead>
+                                    <tr>
+                                        <th class="sorttable_nosort"></th>
+                                        <th class="sorttable_nosort">Backdoor&nbsp;&nbsp;&nbsp;Defense&nbsp;&rarr;</th>
+                                        <th class="sorttable_nosort" colspan="3">No&nbsp;&nbsp;&nbsp;defense</th>
+                                        <th class="sorttable_nosort" colspan="3">FT</th>
+                                        <th class="sorttable_nosort" colspan="3">FP</th>
+                                        <th class="sorttable_nosort" colspan="3">NAD</th>
+                                        <th class="sorttable_nosort" colspan="3">NC</th>
+                                        <th class="sorttable_nosort" colspan="3">ANP</th>
+                                        <th class="sorttable_nosort" colspan="3">AC</th>
+                                        <th class="sorttable_nosort" colspan="3">Spectral</th>
+                                        <th class="sorttable_nosort" colspan="3">ABL</th>
+                                        <th class="sorttable_nosort" colspan="3">DBD</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="sorttable_nosort" scope="col" rowspan="2">
+                                            Targeted&nbsp;Model</th>
+                                        <th class="sorttable_nosort" scope="col" rowspan="2">Backdoor&nbsp;Attack&darr;
+                                        </th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody><tr><td>PreAct-Resnet18</td> <td>BadNets</td><td>92.64</td><td>88.74</td><td>10.78</td><td>91.22</td><td>4.49</td><td>88.22</td><td>92.47</td><td>17.47</td><td>77.9</td><td>91.03</td><td>4.73</td><td>87.93</td><td>89.89</td><td>1.17</td><td>89.7</td><td>87.24</td><td>0.34</td><td>87.34</td><td>90.27</td><td>75.61</td><td>23.58</td><td>91.21</td><td>69.4</td><td>29.21</td><td>84.08</td><td>0.0</td><td>90.5</td><td>87.68</td><td>2.11</td><td>87.01</td></tr><tr><td>PreAct-Resnet18</td> <td>Blended</td><td>93.67</td><td>99.61</td><td>0.39</td><td>93.25</td><td>98.78</td><td>1.21</td><td>93.46</td><td>98.87</td><td>1.11</td><td>93.1</td><td>99.06</td><td>0.93</td><td>93.66</td><td>99.61</td><td>0.39</td><td>88.0</td><td>11.98</td><td>58.5</td><td>91.54</td><td>98.93</td><td>1.03</td><td>91.43</td><td>99.42</td><td>0.56</td><td>65.78</td><td>0.0</td><td>48.48</td><td>75.0</td><td>99.99</td><td>0.01</td></tr><tr><td>PreAct-Resnet18</td> <td>LC</td><td>93.29</td><td>99.5</td><td>0.43</td><td>92.54</td><td>96.34</td><td>2.81</td><td>93.38</td><td>96.71</td><td>2.6</td><td>92.74</td><td>97.62</td><td>1.89</td><td>91.51</td><td>3.58</td><td>64.46</td><td>84.07</td><td>5.06</td><td>53.84</td><td>89.33</td><td>97.29</td><td>1.89</td><td>92.56</td><td>99.5</td><td>0.4</td><td>75.91</td><td>99.37</td><td>0.44</td><td>81.88</td><td>5.83</td><td>60.38</td></tr><tr><td>PreAct-Resnet18</td> <td>SIG</td><td>93.64</td><td>97.09</td><td>2.9</td><td>92.84</td><td>96.42</td><td>3.46</td><td>93.27</td><td>99.79</td><td>0.2</td><td>92.49</td><td>96.98</td><td>2.93</td><td>93.65</td><td>97.09</td><td>2.9</td><td>86.64</td><td>0.21</td><td>49.61</td><td>90.24</td><td>93.32</td><td>6.31</td><td>91.79</td><td>96.36</td><td>3.31</td><td>46.14</td><td>0.0</td><td>42.3</td><td>74.86</td><td>95.58</td><td>4.22</td></tr><tr><td>PreAct-Resnet18</td> <td>LF</td><td>93.35</td><td>98.03</td><td>1.86</td><td>93.21</td><td>93.62</td><td>6.02</td><td>93.14</td><td>98.37</td><td>1.53</td><td>92.98</td><td>94.23</td><td>5.3</td><td>93.35</td><td>98.03</td><td>1.86</td><td>86.32</td><td>2.66</td><td>82.79</td><td>89.02</td><td>95.14</td><td>4.29</td><td>92.36</td><td>97.32</td><td>2.49</td><td>66.54</td><td>98.02</td><td>1.27</td><td>83.98</td><td>15.67</td><td>73.11</td></tr><tr><td>PreAct-Resnet18</td> <td>SSBA</td><td>93.27</td><td>94.91</td><td>4.82</td><td>93.08</td><td>87.46</td><td>11.69</td><td>93.05</td><td>87.14</td><td>12.09</td><td>92.49</td><td>88.63</td><td>10.58</td><td>91.04</td><td>0.8</td><td>87.93</td><td>87.53</td><td>0.66</td><td>81.63</td><td>88.47</td><td>92.64</td><td>6.63</td><td>92.01</td><td>93.19</td><td>6.38</td><td>81.6</td><td>0.09</td><td>79.76</td><td>72.19</td><td>11.34</td><td>65.42</td></tr><tr><td>PreAct-Resnet18</td> <td>Input-aware</td><td>91.52</td><td>90.2</td><td>8.91</td><td>93.12</td><td>89.34</td><td>9.99</td><td>91.89</td><td>52.74</td><td>44.49</td><td>93.07</td><td>97.12</td><td>2.68</td><td>91.51</td><td>90.2</td><td>8.91</td><td>91.54</td><td>2.22</td><td>86.4</td><td>92.07</td><td>92.2</td><td>7.36</td><td>92.02</td><td>83.81</td><td>14.84</td><td>58.14</td><td>92.58</td><td>4.84</td><td>76.23</td><td>6.12</td><td>71.99</td></tr><tr><td>PreAct-Resnet18</td> <td>WaNet</td><td>91.76</td><td>85.5</td><td>13.49</td><td>93.47</td><td>31.32</td><td>64.03</td><td>92.14</td><td>26.1</td><td>63.5</td><td>93.31</td><td>50.4</td><td>46.46</td><td>91.76</td><td>85.5</td><td>13.49</td><td>87.21</td><td>0.57</td><td>87.69</td><td>91.96</td><td>88.72</td><td>10.88</td><td>91.47</td><td>83.84</td><td>15.16</td><td>69.49</td><td>95.2</td><td>3.79</td><td>72.22</td><td>9.93</td><td>69.41</td></tr><tr><td>VGG19</td> <td>BadNets</td><td>89.83</td><td>94.36</td><td>5.39</td><td>89.14</td><td>50.56</td><td>47.02</td><td>89.81</td><td>90.32</td><td>9.09</td><td>88.42</td><td>74.51</td><td>23.89</td><td>88.51</td><td>1.04</td><td>88.31</td><td>NA</td><td>NA</td><td>NA</td><td>88.26</td><td>93.1</td><td>6.34</td><td>88.79</td><td>90.78</td><td>8.58</td><td>86.03</td><td>91.93</td><td>7.3</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>Blended</td><td>90.41</td><td>97.98</td><td>1.79</td><td>88.58</td><td>90.47</td><td>8.72</td><td>90.21</td><td>97.93</td><td>1.84</td><td>88.84</td><td>92.68</td><td>6.7</td><td>86.92</td><td>2.61</td><td>73.99</td><td>NA</td><td>NA</td><td>NA</td><td>87.76</td><td>97.69</td><td>2.16</td><td>88.98</td><td>96.72</td><td>2.93</td><td>88.99</td><td>98.44</td><td>1.38</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>LC</td><td>89.08</td><td>43.06</td><td>40.1</td><td>88.88</td><td>9.06</td><td>56.8</td><td>89.34</td><td>38.5</td><td>42.84</td><td>88.15</td><td>9.63</td><td>55.72</td><td>89.08</td><td>43.06</td><td>40.1</td><td>NA</td><td>NA</td><td>NA</td><td>82.71</td><td>22.52</td><td>47.77</td><td>87.12</td><td>31.88</td><td>45.01</td><td>87.43</td><td>32.1</td><td>44.93</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>SIG</td><td>90.41</td><td>96.76</td><td>2.84</td><td>89.1</td><td>88.24</td><td>9.74</td><td>90.55</td><td>97.72</td><td>2.12</td><td>88.96</td><td>91.34</td><td>7.3</td><td>90.41</td><td>96.76</td><td>2.84</td><td>NA</td><td>NA</td><td>NA</td><td>87.27</td><td>98.78</td><td>0.9</td><td>88.99</td><td>97.44</td><td>2.34</td><td>88.77</td><td>98.67</td><td>0.94</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>LF</td><td>90.13</td><td>86.04</td><td>12.5</td><td>88.83</td><td>55.8</td><td>39.23</td><td>89.86</td><td>83.69</td><td>14.77</td><td>88.82</td><td>54.51</td><td>40.07</td><td>87.25</td><td>8.58</td><td>76.39</td><td>NA</td><td>NA</td><td>NA</td><td>83.83</td><td>79.07</td><td>17.7</td><td>87.98</td><td>83.29</td><td>14.96</td><td>88.14</td><td>87.57</td><td>10.91</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>SSBA</td><td>89.93</td><td>81.19</td><td>17.14</td><td>88.76</td><td>28.17</td><td>63.28</td><td>89.81</td><td>78.61</td><td>19.68</td><td>88.07</td><td>43.93</td><td>48.86</td><td>87.31</td><td>2.27</td><td>83.27</td><td>NA</td><td>NA</td><td>NA</td><td>85.84</td><td>90.62</td><td>8.31</td><td>85.7</td><td>89.97</td><td>8.93</td><td>88.5</td><td>78.44</td><td>19.02</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>Input-aware</td><td>89.34</td><td>71.66</td><td>25.77</td><td>90.95</td><td>67.67</td><td>30.98</td><td>89.9</td><td>52.58</td><td>43.51</td><td>90.51</td><td>81.62</td><td>17.73</td><td>89.58</td><td>2.88</td><td>85.3</td><td>NA</td><td>NA</td><td>NA</td><td>89.75</td><td>63.24</td><td>34.06</td><td>89.85</td><td>87.07</td><td>12.23</td><td>88.47</td><td>73.49</td><td>23.22</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>WaNet</td><td>89.25</td><td>3.96</td><td>86.71</td><td>90.71</td><td>1.51</td><td>89.57</td><td>90.25</td><td>1.66</td><td>89.08</td><td>90.61</td><td>1.67</td><td>89.4</td><td>89.25</td><td>3.96</td><td>86.69</td><td>NA</td><td>NA</td><td>NA</td><td>88.46</td><td>36.68</td><td>57.16</td><td>89.26</td><td>70.89</td><td>26.74</td><td>87.86</td><td>61.62</td><td>34.01</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>EfficientNet-B3</td> <td>BadNets</td><td>65.64</td><td>5.89</td><td>63.88</td><td>59.52</td><td>4.87</td><td>58.43</td><td>65.25</td><td>3.88</td><td>63.88</td><td>61.81</td><td>5.16</td><td>60.73</td><td>59.43</td><td>5.26</td><td>58.31</td><td>65.63</td><td>5.89</td><td>63.88</td><td>22.57</td><td>29.76</td><td>18.66</td><td>53.12</td><td>5.74</td><td>53.69</td><td>28.52</td><td>0.59</td><td>30.34</td><td>61.6</td><td>7.78</td><td>58.69</td></tr><tr><td>EfficientNet-B3</td> <td>Blended</td><td>60.01</td><td>74.83</td><td>16.4</td><td>56.49</td><td>12.34</td><td>46.38</td><td>60.17</td><td>40.16</td><td>35.48</td><td>57.84</td><td>14.21</td><td>46.59</td><td>56.36</td><td>6.81</td><td>50.76</td><td>60.03</td><td>74.83</td><td>16.4</td><td>42.21</td><td>34.89</td><td>29.42</td><td>48.44</td><td>48.06</td><td>27.62</td><td>21.82</td><td>1.67</td><td>21.02</td><td>54.29</td><td>99.76</td><td>0.16</td></tr><tr><td>EfficientNet-B3</td> <td>LC</td><td>64.51</td><td>4.21</td><td>47.2</td><td>60.11</td><td>6.26</td><td>42.83</td><td>64.17</td><td>5.24</td><td>46.06</td><td>61.92</td><td>6.34</td><td>43.88</td><td>64.51</td><td>4.21</td><td>47.2</td><td>64.52</td><td>4.21</td><td>47.2</td><td>41.33</td><td>3.44</td><td>35.99</td><td>45.58</td><td>2.17</td><td>40.57</td><td>35.42</td><td>0.7</td><td>30.23</td><td>56.91</td><td>0.0</td><td>50.79</td></tr><tr><td>EfficientNet-B3</td> <td>SIG</td><td>58.53</td><td>99.14</td><td>0.49</td><td>55.06</td><td>51.48</td><td>16.71</td><td>58.4</td><td>99.9</td><td>0.06</td><td>57.17</td><td>77.53</td><td>6.64</td><td>58.53</td><td>99.14</td><td>0.49</td><td>58.53</td><td>99.14</td><td>0.49</td><td>51.52</td><td>95.52</td><td>1.06</td><td>49.99</td><td>78.09</td><td>7.32</td><td>15.16</td><td>3.9</td><td>30.32</td><td>51.11</td><td>99.84</td><td>0.16</td></tr><tr><td>EfficientNet-B3</td> <td>LF</td><td>65.28</td><td>72.09</td><td>18.27</td><td>59.67</td><td>24.57</td><td>40.54</td><td>64.82</td><td>61.31</td><td>25.09</td><td>62.17</td><td>31.12</td><td>39.78</td><td>65.28</td><td>72.09</td><td>18.29</td><td>59.63</td><td>63.22</td><td>22.91</td><td>39.57</td><td>62.76</td><td>12.42</td><td>45.71</td><td>45.27</td><td>22.03</td><td>19.26</td><td>1.18</td><td>26.59</td><td>53.88</td><td>92.93</td><td>5.76</td></tr><tr><td>EfficientNet-B3</td> <td>SSBA</td><td>54.95</td><td>9.9</td><td>50.79</td><td>51.6</td><td>6.06</td><td>48.04</td><td>55.34</td><td>4.92</td><td>52.62</td><td>53.56</td><td>5.18</td><td>50.54</td><td>49.9</td><td>6.07</td><td>46.79</td><td>54.95</td><td>9.9</td><td>50.79</td><td>21.4</td><td>24.82</td><td>15.9</td><td>33.54</td><td>7.2</td><td>32.74</td><td>41.18</td><td>2.46</td><td>43.7</td><td>51.9</td><td>94.34</td><td>4.2</td></tr><tr><td>EfficientNet-B3</td> <td>Input-aware</td><td>69.7</td><td>76.47</td><td>14.31</td><td>68.92</td><td>24.61</td><td>29.56</td><td>70.82</td><td>92.27</td><td>4.89</td><td>71.31</td><td>38.64</td><td>29.27</td><td>69.7</td><td>76.48</td><td>14.31</td><td>67.5</td><td>68.93</td><td>18.04</td><td>26.39</td><td>25.76</td><td>15.89</td><td>45.29</td><td>82.23</td><td>5.24</td><td>37.72</td><td>20.82</td><td>23.64</td><td>53.93</td><td>100.0</td><td>0.0</td></tr><tr><td>EfficientNet-B3</td> <td>WaNet</td><td>75.39</td><td>6.54</td><td>72.43</td><td>75.09</td><td>3.4</td><td>71.98</td><td>22.92</td><td>9.5</td><td>23.82</td><td>76.7</td><td>3.04</td><td>73.76</td><td>75.4</td><td>6.54</td><td>72.43</td><td>75.38</td><td>6.54</td><td>72.43</td><td>32.49</td><td>14.92</td><td>30.5</td><td>50.28</td><td>5.21</td><td>49.14</td><td>31.79</td><td>2.16</td><td>30.56</td><td>60.35</td><td>14.66</td><td>57.27</td></tr><tr><td>MobileNetV3-Large</td> <td>BadNets</td><td>83.18</td><td>90.0</td><td>8.71</td><td>78.11</td><td>8.72</td><td>72.71</td><td>83.1</td><td>88.03</td><td>10.32</td><td>79.63</td><td>27.41</td><td>58.87</td><td>78.49</td><td>2.26</td><td>78.38</td><td>80.28</td><td>2.14</td><td>79.68</td><td>72.75</td><td>18.83</td><td>62.5</td><td>79.63</td><td>87.69</td><td>10.51</td><td>78.45</td><td>60.51</td><td>32.31</td><td>53.18</td><td>13.63</td><td>47.53</td></tr><tr><td>MobileNetV3-Large</td> <td>Blended</td><td>83.42</td><td>97.33</td><td>2.2</td><td>78.9</td><td>23.47</td><td>45.7</td><td>83.23</td><td>93.77</td><td>3.99</td><td>79.77</td><td>39.41</td><td>38.86</td><td>77.04</td><td>1.24</td><td>64.69</td><td>79.78</td><td>85.1</td><td>9.87</td><td>74.29</td><td>90.76</td><td>6.42</td><td>79.64</td><td>95.78</td><td>3.22</td><td>75.78</td><td>41.17</td><td>40.08</td><td>57.67</td><td>99.28</td><td>0.56</td></tr><tr><td>MobileNetV3-Large</td> <td>LC</td><td>84.22</td><td>95.91</td><td>2.5</td><td>79.71</td><td>19.31</td><td>42.97</td><td>84.1</td><td>89.06</td><td>4.77</td><td>80.16</td><td>19.51</td><td>42.46</td><td>78.37</td><td>5.14</td><td>50.92</td><td>78.74</td><td>1.58</td><td>50.86</td><td>70.86</td><td>8.96</td><td>46.9</td><td>79.01</td><td>15.07</td><td>47.02</td><td>73.13</td><td>7.29</td><td>47.21</td><td>58.75</td><td>4.89</td><td>43.84</td></tr><tr><td>MobileNetV3-Large</td> <td>SIG</td><td>83.94</td><td>96.22</td><td>2.94</td><td>79.24</td><td>9.37</td><td>38.82</td><td>83.36</td><td>39.13</td><td>6.8</td><td>80.44</td><td>1.9</td><td>35.63</td><td>76.71</td><td>2.13</td><td>26.93</td><td>78.81</td><td>91.87</td><td>5.33</td><td>73.52</td><td>97.22</td><td>1.38</td><td>80.17</td><td>97.47</td><td>1.84</td><td>69.3</td><td>77.48</td><td>10.98</td><td>56.42</td><td>99.83</td><td>0.16</td></tr><tr><td>MobileNetV3-Large</td> <td>LF</td><td>83.72</td><td>94.53</td><td>3.68</td><td>79.08</td><td>20.36</td><td>42.89</td><td>83.43</td><td>2.1</td><td>18.79</td><td>79.87</td><td>33.41</td><td>35.68</td><td>83.72</td><td>94.53</td><td>3.69</td><td>79.78</td><td>93.99</td><td>4.48</td><td>71.5</td><td>92.72</td><td>4.69</td><td>79.95</td><td>94.1</td><td>4.31</td><td>75.86</td><td>20.68</td><td>45.43</td><td>52.09</td><td>98.72</td><td>0.93</td></tr><tr><td>MobileNetV3-Large</td> <td>SSBA</td><td>82.61</td><td>69.64</td><td>24.54</td><td>78.82</td><td>5.88</td><td>69.96</td><td>83.11</td><td>49.07</td><td>41.52</td><td>79.71</td><td>5.94</td><td>70.81</td><td>77.47</td><td>4.11</td><td>71.47</td><td>81.3</td><td>13.74</td><td>67.24</td><td>72.0</td><td>28.52</td><td>51.4</td><td>77.75</td><td>39.94</td><td>47.41</td><td>73.52</td><td>33.99</td><td>47.99</td><td>59.9</td><td>8.68</td><td>54.46</td></tr><tr><td>MobileNetV3-Large</td> <td>Input-aware</td><td>74.68</td><td>81.37</td><td>14.32</td><td>79.1</td><td>8.98</td><td>60.8</td><td>81.66</td><td>11.82</td><td>55.38</td><td>80.94</td><td>13.62</td><td>60.89</td><td>74.69</td><td>81.37</td><td>14.32</td><td>69.82</td><td>4.0</td><td>59.12</td><td>72.51</td><td>69.34</td><td>20.3</td><td>79.26</td><td>71.5</td><td>22.36</td><td>75.14</td><td>73.21</td><td>18.5</td><td>57.04</td><td>42.62</td><td>40.57</td></tr><tr><td>MobileNetV3-Large</td> <td>WaNet</td><td>79.32</td><td>2.89</td><td>77.7</td><td>80.48</td><td>3.87</td><td>77.0</td><td>25.72</td><td>6.04</td><td>25.84</td><td>81.9</td><td>3.17</td><td>78.84</td><td>79.31</td><td>2.89</td><td>77.69</td><td>77.0</td><td>1.68</td><td>77.02</td><td>70.73</td><td>13.66</td><td>62.89</td><td>78.55</td><td>19.11</td><td>65.11</td><td>71.38</td><td>14.89</td><td>64.13</td><td>58.93</td><td>10.87</td><td>55.47</td></tr><tr><td>DenseNet-161</td> <td>BadNets</td><td>85.45</td><td>79.87</td><td>17.67</td><td>84.25</td><td>29.62</td><td>61.13</td><td>85.64</td><td>67.23</td><td>28.78</td><td>83.21</td><td>18.31</td><td>69.02</td><td>83.65</td><td>1.86</td><td>83.31</td><td>76.93</td><td>0.81</td><td>77.64</td><td>74.54</td><td>49.81</td><td>39.56</td><td>82.18</td><td>75.22</td><td>21.18</td><td>76.24</td><td>1.3</td><td>79.72</td><td>69.28</td><td>7.92</td><td>66.36</td></tr><tr><td>DenseNet-161</td> <td>Blended</td><td>86.13</td><td>96.62</td><td>2.82</td><td>85.39</td><td>80.74</td><td>15.21</td><td>86.12</td><td>97.39</td><td>2.21</td><td>84.33</td><td>84.8</td><td>12.0</td><td>83.85</td><td>1.11</td><td>72.52</td><td>79.02</td><td>8.52</td><td>58.57</td><td>75.87</td><td>86.0</td><td>10.6</td><td>83.54</td><td>93.57</td><td>5.29</td><td>69.55</td><td>0.96</td><td>70.88</td><td>61.29</td><td>99.63</td><td>0.27</td></tr><tr><td>DenseNet-161</td> <td>LC</td><td>85.48</td><td>13.72</td><td>52.01</td><td>84.77</td><td>6.9</td><td>53.8</td><td>85.73</td><td>18.38</td><td>50.31</td><td>83.42</td><td>6.77</td><td>53.48</td><td>80.28</td><td>5.21</td><td>52.33</td><td>84.12</td><td>7.73</td><td>53.79</td><td>75.27</td><td>7.83</td><td>49.63</td><td>82.1</td><td>10.42</td><td>51.54</td><td>52.71</td><td>7.88</td><td>33.29</td><td>73.46</td><td>5.4</td><td>53.57</td></tr><tr><td>DenseNet-161</td> <td>SIG</td><td>86.11</td><td>95.21</td><td>4.31</td><td>84.5</td><td>90.47</td><td>8.01</td><td>86.17</td><td>99.63</td><td>0.34</td><td>84.34</td><td>93.0</td><td>6.27</td><td>86.11</td><td>95.21</td><td>4.31</td><td>80.15</td><td>1.07</td><td>52.21</td><td>75.42</td><td>95.82</td><td>2.83</td><td>83.18</td><td>95.77</td><td>3.29</td><td>46.71</td><td>0.0</td><td>59.73</td><td>71.73</td><td>99.74</td><td>0.26</td></tr><tr><td>DenseNet-161</td> <td>LF</td><td>85.68</td><td>82.56</td><td>14.63</td><td>84.44</td><td>61.66</td><td>32.17</td><td>85.33</td><td>85.21</td><td>12.29</td><td>84.12</td><td>63.42</td><td>29.66</td><td>85.68</td><td>82.56</td><td>14.64</td><td>78.71</td><td>14.82</td><td>62.93</td><td>74.1</td><td>67.89</td><td>22.76</td><td>82.06</td><td>71.04</td><td>24.11</td><td>63.15</td><td>75.29</td><td>16.44</td><td>69.51</td><td>23.63</td><td>58.0</td></tr><tr><td>DenseNet-161</td> <td>SSBA</td><td>84.85</td><td>60.3</td><td>33.34</td><td>84.04</td><td>21.57</td><td>64.8</td><td>85.08</td><td>60.28</td><td>33.21</td><td>83.06</td><td>24.7</td><td>61.5</td><td>80.66</td><td>2.76</td><td>76.33</td><td>79.57</td><td>1.87</td><td>75.02</td><td>74.06</td><td>32.03</td><td>51.08</td><td>81.67</td><td>35.71</td><td>53.11</td><td>73.42</td><td>3.3</td><td>73.79</td><td>57.81</td><td>57.22</td><td>33.79</td></tr><tr><td>DenseNet-161</td> <td>Input-aware</td><td>84.85</td><td>79.39</td><td>18.21</td><td>86.9</td><td>19.72</td><td>69.07</td><td>85.15</td><td>23.92</td><td>47.97</td><td>87.12</td><td>39.7</td><td>53.51</td><td>84.95</td><td>5.6</td><td>78.01</td><td>80.35</td><td>5.03</td><td>69.46</td><td>75.33</td><td>68.4</td><td>23.8</td><td>82.04</td><td>67.87</td><td>25.66</td><td>64.93</td><td>65.19</td><td>20.9</td><td>61.04</td><td>41.13</td><td>42.82</td></tr><tr><td>DenseNet-161</td> <td>WaNet</td><td>83.47</td><td>36.49</td><td>55.96</td><td>87.57</td><td>1.47</td><td>85.53</td><td>85.6</td><td>2.2</td><td>82.43</td><td>87.49</td><td>1.69</td><td>85.42</td><td>86.56</td><td>1.41</td><td>85.31</td><td>78.95</td><td>0.93</td><td>78.93</td><td>74.42</td><td>12.7</td><td>65.02</td><td>81.2</td><td>27.4</td><td>59.36</td><td>51.05</td><td>58.31</td><td>25.43</td><td>68.03</td><td>5.57</td><td>66.28</td></tr></tbody>
+</table>
+                        </div>
+                    </div>
+
+                    <!-- cifar-10 poison ratio=1% -->
+                    <div class="tab-pane fade" id="cifar10-1" role="tabpanel" aria-labelledby="cifar10-1-tab">
+
+                        <div style="overflow: auto; width: 100%;">
+                            <!-- TODO -->
+                            <table style="overflow: auto; width: 100%;"
+                                class="table table-hover sortable  performanceTableWide" id="cifar10-10-results">
+                                <col>
+                                <col>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <thead>
+                                    <tr>
+                                        <th class="sorttable_nosort"></th>
+                                        <th class="sorttable_nosort">Backdoor&nbsp;&nbsp;&nbsp;Defense&nbsp;&rarr;</th>
+                                        <th class="sorttable_nosort" colspan="3">No&nbsp;&nbsp;&nbsp;defense</th>
+                                        <th class="sorttable_nosort" colspan="3">FT</th>
+                                        <th class="sorttable_nosort" colspan="3">FP</th>
+                                        <th class="sorttable_nosort" colspan="3">NAD</th>
+                                        <th class="sorttable_nosort" colspan="3">NC</th>
+                                        <th class="sorttable_nosort" colspan="3">ANP</th>
+                                        <th class="sorttable_nosort" colspan="3">AC</th>
+                                        <th class="sorttable_nosort" colspan="3">Spectral</th>
+                                        <th class="sorttable_nosort" colspan="3">ABL</th>
+                                        <th class="sorttable_nosort" colspan="3">DBD</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="sorttable_nosort" scope="col" rowspan="2">
+                                            Targeted&nbsp;Model</th>
+                                        <th class="sorttable_nosort" scope="col" rowspan="2">Backdoor&nbsp;Attack&darr;
+                                        </th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody><tr><td>PreAct-Resnet18</td> <td>BadNets</td><td>93.14</td><td>74.73</td><td>24.24</td><td>93.07</td><td>10.36</td><td>84.58</td><td>92.98</td><td>20.18</td><td>75.87</td><td>92.52</td><td>8.33</td><td>85.96</td><td>91.64</td><td>0.88</td><td>91.68</td><td>84.67</td><td>0.29</td><td>85.3</td><td>88.88</td><td>27.18</td><td>68.14</td><td>92.62</td><td>74.2</td><td>24.88</td><td>72.81</td><td>53.2</td><td>41.31</td><td>78.09</td><td>2.99</td><td>76.51</td></tr><tr><td>PreAct-Resnet18</td> <td>Blended</td><td>93.76</td><td>94.88</td><td>4.79</td><td>93.53</td><td>91.96</td><td>7.56</td><td>93.48</td><td>94.14</td><td>5.41</td><td>93.34</td><td>92.07</td><td>7.41</td><td>90.98</td><td>65.91</td><td>29.24</td><td>86.92</td><td>37.01</td><td>40.68</td><td>89.77</td><td>86.09</td><td>12.67</td><td>93.27</td><td>93.32</td><td>6.28</td><td>66.26</td><td>0.17</td><td>34.91</td><td>70.18</td><td>8.04</td><td>55.6</td></tr><tr><td>PreAct-Resnet18</td> <td>LC</td><td>93.78</td><td>90.63</td><td>7.14</td><td>93.54</td><td>87.16</td><td>9.53</td><td>93.61</td><td>80.14</td><td>15.04</td><td>93.25</td><td>87.16</td><td>9.74</td><td>91.83</td><td>3.67</td><td>64.41</td><td>89.57</td><td>10.61</td><td>54.67</td><td>89.44</td><td>12.12</td><td>56.28</td><td>92.57</td><td>37.36</td><td>44.67</td><td>68.49</td><td>11.79</td><td>40.93</td><td>76.07</td><td>6.47</td><td>56.98</td></tr><tr><td>PreAct-Resnet18</td> <td>SIG</td><td>93.82</td><td>83.4</td><td>14.29</td><td>93.59</td><td>88.17</td><td>10.13</td><td>93.48</td><td>88.07</td><td>10.08</td><td>93.41</td><td>83.2</td><td>14.22</td><td>93.82</td><td>83.4</td><td>14.29</td><td>91.82</td><td>23.63</td><td>50.47</td><td>90.0</td><td>74.81</td><td>18.61</td><td>93.09</td><td>85.91</td><td>12.12</td><td>64.33</td><td>0.0</td><td>20.51</td><td>75.01</td><td>67.82</td><td>29.87</td></tr><tr><td>PreAct-Resnet18</td> <td>LF</td><td>93.56</td><td>86.46</td><td>12.88</td><td>93.35</td><td>82.54</td><td>16.36</td><td>93.25</td><td>86.58</td><td>12.6</td><td>93.34</td><td>84.43</td><td>14.64</td><td>93.56</td><td>86.46</td><td>12.87</td><td>88.11</td><td>6.36</td><td>78.78</td><td>89.49</td><td>76.22</td><td>21.4</td><td>92.68</td><td>82.19</td><td>16.68</td><td>60.04</td><td>55.07</td><td>30.76</td><td>79.13</td><td>7.47</td><td>75.38</td></tr><tr><td>PreAct-Resnet18</td> <td>SSBA</td><td>93.43</td><td>73.44</td><td>24.89</td><td>93.24</td><td>61.32</td><td>35.98</td><td>93.34</td><td>52.76</td><td>43.53</td><td>93.33</td><td>67.03</td><td>30.83</td><td>90.45</td><td>1.22</td><td>85.77</td><td>91.68</td><td>2.19</td><td>87.52</td><td>89.61</td><td>27.92</td><td>64.11</td><td>92.71</td><td>54.79</td><td>42.18</td><td>83.11</td><td>56.33</td><td>37.69</td><td>78.52</td><td>1.13</td><td>74.21</td></tr><tr><td>PreAct-Resnet18</td> <td>Input-aware</td><td>91.74</td><td>79.18</td><td>19.89</td><td>93.14</td><td>77.68</td><td>21.59</td><td>92.2</td><td>53.69</td><td>43.89</td><td>93.07</td><td>85.13</td><td>14.37</td><td>91.74</td><td>79.19</td><td>19.88</td><td>85.88</td><td>7.54</td><td>75.41</td><td>89.44</td><td>60.56</td><td>36.07</td><td>92.78</td><td>60.14</td><td>37.84</td><td>72.26</td><td>69.31</td><td>24.89</td><td>69.66</td><td>14.36</td><td>62.67</td></tr><tr><td>PreAct-Resnet18</td> <td>WaNet</td><td>90.65</td><td>12.63</td><td>79.94</td><td>93.61</td><td>0.68</td><td>92.72</td><td>92.07</td><td>0.93</td><td>91.1</td><td>93.61</td><td>0.78</td><td>92.67</td><td>90.65</td><td>12.66</td><td>79.92</td><td>84.96</td><td>0.59</td><td>86.37</td><td>89.53</td><td>4.87</td><td>84.87</td><td>92.79</td><td>8.81</td><td>84.56</td><td>65.43</td><td>53.43</td><td>37.98</td><td>79.74</td><td>4.6</td><td>78.46</td></tr><tr><td>VGG19</td> <td>BadNets</td><td>90.45</td><td>83.98</td><td>15.14</td><td>89.12</td><td>55.17</td><td>42.29</td><td>90.38</td><td>78.61</td><td>20.21</td><td>88.69</td><td>64.76</td><td>32.97</td><td>88.97</td><td>1.09</td><td>88.82</td><td>NA</td><td>NA</td><td>NA</td><td>85.63</td><td>24.59</td><td>67.54</td><td>89.01</td><td>76.46</td><td>22.03</td><td>61.58</td><td>0.0</td><td>63.51</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>Blended</td><td>90.47</td><td>89.53</td><td>9.62</td><td>89.47</td><td>79.83</td><td>18.2</td><td>90.35</td><td>89.63</td><td>9.36</td><td>88.91</td><td>77.71</td><td>19.63</td><td>90.47</td><td>89.53</td><td>9.62</td><td>NA</td><td>NA</td><td>NA</td><td>85.58</td><td>75.17</td><td>20.99</td><td>89.19</td><td>80.57</td><td>17.41</td><td>89.42</td><td>91.72</td><td>7.5</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>LC</td><td>89.97</td><td>12.82</td><td>57.99</td><td>88.88</td><td>5.86</td><td>59.07</td><td>90.24</td><td>9.06</td><td>59.3</td><td>88.46</td><td>6.7</td><td>58.13</td><td>89.97</td><td>12.82</td><td>57.99</td><td>NA</td><td>NA</td><td>NA</td><td>85.33</td><td>9.48</td><td>53.43</td><td>89.01</td><td>10.94</td><td>56.49</td><td>88.99</td><td>8.1</td><td>57.0</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>SIG</td><td>90.85</td><td>83.77</td><td>12.48</td><td>89.73</td><td>78.64</td><td>16.28</td><td>90.9</td><td>84.9</td><td>11.68</td><td>88.96</td><td>81.96</td><td>13.19</td><td>90.85</td><td>83.77</td><td>12.48</td><td>NA</td><td>NA</td><td>NA</td><td>85.13</td><td>81.56</td><td>10.79</td><td>89.6</td><td>84.94</td><td>10.11</td><td>88.9</td><td>81.74</td><td>10.44</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>LF</td><td>90.21</td><td>37.54</td><td>56.47</td><td>89.28</td><td>14.09</td><td>75.01</td><td>90.08</td><td>33.28</td><td>60.03</td><td>88.61</td><td>17.16</td><td>72.53</td><td>86.32</td><td>13.96</td><td>70.97</td><td>NA</td><td>NA</td><td>NA</td><td>85.06</td><td>29.23</td><td>57.84</td><td>88.99</td><td>35.4</td><td>56.44</td><td>89.08</td><td>40.22</td><td>51.77</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>SSBA</td><td>89.96</td><td>10.97</td><td>79.72</td><td>89.12</td><td>2.07</td><td>85.58</td><td>90.08</td><td>6.51</td><td>82.83</td><td>88.41</td><td>3.54</td><td>83.54</td><td>86.3</td><td>1.82</td><td>83.72</td><td>NA</td><td>NA</td><td>NA</td><td>84.44</td><td>9.38</td><td>75.92</td><td>89.32</td><td>11.18</td><td>78.73</td><td>83.86</td><td>41.68</td><td>50.47</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>Input-aware</td><td>89.47</td><td>58.09</td><td>37.13</td><td>90.53</td><td>31.96</td><td>59.36</td><td>89.36</td><td>34.62</td><td>56.88</td><td>90.52</td><td>33.0</td><td>58.2</td><td>89.56</td><td>3.12</td><td>79.97</td><td>NA</td><td>NA</td><td>NA</td><td>85.47</td><td>51.47</td><td>39.04</td><td>89.47</td><td>59.71</td><td>33.8</td><td>89.07</td><td>57.51</td><td>33.98</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>WaNet</td><td>89.99</td><td>1.71</td><td>88.73</td><td>90.99</td><td>0.98</td><td>90.36</td><td>90.19</td><td>1.03</td><td>89.39</td><td>91.1</td><td>0.99</td><td>89.96</td><td>88.1</td><td>1.86</td><td>86.39</td><td>NA</td><td>NA</td><td>NA</td><td>85.59</td><td>5.1</td><td>81.23</td><td>89.13</td><td>7.22</td><td>82.47</td><td>88.77</td><td>4.46</td><td>84.63</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>EfficientNet-B3</td> <td>BadNets</td><td>53.13</td><td>3.8</td><td>52.84</td><td>51.77</td><td>5.11</td><td>51.18</td><td>53.02</td><td>3.71</td><td>52.91</td><td>51.9</td><td>4.8</td><td>51.68</td><td>53.14</td><td>3.8</td><td>52.86</td><td>53.14</td><td>3.8</td><td>52.86</td><td>41.98</td><td>5.04</td><td>41.56</td><td>52.04</td><td>5.06</td><td>51.59</td><td>33.27</td><td>0.38</td><td>36.04</td><td>54.48</td><td>14.17</td><td>50.13</td></tr><tr><td>EfficientNet-B3</td> <td>Blended</td><td>61.57</td><td>10.86</td><td>53.18</td><td>56.29</td><td>6.03</td><td>50.6</td><td>61.45</td><td>7.81</td><td>53.77</td><td>58.03</td><td>7.46</td><td>50.78</td><td>55.16</td><td>7.88</td><td>48.56</td><td>61.56</td><td>10.86</td><td>53.18</td><td>43.94</td><td>7.39</td><td>38.89</td><td>47.6</td><td>7.32</td><td>42.41</td><td>35.26</td><td>3.8</td><td>31.24</td><td>54.63</td><td>21.17</td><td>44.53</td></tr><tr><td>EfficientNet-B3</td> <td>LC</td><td>56.94</td><td>6.16</td><td>43.44</td><td>53.54</td><td>7.39</td><td>40.6</td><td>56.75</td><td>6.98</td><td>42.86</td><td>53.89</td><td>7.32</td><td>40.7</td><td>56.94</td><td>6.16</td><td>43.42</td><td>56.93</td><td>6.16</td><td>43.43</td><td>47.77</td><td>5.07</td><td>39.94</td><td>56.44</td><td>4.88</td><td>43.53</td><td>31.63</td><td>0.87</td><td>27.87</td><td>53.83</td><td>6.44</td><td>42.61</td></tr><tr><td>EfficientNet-B3</td> <td>SIG</td><td>63.63</td><td>3.87</td><td>57.93</td><td>58.45</td><td>4.19</td><td>53.78</td><td>63.4</td><td>3.87</td><td>56.98</td><td>59.74</td><td>3.84</td><td>54.73</td><td>56.33</td><td>3.91</td><td>52.39</td><td>63.63</td><td>3.87</td><td>57.93</td><td>35.75</td><td>5.22</td><td>30.99</td><td>58.1</td><td>50.37</td><td>22.01</td><td>19.45</td><td>0.43</td><td>22.1</td><td>57.5</td><td>92.52</td><td>6.33</td></tr><tr><td>EfficientNet-B3</td> <td>LF</td><td>54.7</td><td>24.88</td><td>35.17</td><td>52.61</td><td>15.18</td><td>38.44</td><td>54.35</td><td>22.14</td><td>36.57</td><td>52.77</td><td>18.54</td><td>37.48</td><td>54.7</td><td>24.88</td><td>35.21</td><td>54.72</td><td>24.89</td><td>35.19</td><td>42.25</td><td>27.97</td><td>22.99</td><td>46.9</td><td>19.41</td><td>33.39</td><td>34.85</td><td>4.46</td><td>40.93</td><td>53.93</td><td>22.3</td><td>45.9</td></tr><tr><td>EfficientNet-B3</td> <td>SSBA</td><td>59.42</td><td>4.49</td><td>55.76</td><td>54.16</td><td>4.97</td><td>51.54</td><td>59.0</td><td>4.17</td><td>55.98</td><td>56.16</td><td>4.17</td><td>53.53</td><td>53.4</td><td>4.31</td><td>50.7</td><td>59.41</td><td>4.49</td><td>55.77</td><td>47.26</td><td>4.76</td><td>45.46</td><td>44.9</td><td>3.72</td><td>44.13</td><td>20.08</td><td>0.44</td><td>21.16</td><td>60.79</td><td>9.4</td><td>55.36</td></tr><tr><td>EfficientNet-B3</td> <td>Input-aware</td><td>55.8</td><td>5.49</td><td>51.03</td><td>57.46</td><td>5.72</td><td>52.08</td><td>57.59</td><td>4.66</td><td>53.21</td><td>57.65</td><td>5.52</td><td>52.86</td><td>55.8</td><td>5.49</td><td>51.03</td><td>55.8</td><td>5.49</td><td>51.03</td><td>26.59</td><td>3.33</td><td>26.52</td><td>51.95</td><td>4.92</td><td>50.17</td><td>26.46</td><td>0.49</td><td>25.91</td><td>58.61</td><td>13.9</td><td>49.27</td></tr><tr><td>EfficientNet-B3</td> <td>WaNet</td><td>73.07</td><td>2.36</td><td>72.02</td><td>70.35</td><td>3.67</td><td>68.36</td><td>73.11</td><td>3.09</td><td>70.62</td><td>72.37</td><td>3.16</td><td>70.53</td><td>73.07</td><td>2.36</td><td>72.03</td><td>73.08</td><td>2.36</td><td>72.02</td><td>37.2</td><td>6.48</td><td>36.21</td><td>48.72</td><td>4.07</td><td>48.66</td><td>24.81</td><td>3.97</td><td>24.49</td><td>55.71</td><td>11.7</td><td>51.37</td></tr><tr><td>MobileNetV3-Large</td> <td>BadNets</td><td>84.46</td><td>3.29</td><td>83.43</td><td>79.6</td><td>2.9</td><td>78.88</td><td>84.49</td><td>2.39</td><td>83.86</td><td>80.57</td><td>3.06</td><td>79.41</td><td>76.69</td><td>3.18</td><td>75.83</td><td>84.46</td><td>3.29</td><td>83.44</td><td>71.9</td><td>3.29</td><td>71.38</td><td>80.26</td><td>2.27</td><td>79.89</td><td>74.35</td><td>2.2</td><td>73.61</td><td>58.82</td><td>10.08</td><td>55.67</td></tr><tr><td>MobileNetV3-Large</td> <td>Blended</td><td>83.97</td><td>87.06</td><td>10.17</td><td>79.49</td><td>34.61</td><td>43.2</td><td>83.68</td><td>86.11</td><td>11.04</td><td>80.32</td><td>49.88</td><td>33.21</td><td>75.7</td><td>1.31</td><td>64.01</td><td>83.97</td><td>87.06</td><td>10.17</td><td>73.15</td><td>54.56</td><td>29.51</td><td>80.54</td><td>73.33</td><td>19.72</td><td>77.9</td><td>20.27</td><td>50.97</td><td>56.87</td><td>5.32</td><td>49.92</td></tr><tr><td>MobileNetV3-Large</td> <td>LC</td><td>84.16</td><td>6.07</td><td>54.64</td><td>79.79</td><td>5.99</td><td>51.09</td><td>84.03</td><td>5.84</td><td>54.31</td><td>80.39</td><td>5.84</td><td>51.68</td><td>84.16</td><td>6.07</td><td>54.64</td><td>84.16</td><td>6.07</td><td>54.64</td><td>75.08</td><td>5.41</td><td>50.02</td><td>79.99</td><td>5.63</td><td>52.07</td><td>73.65</td><td>6.74</td><td>47.09</td><td>57.11</td><td>11.82</td><td>40.33</td></tr><tr><td>MobileNetV3-Large</td> <td>SIG</td><td>84.48</td><td>80.79</td><td>10.77</td><td>79.56</td><td>56.01</td><td>19.7</td><td>84.14</td><td>83.76</td><td>8.98</td><td>80.45</td><td>51.67</td><td>24.0</td><td>84.47</td><td>80.78</td><td>10.78</td><td>81.53</td><td>76.63</td><td>11.02</td><td>74.42</td><td>83.9</td><td>6.59</td><td>80.67</td><td>93.54</td><td>3.3</td><td>75.36</td><td>38.56</td><td>22.6</td><td>57.16</td><td>96.63</td><td>3.08</td></tr><tr><td>MobileNetV3-Large</td> <td>LF</td><td>83.08</td><td>86.32</td><td>9.9</td><td>78.38</td><td>43.78</td><td>29.79</td><td>83.01</td><td>82.91</td><td>10.43</td><td>79.35</td><td>51.6</td><td>30.91</td><td>83.08</td><td>86.32</td><td>9.9</td><td>78.15</td><td>82.87</td><td>13.17</td><td>73.08</td><td>77.5</td><td>15.39</td><td>80.14</td><td>81.94</td><td>14.14</td><td>73.96</td><td>82.94</td><td>11.36</td><td>57.34</td><td>46.93</td><td>36.3</td></tr><tr><td>MobileNetV3-Large</td> <td>SSBA</td><td>83.28</td><td>9.71</td><td>73.78</td><td>79.8</td><td>3.34</td><td>74.14</td><td>83.47</td><td>5.91</td><td>76.06</td><td>80.32</td><td>3.46</td><td>74.42</td><td>77.1</td><td>3.44</td><td>73.0</td><td>83.29</td><td>9.72</td><td>73.78</td><td>72.41</td><td>7.77</td><td>64.59</td><td>79.81</td><td>6.82</td><td>72.84</td><td>74.49</td><td>6.96</td><td>70.17</td><td>55.41</td><td>12.18</td><td>47.22</td></tr><tr><td>MobileNetV3-Large</td> <td>Input-aware</td><td>80.8</td><td>90.72</td><td>7.16</td><td>80.36</td><td>30.52</td><td>46.96</td><td>82.48</td><td>97.43</td><td>2.16</td><td>81.48</td><td>67.33</td><td>22.24</td><td>80.8</td><td>90.72</td><td>7.16</td><td>77.21</td><td>90.06</td><td>7.29</td><td>73.48</td><td>58.49</td><td>26.27</td><td>80.07</td><td>58.91</td><td>28.87</td><td>75.28</td><td>62.62</td><td>22.73</td><td>57.37</td><td>13.47</td><td>47.87</td></tr><tr><td>MobileNetV3-Large</td> <td>WaNet</td><td>80.86</td><td>1.66</td><td>80.02</td><td>81.45</td><td>2.29</td><td>79.06</td><td>81.75</td><td>3.31</td><td>79.11</td><td>82.29</td><td>2.17</td><td>80.59</td><td>78.78</td><td>2.98</td><td>76.29</td><td>80.86</td><td>1.66</td><td>80.02</td><td>73.11</td><td>3.36</td><td>71.5</td><td>80.71</td><td>3.29</td><td>78.17</td><td>74.24</td><td>1.73</td><td>74.3</td><td>57.06</td><td>13.52</td><td>53.11</td></tr><tr><td>DenseNet-161</td> <td>BadNets</td><td>86.3</td><td>16.32</td><td>73.38</td><td>85.26</td><td>3.47</td><td>82.79</td><td>86.37</td><td>5.34</td><td>82.39</td><td>84.78</td><td>3.81</td><td>82.31</td><td>86.31</td><td>16.32</td><td>73.37</td><td>84.66</td><td>1.99</td><td>83.98</td><td>76.19</td><td>3.1</td><td>74.84</td><td>83.52</td><td>1.76</td><td>83.23</td><td>64.73</td><td>14.99</td><td>55.49</td><td>70.15</td><td>4.59</td><td>67.93</td></tr><tr><td>DenseNet-161</td> <td>Blended</td><td>86.65</td><td>79.32</td><td>16.94</td><td>85.51</td><td>61.74</td><td>31.1</td><td>86.62</td><td>80.12</td><td>16.32</td><td>84.99</td><td>59.03</td><td>32.52</td><td>83.29</td><td>34.52</td><td>48.9</td><td>79.59</td><td>23.09</td><td>56.71</td><td>75.87</td><td>31.92</td><td>49.54</td><td>83.77</td><td>1.98</td><td>73.92</td><td>63.97</td><td>12.18</td><td>45.19</td><td>69.93</td><td>3.24</td><td>63.78</td></tr><tr><td>DenseNet-161</td> <td>LC</td><td>86.56</td><td>5.31</td><td>56.19</td><td>85.2</td><td>5.24</td><td>55.74</td><td>86.73</td><td>7.53</td><td>55.01</td><td>84.45</td><td>5.71</td><td>54.5</td><td>83.25</td><td>5.11</td><td>53.88</td><td>85.27</td><td>4.87</td><td>55.83</td><td>76.68</td><td>5.13</td><td>50.01</td><td>83.23</td><td>5.16</td><td>54.3</td><td>57.96</td><td>5.21</td><td>36.7</td><td>64.14</td><td>8.63</td><td>47.22</td></tr><tr><td>DenseNet-161</td> <td>SIG</td><td>86.63</td><td>82.66</td><td>13.49</td><td>85.15</td><td>75.18</td><td>17.83</td><td>86.45</td><td>90.18</td><td>8.1</td><td>84.83</td><td>74.54</td><td>17.31</td><td>86.62</td><td>82.66</td><td>13.49</td><td>80.2</td><td>22.66</td><td>43.33</td><td>76.56</td><td>67.29</td><td>18.46</td><td>83.35</td><td>71.78</td><td>17.77</td><td>60.91</td><td>0.0</td><td>64.33</td><td>63.01</td><td>96.0</td><td>3.42</td></tr><tr><td>DenseNet-161</td> <td>LF</td><td>86.5</td><td>39.24</td><td>51.92</td><td>85.3</td><td>25.14</td><td>62.66</td><td>86.55</td><td>36.29</td><td>54.33</td><td>84.59</td><td>25.77</td><td>62.47</td><td>81.74</td><td>12.98</td><td>68.17</td><td>81.3</td><td>8.97</td><td>71.61</td><td>76.28</td><td>33.22</td><td>48.16</td><td>83.62</td><td>9.5</td><td>72.83</td><td>58.25</td><td>40.64</td><td>38.84</td><td>70.35</td><td>6.9</td><td>65.79</td></tr><tr><td>DenseNet-161</td> <td>SSBA</td><td>86.31</td><td>6.56</td><td>79.24</td><td>85.06</td><td>3.33</td><td>80.96</td><td>86.3</td><td>4.56</td><td>80.8</td><td>85.2</td><td>4.89</td><td>79.11</td><td>86.33</td><td>6.58</td><td>79.24</td><td>82.14</td><td>2.0</td><td>77.64</td><td>76.03</td><td>8.27</td><td>68.61</td><td>83.34</td><td>2.98</td><td>79.43</td><td>60.19</td><td>10.17</td><td>54.78</td><td>72.51</td><td>4.87</td><td>67.28</td></tr><tr><td>DenseNet-161</td> <td>Input-aware</td><td>84.21</td><td>66.37</td><td>25.18</td><td>87.3</td><td>86.13</td><td>11.41</td><td>85.31</td><td>97.56</td><td>1.84</td><td>86.9</td><td>88.99</td><td>8.88</td><td>84.21</td><td>66.39</td><td>25.16</td><td>78.26</td><td>2.36</td><td>64.17</td><td>76.47</td><td>59.51</td><td>28.89</td><td>82.86</td><td>71.41</td><td>22.1</td><td>58.24</td><td>60.71</td><td>21.26</td><td>64.53</td><td>5.49</td><td>57.7</td></tr><tr><td>DenseNet-161</td> <td>WaNet</td><td>85.73</td><td>2.17</td><td>84.99</td><td>87.99</td><td>1.17</td><td>86.56</td><td>85.33</td><td>2.59</td><td>83.23</td><td>87.56</td><td>1.32</td><td>85.92</td><td>86.31</td><td>1.46</td><td>84.94</td><td>83.74</td><td>1.62</td><td>83.32</td><td>76.44</td><td>2.98</td><td>74.06</td><td>82.87</td><td>2.71</td><td>79.66</td><td>55.54</td><td>4.13</td><td>49.88</td><td>69.1</td><td>7.19</td><td>65.28</td></tr></tbody>
+</table>
+                        </div>
+                    </div>
+
+                    <!-- cifar-10 poison ratio=0.5% -->
+                    <div class="tab-pane fade" id="cifar10-0_5" role="tabpanel" aria-labelledby="cifar10-0_5-tab">
+                        <div style="overflow: auto; width: 100%;">
+                            <!-- TODO -->
+                            <table style="overflow: auto; width: 100%;"
+                                class="table table-hover sortable  performanceTableWide" id="cifar10-10-results">
+                                <col>
+                                <col>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <colgroup span="3" class="wBackground"></colgroup>
+                                <colgroup span="3"></colgroup>
+                                <thead>
+                                    <tr>
+                                        <th class="sorttable_nosort"></th>
+                                        <th class="sorttable_nosort">Backdoor&nbsp;&nbsp;&nbsp;Defense&nbsp;&rarr;</th>
+                                        <th class="sorttable_nosort" colspan="3">No&nbsp;&nbsp;&nbsp;defense</th>
+                                        <th class="sorttable_nosort" colspan="3">FT</th>
+                                        <th class="sorttable_nosort" colspan="3">FP</th>
+                                        <th class="sorttable_nosort" colspan="3">NAD</th>
+                                        <th class="sorttable_nosort" colspan="3">NC</th>
+                                        <th class="sorttable_nosort" colspan="3">ANP</th>
+                                        <th class="sorttable_nosort" colspan="3">AC</th>
+                                        <th class="sorttable_nosort" colspan="3">Spectral</th>
+                                        <th class="sorttable_nosort" colspan="3">ABL</th>
+                                        <th class="sorttable_nosort" colspan="3">DBD</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="sorttable_nosort" scope="col" rowspan="2">
+                                            Targeted&nbsp;Model</th>
+                                        <th class="sorttable_nosort" scope="col" rowspan="2">Backdoor&nbsp;Attack&darr;
+                                        </th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                        <th scope="col">C-Acc (%)</th>
+                                        <th scope="col">ASR (%)</th>
+                                        <th scope="col">R-Acc (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody><tr><td>PreAct-Resnet18</td> <td>BadNets</td><td>93.76</td><td>50.06</td><td>48.14</td><td>93.49</td><td>4.94</td><td>89.83</td><td>93.67</td><td>5.01</td><td>89.6</td><td>93.3</td><td>7.67</td><td>87.31</td><td>92.83</td><td>0.62</td><td>92.67</td><td>91.32</td><td>0.76</td><td>91.31</td><td>89.51</td><td>2.29</td><td>88.72</td><td>92.97</td><td>7.91</td><td>87.31</td><td>68.4</td><td>71.78</td><td>22.14</td><td>73.6</td><td>0.1</td><td>80.01</td></tr><tr><td>PreAct-Resnet18</td> <td>Blended</td><td>93.68</td><td>93.3</td><td>6.37</td><td>93.46</td><td>90.68</td><td>8.79</td><td>93.3</td><td>93.28</td><td>6.39</td><td>93.48</td><td>91.97</td><td>7.6</td><td>90.64</td><td>60.71</td><td>33.92</td><td>89.9</td><td>53.54</td><td>36.19</td><td>90.14</td><td>75.23</td><td>22.02</td><td>93.08</td><td>88.18</td><td>10.91</td><td>61.89</td><td>26.51</td><td>38.22</td><td>71.18</td><td>0.01</td><td>71.24</td></tr><tr><td>PreAct-Resnet18</td> <td>LC</td><td>93.66</td><td>18.61</td><td>58.08</td><td>93.55</td><td>10.82</td><td>62.28</td><td>93.77</td><td>10.43</td><td>62.17</td><td>93.64</td><td>12.67</td><td>61.42</td><td>89.58</td><td>4.06</td><td>61.68</td><td>91.5</td><td>6.6</td><td>61.48</td><td>89.54</td><td>7.31</td><td>58.98</td><td>92.76</td><td>13.64</td><td>60.19</td><td>60.68</td><td>11.68</td><td>36.51</td><td>78.33</td><td>3.73</td><td>60.48</td></tr><tr><td>PreAct-Resnet18</td> <td>SIG</td><td>93.8</td><td>82.43</td><td>14.9</td><td>93.51</td><td>81.77</td><td>15.53</td><td>93.69</td><td>84.59</td><td>12.18</td><td>93.65</td><td>81.64</td><td>15.43</td><td>93.8</td><td>82.43</td><td>14.9</td><td>90.11</td><td>14.97</td><td>50.53</td><td>89.66</td><td>65.29</td><td>25.72</td><td>93.26</td><td>64.04</td><td>27.1</td><td>70.52</td><td>85.82</td><td>6.64</td><td>77.35</td><td>72.37</td><td>25.28</td></tr><tr><td>PreAct-Resnet18</td> <td>LF</td><td>93.85</td><td>75.09</td><td>23.57</td><td>93.62</td><td>69.64</td><td>28.33</td><td>93.31</td><td>74.16</td><td>24.02</td><td>93.37</td><td>71.56</td><td>26.64</td><td>93.85</td><td>75.09</td><td>23.57</td><td>85.0</td><td>4.43</td><td>76.66</td><td>89.21</td><td>63.48</td><td>32.44</td><td>92.68</td><td>71.5</td><td>26.83</td><td>82.88</td><td>77.69</td><td>18.56</td><td>88.95</td><td>3.63</td><td>86.48</td></tr><tr><td>PreAct-Resnet18</td> <td>SSBA</td><td>93.41</td><td>35.67</td><td>59.99</td><td>93.36</td><td>27.97</td><td>66.46</td><td>93.37</td><td>16.99</td><td>76.3</td><td>93.28</td><td>30.91</td><td>63.73</td><td>93.41</td><td>35.66</td><td>60.0</td><td>85.04</td><td>1.66</td><td>78.94</td><td>89.9</td><td>9.72</td><td>80.02</td><td>92.96</td><td>23.64</td><td>69.98</td><td>74.04</td><td>45.26</td><td>42.54</td><td>80.12</td><td>7.0</td><td>75.22</td></tr><tr><td>PreAct-Resnet18</td> <td>Input-aware</td><td>90.66</td><td>56.06</td><td>41.27</td><td>93.22</td><td>75.64</td><td>23.93</td><td>91.93</td><td>73.21</td><td>25.83</td><td>93.36</td><td>79.54</td><td>20.07</td><td>90.66</td><td>56.07</td><td>41.27</td><td>88.61</td><td>9.02</td><td>74.3</td><td>89.82</td><td>62.34</td><td>33.44</td><td>92.98</td><td>60.34</td><td>37.51</td><td>66.84</td><td>62.16</td><td>22.96</td><td>77.5</td><td>3.8</td><td>71.36</td></tr><tr><td>PreAct-Resnet18</td> <td>WaNet</td><td>91.27</td><td>1.12</td><td>91.24</td><td>93.99</td><td>0.76</td><td>92.83</td><td>92.34</td><td>1.11</td><td>91.49</td><td>93.67</td><td>0.89</td><td>92.67</td><td>91.27</td><td>1.12</td><td>91.24</td><td>91.27</td><td>1.12</td><td>91.24</td><td>89.48</td><td>2.57</td><td>86.66</td><td>92.94</td><td>3.59</td><td>89.34</td><td>42.48</td><td>75.28</td><td>19.77</td><td>64.9</td><td>0.0</td><td>72.59</td></tr><tr><td>VGG19</td> <td>BadNets</td><td>90.28</td><td>3.71</td><td>88.48</td><td>89.1</td><td>1.53</td><td>88.62</td><td>90.09</td><td>2.02</td><td>89.38</td><td>88.65</td><td>1.76</td><td>88.09</td><td>87.78</td><td>1.59</td><td>87.47</td><td>NA</td><td>NA</td><td>NA</td><td>85.36</td><td>1.93</td><td>84.76</td><td>89.21</td><td>16.31</td><td>77.04</td><td>60.84</td><td>92.12</td><td>7.18</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>Blended</td><td>90.85</td><td>74.69</td><td>22.6</td><td>89.54</td><td>57.18</td><td>37.21</td><td>90.7</td><td>74.49</td><td>22.49</td><td>88.65</td><td>63.59</td><td>31.11</td><td>90.85</td><td>74.69</td><td>22.6</td><td>NA</td><td>NA</td><td>NA</td><td>85.21</td><td>50.44</td><td>39.43</td><td>89.6</td><td>69.44</td><td>26.39</td><td>89.15</td><td>78.13</td><td>18.86</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>LC</td><td>90.63</td><td>8.27</td><td>60.39</td><td>89.45</td><td>5.09</td><td>60.03</td><td>90.76</td><td>6.48</td><td>60.78</td><td>89.1</td><td>4.86</td><td>59.49</td><td>90.63</td><td>8.27</td><td>60.4</td><td>NA</td><td>NA</td><td>NA</td><td>85.39</td><td>6.49</td><td>54.67</td><td>89.51</td><td>7.17</td><td>58.4</td><td>89.12</td><td>5.7</td><td>58.86</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>SIG</td><td>90.76</td><td>72.92</td><td>18.26</td><td>89.6</td><td>59.68</td><td>26.41</td><td>90.64</td><td>73.42</td><td>17.93</td><td>89.25</td><td>53.72</td><td>30.0</td><td>86.54</td><td>57.06</td><td>25.78</td><td>NA</td><td>NA</td><td>NA</td><td>85.06</td><td>59.0</td><td>21.76</td><td>89.28</td><td>54.4</td><td>29.84</td><td>88.99</td><td>71.69</td><td>16.5</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>LF</td><td>90.54</td><td>20.46</td><td>71.11</td><td>89.29</td><td>8.5</td><td>79.13</td><td>90.51</td><td>18.67</td><td>72.7</td><td>88.85</td><td>11.04</td><td>77.4</td><td>90.54</td><td>20.46</td><td>71.13</td><td>NA</td><td>NA</td><td>NA</td><td>84.78</td><td>16.18</td><td>67.7</td><td>89.42</td><td>19.12</td><td>70.31</td><td>89.0</td><td>19.42</td><td>69.97</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>SSBA</td><td>90.59</td><td>5.14</td><td>84.94</td><td>89.22</td><td>1.61</td><td>86.31</td><td>90.58</td><td>3.22</td><td>86.24</td><td>88.83</td><td>1.81</td><td>85.3</td><td>90.59</td><td>5.14</td><td>84.94</td><td>NA</td><td>NA</td><td>NA</td><td>85.67</td><td>5.37</td><td>79.29</td><td>88.81</td><td>5.48</td><td>82.98</td><td>77.41</td><td>36.69</td><td>55.39</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>Input-aware</td><td>89.32</td><td>75.27</td><td>23.63</td><td>90.93</td><td>48.78</td><td>47.7</td><td>89.93</td><td>38.34</td><td>49.16</td><td>90.7</td><td>59.61</td><td>38.09</td><td>89.32</td><td>75.27</td><td>23.63</td><td>NA</td><td>NA</td><td>NA</td><td>85.45</td><td>50.43</td><td>39.43</td><td>89.96</td><td>59.29</td><td>34.87</td><td>89.72</td><td>63.31</td><td>31.04</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>WaNet</td><td>89.52</td><td>1.02</td><td>88.84</td><td>91.31</td><td>1.43</td><td>89.99</td><td>90.2</td><td>0.98</td><td>89.51</td><td>90.81</td><td>1.38</td><td>89.83</td><td>89.52</td><td>1.02</td><td>88.84</td><td>NA</td><td>NA</td><td>NA</td><td>86.06</td><td>3.06</td><td>82.58</td><td>89.26</td><td>4.06</td><td>85.43</td><td>89.0</td><td>3.12</td><td>85.88</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>EfficientNet-B3</td> <td>BadNets</td><td>61.36</td><td>3.53</td><td>60.79</td><td>56.46</td><td>5.8</td><td>55.0</td><td>60.94</td><td>3.6</td><td>60.24</td><td>58.14</td><td>5.47</td><td>56.84</td><td>61.35</td><td>3.53</td><td>60.79</td><td>61.35</td><td>3.53</td><td>60.79</td><td>42.45</td><td>5.29</td><td>42.16</td><td>50.22</td><td>3.91</td><td>49.92</td><td>34.72</td><td>1.61</td><td>36.9</td><td>54.7</td><td>15.23</td><td>50.22</td></tr><tr><td>EfficientNet-B3</td> <td>Blended</td><td>54.41</td><td>5.49</td><td>50.6</td><td>51.16</td><td>7.17</td><td>46.77</td><td>54.1</td><td>5.01</td><td>50.06</td><td>52.64</td><td>6.29</td><td>47.8</td><td>54.42</td><td>5.48</td><td>50.58</td><td>54.42</td><td>5.48</td><td>50.58</td><td>45.86</td><td>9.27</td><td>38.98</td><td>49.0</td><td>8.64</td><td>44.04</td><td>30.26</td><td>0.27</td><td>23.24</td><td>52.82</td><td>12.37</td><td>42.14</td></tr><tr><td>EfficientNet-B3</td> <td>LC</td><td>57.65</td><td>6.07</td><td>43.77</td><td>56.2</td><td>6.33</td><td>40.93</td><td>57.88</td><td>6.83</td><td>43.01</td><td>56.08</td><td>7.89</td><td>40.94</td><td>57.65</td><td>6.07</td><td>43.76</td><td>57.65</td><td>6.07</td><td>43.78</td><td>46.15</td><td>7.36</td><td>38.81</td><td>41.07</td><td>3.43</td><td>36.4</td><td>25.01</td><td>0.81</td><td>22.42</td><td>56.53</td><td>9.52</td><td>42.34</td></tr><tr><td>EfficientNet-B3</td> <td>SIG</td><td>53.69</td><td>4.07</td><td>40.26</td><td>51.45</td><td>3.33</td><td>37.66</td><td>53.38</td><td>3.29</td><td>39.56</td><td>51.91</td><td>3.26</td><td>38.98</td><td>53.67</td><td>4.08</td><td>40.26</td><td>53.67</td><td>4.08</td><td>40.26</td><td>43.66</td><td>4.76</td><td>26.74</td><td>53.62</td><td>4.41</td><td>50.69</td><td>27.18</td><td>0.59</td><td>24.96</td><td>55.05</td><td>58.19</td><td>26.27</td></tr><tr><td>EfficientNet-B3</td> <td>LF</td><td>62.5</td><td>22.32</td><td>44.0</td><td>55.76</td><td>18.1</td><td>41.14</td><td>61.76</td><td>23.41</td><td>43.81</td><td>57.21</td><td>20.13</td><td>41.81</td><td>62.5</td><td>22.32</td><td>44.01</td><td>62.52</td><td>22.32</td><td>44.01</td><td>47.03</td><td>20.4</td><td>29.66</td><td>44.03</td><td>17.83</td><td>32.66</td><td>14.38</td><td>1.53</td><td>25.13</td><td>57.24</td><td>14.93</td><td>49.42</td></tr><tr><td>EfficientNet-B3</td> <td>SSBA</td><td>62.61</td><td>6.19</td><td>58.31</td><td>56.29</td><td>6.56</td><td>53.51</td><td>62.34</td><td>6.29</td><td>58.26</td><td>58.88</td><td>7.16</td><td>54.26</td><td>62.62</td><td>6.18</td><td>58.32</td><td>61.36</td><td>6.09</td><td>56.59</td><td>41.7</td><td>4.88</td><td>40.39</td><td>53.43</td><td>4.74</td><td>51.71</td><td>29.12</td><td>1.29</td><td>29.99</td><td>54.79</td><td>7.79</td><td>50.08</td></tr><tr><td>EfficientNet-B3</td> <td>Input-aware</td><td>62.8</td><td>9.01</td><td>53.57</td><td>62.13</td><td>9.5</td><td>53.4</td><td>64.85</td><td>6.08</td><td>57.52</td><td>64.28</td><td>9.23</td><td>54.77</td><td>62.8</td><td>9.01</td><td>53.57</td><td>62.8</td><td>9.01</td><td>53.57</td><td>42.92</td><td>5.36</td><td>41.09</td><td>54.33</td><td>4.54</td><td>48.51</td><td>35.52</td><td>2.98</td><td>34.94</td><td>58.85</td><td>16.97</td><td>50.23</td></tr><tr><td>EfficientNet-B3</td> <td>WaNet</td><td>72.04</td><td>3.73</td><td>69.36</td><td>73.3</td><td>2.77</td><td>71.49</td><td>73.42</td><td>4.23</td><td>70.14</td><td>74.51</td><td>2.56</td><td>73.6</td><td>71.0</td><td>3.03</td><td>68.84</td><td>69.19</td><td>3.02</td><td>64.59</td><td>40.48</td><td>9.2</td><td>39.01</td><td>46.8</td><td>3.71</td><td>46.77</td><td>27.19</td><td>4.54</td><td>25.96</td><td>54.78</td><td>12.87</td><td>49.86</td></tr><tr><td>MobileNetV3-Large</td> <td>BadNets</td><td>83.78</td><td>1.93</td><td>83.13</td><td>79.67</td><td>2.24</td><td>79.07</td><td>83.64</td><td>1.79</td><td>83.09</td><td>80.88</td><td>2.07</td><td>80.5</td><td>78.01</td><td>2.58</td><td>77.56</td><td>83.78</td><td>1.93</td><td>83.14</td><td>72.39</td><td>2.98</td><td>72.22</td><td>80.64</td><td>2.03</td><td>80.33</td><td>72.64</td><td>0.72</td><td>74.5</td><td>57.77</td><td>8.57</td><td>54.77</td></tr><tr><td>MobileNetV3-Large</td> <td>Blended</td><td>84.02</td><td>78.3</td><td>16.32</td><td>79.19</td><td>25.3</td><td>49.63</td><td>83.99</td><td>75.3</td><td>18.59</td><td>80.43</td><td>26.61</td><td>49.16</td><td>84.01</td><td>78.29</td><td>16.32</td><td>84.01</td><td>78.29</td><td>16.32</td><td>73.13</td><td>35.01</td><td>42.14</td><td>80.67</td><td>30.88</td><td>49.92</td><td>74.57</td><td>56.41</td><td>30.2</td><td>55.33</td><td>10.3</td><td>48.0</td></tr><tr><td>MobileNetV3-Large</td> <td>LC</td><td>83.72</td><td>5.66</td><td>54.42</td><td>79.11</td><td>5.46</td><td>50.53</td><td>83.61</td><td>5.68</td><td>54.26</td><td>80.31</td><td>5.1</td><td>51.68</td><td>83.72</td><td>5.66</td><td>54.41</td><td>83.71</td><td>5.64</td><td>54.42</td><td>74.99</td><td>5.82</td><td>50.22</td><td>80.86</td><td>5.18</td><td>53.07</td><td>72.89</td><td>3.41</td><td>47.27</td><td>56.48</td><td>10.11</td><td>42.41</td></tr><tr><td>MobileNetV3-Large</td> <td>SIG</td><td>84.34</td><td>67.39</td><td>17.06</td><td>79.61</td><td>53.16</td><td>23.07</td><td>84.21</td><td>72.14</td><td>14.34</td><td>80.95</td><td>57.77</td><td>21.02</td><td>77.78</td><td>60.39</td><td>19.56</td><td>76.76</td><td>59.29</td><td>16.39</td><td>73.16</td><td>70.48</td><td>11.76</td><td>80.99</td><td>60.21</td><td>17.57</td><td>72.34</td><td>84.03</td><td>5.22</td><td>58.58</td><td>89.31</td><td>8.53</td></tr><tr><td>MobileNetV3-Large</td> <td>LF</td><td>84.06</td><td>77.57</td><td>18.06</td><td>79.35</td><td>38.19</td><td>42.82</td><td>83.96</td><td>77.13</td><td>17.82</td><td>79.77</td><td>51.82</td><td>34.68</td><td>84.06</td><td>77.57</td><td>18.06</td><td>82.3</td><td>68.78</td><td>23.82</td><td>74.17</td><td>70.66</td><td>19.89</td><td>80.05</td><td>62.39</td><td>28.19</td><td>75.47</td><td>72.8</td><td>17.99</td><td>60.19</td><td>7.7</td><td>56.36</td></tr><tr><td>MobileNetV3-Large</td> <td>SSBA</td><td>84.01</td><td>4.91</td><td>78.27</td><td>79.23</td><td>3.41</td><td>74.07</td><td>83.72</td><td>3.54</td><td>79.16</td><td>80.03</td><td>3.13</td><td>74.99</td><td>84.01</td><td>4.92</td><td>78.26</td><td>84.01</td><td>4.92</td><td>78.26</td><td>74.22</td><td>5.44</td><td>68.37</td><td>80.28</td><td>5.01</td><td>74.37</td><td>74.33</td><td>5.68</td><td>69.8</td><td>54.01</td><td>13.39</td><td>48.9</td></tr><tr><td>MobileNetV3-Large</td> <td>Input-aware</td><td>78.7</td><td>33.81</td><td>42.01</td><td>79.63</td><td>24.54</td><td>49.84</td><td>81.4</td><td>36.28</td><td>39.4</td><td>81.33</td><td>30.0</td><td>47.07</td><td>78.7</td><td>33.82</td><td>42.01</td><td>72.17</td><td>12.33</td><td>57.23</td><td>73.69</td><td>29.62</td><td>47.7</td><td>81.08</td><td>41.73</td><td>42.52</td><td>71.25</td><td>37.1</td><td>39.52</td><td>58.27</td><td>83.33</td><td>12.7</td></tr><tr><td>MobileNetV3-Large</td> <td>WaNet</td><td>79.16</td><td>3.61</td><td>77.58</td><td>80.82</td><td>2.6</td><td>78.97</td><td>81.3</td><td>4.51</td><td>78.19</td><td>82.16</td><td>2.46</td><td>80.09</td><td>79.16</td><td>3.61</td><td>77.58</td><td>79.16</td><td>3.61</td><td>77.58</td><td>72.93</td><td>3.49</td><td>71.32</td><td>80.55</td><td>2.84</td><td>78.23</td><td>76.44</td><td>1.91</td><td>73.31</td><td>54.84</td><td>14.46</td><td>51.24</td></tr><tr><td>DenseNet-161</td> <td>BadNets</td><td>86.42</td><td>1.8</td><td>85.51</td><td>85.6</td><td>1.82</td><td>84.82</td><td>86.4</td><td>1.24</td><td>85.74</td><td>84.38</td><td>2.06</td><td>83.79</td><td>82.99</td><td>2.1</td><td>82.21</td><td>86.02</td><td>1.52</td><td>85.4</td><td>76.13</td><td>2.51</td><td>75.53</td><td>83.6</td><td>1.8</td><td>82.61</td><td>57.11</td><td>6.19</td><td>53.56</td><td>64.53</td><td>5.07</td><td>61.44</td></tr><tr><td>DenseNet-161</td> <td>Blended</td><td>86.57</td><td>59.88</td><td>32.08</td><td>85.98</td><td>36.13</td><td>50.5</td><td>86.74</td><td>56.77</td><td>34.47</td><td>84.88</td><td>29.73</td><td>53.92</td><td>86.56</td><td>59.9</td><td>32.07</td><td>83.43</td><td>25.11</td><td>55.74</td><td>75.77</td><td>16.21</td><td>57.51</td><td>83.34</td><td>2.04</td><td>73.48</td><td>61.21</td><td>43.96</td><td>37.49</td><td>70.5</td><td>5.22</td><td>61.54</td></tr><tr><td>DenseNet-161</td> <td>LC</td><td>86.91</td><td>4.73</td><td>56.97</td><td>85.05</td><td>4.96</td><td>55.59</td><td>87.03</td><td>5.28</td><td>56.59</td><td>84.3</td><td>4.96</td><td>54.51</td><td>86.91</td><td>4.73</td><td>56.98</td><td>86.4</td><td>3.83</td><td>57.21</td><td>76.41</td><td>5.59</td><td>50.68</td><td>83.35</td><td>4.43</td><td>54.84</td><td>50.91</td><td>5.13</td><td>31.11</td><td>66.1</td><td>10.99</td><td>47.53</td></tr><tr><td>DenseNet-161</td> <td>SIG</td><td>86.69</td><td>61.2</td><td>26.18</td><td>85.49</td><td>63.99</td><td>23.58</td><td>86.67</td><td>67.52</td><td>22.21</td><td>84.47</td><td>48.98</td><td>30.41</td><td>83.68</td><td>42.3</td><td>34.6</td><td>79.32</td><td>22.83</td><td>38.37</td><td>76.23</td><td>41.62</td><td>30.27</td><td>83.48</td><td>52.7</td><td>30.58</td><td>69.79</td><td>0.07</td><td>46.86</td><td>74.11</td><td>95.23</td><td>4.21</td></tr><tr><td>DenseNet-161</td> <td>LF</td><td>86.27</td><td>22.28</td><td>65.93</td><td>84.99</td><td>11.47</td><td>73.23</td><td>86.46</td><td>19.64</td><td>68.12</td><td>84.22</td><td>13.32</td><td>71.31</td><td>86.27</td><td>22.28</td><td>65.93</td><td>79.57</td><td>6.64</td><td>71.64</td><td>75.42</td><td>20.96</td><td>57.9</td><td>82.98</td><td>21.76</td><td>63.32</td><td>60.11</td><td>32.86</td><td>41.54</td><td>77.9</td><td>9.01</td><td>71.76</td></tr><tr><td>DenseNet-161</td> <td>SSBA</td><td>86.59</td><td>4.4</td><td>81.6</td><td>85.08</td><td>3.13</td><td>81.32</td><td>86.92</td><td>2.88</td><td>82.91</td><td>84.27</td><td>3.24</td><td>79.8</td><td>86.59</td><td>4.4</td><td>81.6</td><td>81.5</td><td>2.02</td><td>76.52</td><td>75.68</td><td>5.23</td><td>70.58</td><td>83.37</td><td>2.59</td><td>79.32</td><td>58.46</td><td>4.63</td><td>55.72</td><td>68.39</td><td>4.82</td><td>63.9</td></tr><tr><td>DenseNet-161</td> <td>Input-aware</td><td>84.56</td><td>83.64</td><td>14.29</td><td>87.38</td><td>73.1</td><td>23.9</td><td>85.02</td><td>84.68</td><td>14.3</td><td>87.19</td><td>71.63</td><td>24.82</td><td>85.84</td><td>3.23</td><td>75.08</td><td>76.28</td><td>8.93</td><td>62.44</td><td>76.49</td><td>60.14</td><td>27.19</td><td>83.28</td><td>62.28</td><td>28.59</td><td>59.73</td><td>29.89</td><td>31.59</td><td>67.97</td><td>6.63</td><td>57.93</td></tr><tr><td>DenseNet-161</td> <td>WaNet</td><td>85.74</td><td>1.27</td><td>84.71</td><td>87.76</td><td>1.27</td><td>85.77</td><td>85.05</td><td>2.06</td><td>83.43</td><td>87.54</td><td>1.13</td><td>85.44</td><td>85.75</td><td>1.27</td><td>84.69</td><td>85.75</td><td>1.27</td><td>84.69</td><td>76.66</td><td>2.66</td><td>74.91</td><td>83.24</td><td>1.91</td><td>81.01</td><td>55.57</td><td>17.0</td><td>44.24</td><td>67.22</td><td>4.21</td><td>65.47</td></tr></tbody>
+</table>
+                        </div>
+                    </div>
+
+                    <!-- cifar-10 poison ratio=0.1% -->
+                    <div class="tab-pane fade" id="cifar10-0_1" role="tabpanel" aria-labelledby="cifar10-0_1-tab">
+                        <div style="overflow: auto; width: 100%;">
+                            <table style="overflow: auto; width: 100%;"
+                            class="table table-hover sortable  performanceTableWide" id="cifar10-10-results">
+                            <col>
+                            <col>
+                            <colgroup span="3" class="wBackground"></colgroup>
+                            <colgroup span="3"></colgroup>
+                            <colgroup span="3" class="wBackground"></colgroup>
+                            <colgroup span="3"></colgroup>
+                            <colgroup span="3" class="wBackground"></colgroup>
+                            <colgroup span="3"></colgroup>
+                            <colgroup span="3" class="wBackground"></colgroup>
+                            <colgroup span="3"></colgroup>
+                            <colgroup span="3" class="wBackground"></colgroup>
+                            <colgroup span="3"></colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="sorttable_nosort"></th>
+                                    <th class="sorttable_nosort">Backdoor&nbsp;&nbsp;&nbsp;Defense&nbsp;&rarr;</th>
+                                    <th class="sorttable_nosort" colspan="3">No&nbsp;&nbsp;&nbsp;defense</th>
+                                    <th class="sorttable_nosort" colspan="3">FT</th>
+                                    <th class="sorttable_nosort" colspan="3">FP</th>
+                                    <th class="sorttable_nosort" colspan="3">NAD</th>
+                                    <th class="sorttable_nosort" colspan="3">NC</th>
+                                    <th class="sorttable_nosort" colspan="3">ANP</th>
+                                    <th class="sorttable_nosort" colspan="3">AC</th>
+                                    <th class="sorttable_nosort" colspan="3">Spectral</th>
+                                    <th class="sorttable_nosort" colspan="3">ABL</th>
+                                    <th class="sorttable_nosort" colspan="3">DBD</th>
+                                </tr>
+                                <tr>
+                                    <th class="sorttable_nosort" scope="col" rowspan="2">
+                                        Targeted&nbsp;Model</th>
+                                    <th class="sorttable_nosort" scope="col" rowspan="2">Backdoor&nbsp;Attack&darr;
+                                    </th>
+                                    <th scope="col">C-Acc (%)</th>
+                                    <th scope="col">ASR (%)</th>
+                                    <th scope="col">R-Acc (%)</th>
+                                    <th scope="col">C-Acc (%)</th>
+                                    <th scope="col">ASR (%)</th>
+                                    <th scope="col">R-Acc (%)</th>
+                                    <th scope="col">C-Acc (%)</th>
+                                    <th scope="col">ASR (%)</th>
+                                    <th scope="col">R-Acc (%)</th>
+                                    <th scope="col">C-Acc (%)</th>
+                                    <th scope="col">ASR (%)</th>
+                                    <th scope="col">R-Acc (%)</th>
+                                    <th scope="col">C-Acc (%)</th>
+                                    <th scope="col">ASR (%)</th>
+                                    <th scope="col">R-Acc (%)</th>
+                                    <th scope="col">C-Acc (%)</th>
+                                    <th scope="col">ASR (%)</th>
+                                    <th scope="col">R-Acc (%)</th>
+                                    <th scope="col">C-Acc (%)</th>
+                                    <th scope="col">ASR (%)</th>
+                                    <th scope="col">R-Acc (%)</th>
+                                    <th scope="col">C-Acc (%)</th>
+                                    <th scope="col">ASR (%)</th>
+                                    <th scope="col">R-Acc (%)</th>
+                                    <th scope="col">C-Acc (%)</th>
+                                    <th scope="col">ASR (%)</th>
+                                    <th scope="col">R-Acc (%)</th>
+                                    <th scope="col">C-Acc (%)</th>
+                                    <th scope="col">ASR (%)</th>
+                                    <th scope="col">R-Acc (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody><tr><td>PreAct-Resnet18</td> <td>BadNets</td><td>93.61</td><td>1.23</td><td>93.24</td><td>93.59</td><td>1.2</td><td>93.2</td><td>93.54</td><td>0.91</td><td>93.24</td><td>93.45</td><td>1.26</td><td>93.03</td><td>90.29</td><td>1.27</td><td>90.08</td><td>89.6</td><td>0.71</td><td>89.37</td><td>89.97</td><td>1.37</td><td>89.57</td><td>93.03</td><td>1.01</td><td>92.53</td><td>81.44</td><td>1.99</td><td>79.69</td><td>71.59</td><td>4.9</td><td>68.82</td></tr><tr><td>PreAct-Resnet18</td> <td>Blended</td><td>93.8</td><td>56.11</td><td>39.37</td><td>93.78</td><td>52.6</td><td>42.09</td><td>93.7</td><td>54.67</td><td>40.38</td><td>93.71</td><td>55.23</td><td>39.76</td><td>91.07</td><td>26.83</td><td>57.16</td><td>85.35</td><td>24.18</td><td>49.57</td><td>89.59</td><td>41.41</td><td>48.77</td><td>93.14</td><td>51.16</td><td>42.93</td><td>67.96</td><td>12.06</td><td>40.82</td><td>78.51</td><td>0.0</td><td>81.22</td></tr><tr><td>PreAct-Resnet18</td> <td>LC</td><td>93.82</td><td>4.67</td><td>66.52</td><td>93.63</td><td>4.21</td><td>66.83</td><td>93.52</td><td>4.51</td><td>66.41</td><td>93.78</td><td>4.57</td><td>66.76</td><td>93.82</td><td>4.67</td><td>66.51</td><td>93.82</td><td>4.67</td><td>66.51</td><td>89.95</td><td>4.53</td><td>60.54</td><td>93.19</td><td>4.64</td><td>65.68</td><td>83.2</td><td>8.91</td><td>50.52</td><td>75.43</td><td>3.27</td><td>57.81</td></tr><tr><td>PreAct-Resnet18</td> <td>SIG</td><td>93.73</td><td>41.27</td><td>42.34</td><td>93.64</td><td>38.99</td><td>44.12</td><td>93.53</td><td>37.71</td><td>43.07</td><td>93.75</td><td>37.6</td><td>45.49</td><td>89.34</td><td>15.96</td><td>42.92</td><td>84.72</td><td>2.71</td><td>41.97</td><td>89.62</td><td>40.09</td><td>35.27</td><td>93.21</td><td>41.34</td><td>41.5</td><td>62.37</td><td>13.52</td><td>22.79</td><td>74.78</td><td>0.07</td><td>21.54</td></tr><tr><td>PreAct-Resnet18</td> <td>LF</td><td>93.55</td><td>12.72</td><td>81.16</td><td>93.27</td><td>9.63</td><td>83.07</td><td>93.42</td><td>12.48</td><td>81.0</td><td>93.57</td><td>10.51</td><td>82.41</td><td>89.68</td><td>4.57</td><td>83.62</td><td>88.52</td><td>5.63</td><td>79.58</td><td>89.94</td><td>13.26</td><td>76.52</td><td>92.86</td><td>18.39</td><td>75.06</td><td>54.82</td><td>8.07</td><td>53.46</td><td>74.19</td><td>9.5</td><td>70.13</td></tr><tr><td>PreAct-Resnet18</td> <td>SSBA</td><td>93.89</td><td>1.62</td><td>90.64</td><td>93.86</td><td>1.41</td><td>90.84</td><td>93.72</td><td>1.6</td><td>90.28</td><td>93.83</td><td>1.43</td><td>90.76</td><td>93.89</td><td>1.62</td><td>90.64</td><td>90.21</td><td>0.99</td><td>86.69</td><td>89.97</td><td>2.33</td><td>86.16</td><td>93.39</td><td>1.83</td><td>90.08</td><td>81.0</td><td>6.22</td><td>76.59</td><td>73.42</td><td>4.42</td><td>67.39</td></tr><tr><td>PreAct-Resnet18</td> <td>Input-aware</td><td>91.94</td><td>47.32</td><td>45.53</td><td>93.05</td><td>56.61</td><td>39.22</td><td>92.03</td><td>26.13</td><td>51.19</td><td>93.05</td><td>58.94</td><td>37.43</td><td>91.94</td><td>47.32</td><td>45.53</td><td>86.47</td><td>14.83</td><td>63.89</td><td>89.93</td><td>30.92</td><td>58.3</td><td>93.16</td><td>46.93</td><td>48.42</td><td>76.14</td><td>31.19</td><td>44.8</td><td>82.22</td><td>13.18</td><td>69.51</td></tr><tr><td>PreAct-Resnet18</td> <td>WaNet</td><td>92.18</td><td>0.78</td><td>91.42</td><td>93.49</td><td>0.74</td><td>92.92</td><td>91.88</td><td>1.06</td><td>91.0</td><td>93.44</td><td>0.76</td><td>92.93</td><td>90.71</td><td>0.94</td><td>89.81</td><td>87.53</td><td>0.56</td><td>88.91</td><td>90.07</td><td>1.69</td><td>88.13</td><td>93.04</td><td>1.02</td><td>91.57</td><td>67.9</td><td>5.04</td><td>61.27</td><td>87.83</td><td>2.63</td><td>86.66</td></tr><tr><td>VGG19</td> <td>BadNets</td><td>90.64</td><td>1.22</td><td>90.37</td><td>89.28</td><td>1.1</td><td>89.2</td><td>90.47</td><td>0.98</td><td>90.34</td><td>88.54</td><td>1.14</td><td>88.44</td><td>90.64</td><td>1.22</td><td>90.37</td><td>NA</td><td>NA</td><td>NA</td><td>85.4</td><td>1.72</td><td>84.87</td><td>89.06</td><td>1.51</td><td>88.62</td><td>89.63</td><td>1.04</td><td>89.47</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>Blended</td><td>91.0</td><td>26.12</td><td>61.7</td><td>89.18</td><td>16.46</td><td>66.8</td><td>90.77</td><td>25.28</td><td>62.03</td><td>88.78</td><td>18.36</td><td>65.1</td><td>91.0</td><td>26.12</td><td>61.7</td><td>NA</td><td>NA</td><td>NA</td><td>85.6</td><td>8.12</td><td>67.64</td><td>89.39</td><td>20.86</td><td>63.18</td><td>89.71</td><td>15.14</td><td>67.67</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>LC</td><td>91.07</td><td>5.08</td><td>62.11</td><td>89.37</td><td>4.61</td><td>60.91</td><td>91.0</td><td>4.67</td><td>62.2</td><td>89.39</td><td>4.03</td><td>60.97</td><td>91.07</td><td>5.08</td><td>62.11</td><td>NA</td><td>NA</td><td>NA</td><td>85.42</td><td>5.3</td><td>54.52</td><td>89.49</td><td>4.9</td><td>59.58</td><td>89.64</td><td>4.44</td><td>59.56</td><td>10.0</td><td>0.0</td><td>11.1</td></tr><tr><td>VGG19</td> <td>SIG</td><td>90.77</td><td>22.71</td><td>50.34</td><td>89.52</td><td>19.97</td><td>51.57</td><td>90.62</td><td>22.24</td><td>50.29</td><td>88.75</td><td>18.0</td><td>49.1</td><td>90.77</td><td>22.71</td><td>50.34</td><td>NA</td><td>NA</td><td>NA</td><td>85.39</td><td>21.3</td><td>40.37</td><td>89.32</td><td>25.0</td><td>43.9</td><td>89.69</td><td>21.58</td><td>47.57</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>LF</td><td>90.46</td><td>5.74</td><td>84.02</td><td>89.21</td><td>5.4</td><td>83.52</td><td>90.5</td><td>5.44</td><td>84.1</td><td>88.47</td><td>4.49</td><td>83.29</td><td>90.46</td><td>5.74</td><td>84.02</td><td>NA</td><td>NA</td><td>NA</td><td>85.83</td><td>7.18</td><td>77.36</td><td>89.56</td><td>6.6</td><td>81.44</td><td>89.1</td><td>6.16</td><td>82.03</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>SSBA</td><td>91.06</td><td>1.54</td><td>87.96</td><td>89.31</td><td>1.16</td><td>87.0</td><td>90.86</td><td>1.33</td><td>87.92</td><td>89.45</td><td>1.73</td><td>86.06</td><td>86.73</td><td>2.17</td><td>83.66</td><td>NA</td><td>NA</td><td>NA</td><td>85.78</td><td>2.58</td><td>82.32</td><td>89.2</td><td>2.02</td><td>86.01</td><td>88.96</td><td>1.98</td><td>85.8</td><td>10.0</td><td>0.0</td><td>11.11</td></tr><tr><td>VGG19</td> <td>Input-aware</td><td>89.52</td><td>48.24</td><td>43.78</td><td>90.87</td><td>27.2</td><td>58.03</td><td>89.85</td><td>38.33</td><td>48.48</td><td>90.84</td><td>27.2</td><td>57.1</td><td>89.52</td><td>48.24</td><td>43.78</td><td>NA</td><td>NA</td><td>NA</td><td>86.01</td><td>8.5</td><td>71.73</td><td>89.81</td><td>14.27</td><td>70.32</td><td>89.73</td><td>18.76</td><td>63.83</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>VGG19</td> <td>WaNet</td><td>89.77</td><td>1.6</td><td>88.86</td><td>91.58</td><td>1.12</td><td>90.7</td><td>90.29</td><td>1.09</td><td>89.64</td><td>91.2</td><td>1.11</td><td>90.5</td><td>89.44</td><td>1.54</td><td>87.94</td><td>NA</td><td>NA</td><td>NA</td><td>85.9</td><td>2.17</td><td>83.39</td><td>88.99</td><td>1.77</td><td>86.99</td><td>89.67</td><td>1.47</td><td>87.74</td><td>10.0</td><td>100.0</td><td>0.0</td></tr><tr><td>EfficientNet-B3</td> <td>BadNets</td><td>63.92</td><td>3.44</td><td>63.43</td><td>57.59</td><td>4.47</td><td>56.93</td><td>63.31</td><td>3.76</td><td>62.64</td><td>60.03</td><td>3.87</td><td>59.2</td><td>63.92</td><td>3.43</td><td>63.46</td><td>63.92</td><td>3.43</td><td>63.46</td><td>41.5</td><td>4.68</td><td>40.79</td><td>53.14</td><td>4.52</td><td>52.37</td><td>31.5</td><td>1.01</td><td>33.5</td><td>52.65</td><td>12.21</td><td>48.14</td></tr><tr><td>EfficientNet-B3</td> <td>Blended</td><td>61.41</td><td>6.66</td><td>51.91</td><td>57.29</td><td>6.9</td><td>48.29</td><td>61.78</td><td>6.27</td><td>51.48</td><td>58.89</td><td>7.03</td><td>49.31</td><td>61.43</td><td>6.66</td><td>51.9</td><td>61.43</td><td>6.66</td><td>51.9</td><td>46.82</td><td>9.0</td><td>41.33</td><td>56.07</td><td>5.13</td><td>50.88</td><td>23.47</td><td>2.74</td><td>18.94</td><td>62.6</td><td>6.52</td><td>56.54</td></tr><tr><td>EfficientNet-B3</td> <td>LC</td><td>54.96</td><td>4.99</td><td>43.16</td><td>52.21</td><td>6.53</td><td>39.9</td><td>54.98</td><td>5.74</td><td>42.42</td><td>52.3</td><td>6.42</td><td>40.78</td><td>54.96</td><td>4.98</td><td>43.16</td><td>54.96</td><td>4.98</td><td>43.16</td><td>39.23</td><td>6.28</td><td>33.76</td><td>54.34</td><td>5.4</td><td>41.84</td><td>20.28</td><td>0.19</td><td>20.04</td><td>54.7</td><td>13.16</td><td>40.79</td></tr><tr><td>EfficientNet-B3</td> <td>SIG</td><td>66.63</td><td>41.69</td><td>23.9</td><td>61.28</td><td>17.31</td><td>26.6</td><td>66.91</td><td>35.6</td><td>25.38</td><td>64.25</td><td>9.26</td><td>28.34</td><td>61.13</td><td>6.88</td><td>32.34</td><td>66.63</td><td>41.71</td><td>23.89</td><td>43.94</td><td>1.66</td><td>31.4</td><td>50.8</td><td>3.03</td><td>47.77</td><td>32.25</td><td>15.94</td><td>22.28</td><td>59.05</td><td>41.2</td><td>34.32</td></tr><tr><td>EfficientNet-B3</td> <td>LF</td><td>55.96</td><td>13.57</td><td>39.2</td><td>52.77</td><td>14.09</td><td>36.93</td><td>55.64</td><td>14.18</td><td>39.73</td><td>53.59</td><td>14.94</td><td>38.04</td><td>55.96</td><td>13.56</td><td>39.2</td><td>55.96</td><td>13.56</td><td>39.2</td><td>43.3</td><td>21.13</td><td>26.06</td><td>47.4</td><td>16.67</td><td>34.32</td><td>23.39</td><td>1.76</td><td>37.63</td><td>54.14</td><td>14.26</td><td>48.48</td></tr><tr><td>EfficientNet-B3</td> <td>SSBA</td><td>65.76</td><td>3.72</td><td>61.94</td><td>59.73</td><td>5.24</td><td>55.51</td><td>65.31</td><td>3.93</td><td>61.33</td><td>62.82</td><td>4.94</td><td>58.03</td><td>65.77</td><td>3.72</td><td>61.94</td><td>65.77</td><td>3.72</td><td>61.96</td><td>40.4</td><td>5.16</td><td>39.71</td><td>47.98</td><td>3.44</td><td>47.26</td><td>29.8</td><td>0.37</td><td>32.63</td><td>58.51</td><td>10.97</td><td>53.37</td></tr><tr><td>EfficientNet-B3</td> <td>Input-aware</td><td>61.93</td><td>7.96</td><td>54.93</td><td>62.14</td><td>6.79</td><td>55.32</td><td>62.89</td><td>6.26</td><td>56.64</td><td>62.69</td><td>6.87</td><td>55.71</td><td>61.21</td><td>7.7</td><td>53.16</td><td>61.93</td><td>7.96</td><td>54.94</td><td>45.17</td><td>6.33</td><td>41.56</td><td>45.58</td><td>3.88</td><td>43.66</td><td>33.34</td><td>1.07</td><td>35.48</td><td>56.16</td><td>17.86</td><td>45.77</td></tr><tr><td>EfficientNet-B3</td> <td>WaNet</td><td>75.14</td><td>3.54</td><td>72.91</td><td>70.98</td><td>3.57</td><td>69.44</td><td>73.46</td><td>3.83</td><td>71.22</td><td>73.89</td><td>3.13</td><td>71.59</td><td>75.13</td><td>3.54</td><td>72.9</td><td>71.12</td><td>3.09</td><td>69.13</td><td>48.4</td><td>5.31</td><td>47.0</td><td>50.38</td><td>3.19</td><td>50.09</td><td>26.57</td><td>0.43</td><td>26.9</td><td>57.88</td><td>10.91</td><td>54.36</td></tr><tr><td>MobileNetV3-Large</td> <td>BadNets</td><td>84.3</td><td>1.61</td><td>84.03</td><td>79.1</td><td>2.31</td><td>78.83</td><td>84.15</td><td>1.72</td><td>83.87</td><td>80.35</td><td>2.19</td><td>79.64</td><td>84.3</td><td>1.61</td><td>84.03</td><td>84.3</td><td>1.61</td><td>84.03</td><td>74.84</td><td>2.41</td><td>74.23</td><td>79.72</td><td>1.94</td><td>79.6</td><td>76.19</td><td>2.73</td><td>75.21</td><td>58.91</td><td>7.4</td><td>56.29</td></tr><tr><td>MobileNetV3-Large</td> <td>Blended</td><td>84.15</td><td>34.39</td><td>49.36</td><td>79.33</td><td>3.86</td><td>63.48</td><td>84.1</td><td>31.48</td><td>51.29</td><td>80.41</td><td>4.77</td><td>63.83</td><td>84.15</td><td>34.39</td><td>49.36</td><td>84.15</td><td>34.39</td><td>49.36</td><td>73.87</td><td>3.16</td><td>61.93</td><td>80.43</td><td>11.83</td><td>63.74</td><td>74.94</td><td>6.56</td><td>57.49</td><td>56.22</td><td>10.08</td><td>47.9</td></tr><tr><td>MobileNetV3-Large</td> <td>LC</td><td>84.19</td><td>5.01</td><td>55.58</td><td>79.58</td><td>5.47</td><td>52.44</td><td>83.88</td><td>5.1</td><td>55.47</td><td>80.7</td><td>5.62</td><td>52.42</td><td>77.3</td><td>5.47</td><td>49.82</td><td>84.19</td><td>5.01</td><td>55.58</td><td>75.12</td><td>5.28</td><td>49.5</td><td>80.62</td><td>4.47</td><td>53.18</td><td>73.81</td><td>4.57</td><td>46.77</td><td>56.01</td><td>10.67</td><td>40.87</td></tr><tr><td>MobileNetV3-Large</td> <td>SIG</td><td>84.22</td><td>41.32</td><td>29.08</td><td>79.51</td><td>32.8</td><td>32.5</td><td>83.88</td><td>41.18</td><td>28.94</td><td>80.21</td><td>16.54</td><td>39.47</td><td>84.22</td><td>41.32</td><td>29.08</td><td>76.25</td><td>33.66</td><td>27.82</td><td>73.0</td><td>30.98</td><td>24.77</td><td>80.67</td><td>29.53</td><td>32.11</td><td>75.35</td><td>28.73</td><td>26.87</td><td>58.69</td><td>93.52</td><td>4.53</td></tr><tr><td>MobileNetV3-Large</td> <td>LF</td><td>84.03</td><td>24.63</td><td>61.21</td><td>79.2</td><td>8.7</td><td>62.83</td><td>83.73</td><td>24.02</td><td>61.84</td><td>80.34</td><td>10.61</td><td>64.39</td><td>84.03</td><td>24.63</td><td>61.22</td><td>83.29</td><td>23.39</td><td>61.7</td><td>73.38</td><td>6.51</td><td>63.49</td><td>80.63</td><td>9.37</td><td>70.0</td><td>74.42</td><td>14.71</td><td>59.39</td><td>56.49</td><td>11.22</td><td>50.81</td></tr><tr><td>MobileNetV3-Large</td> <td>SSBA</td><td>84.42</td><td>2.22</td><td>81.21</td><td>79.63</td><td>2.79</td><td>75.79</td><td>84.33</td><td>2.34</td><td>80.73</td><td>80.47</td><td>2.96</td><td>76.78</td><td>76.14</td><td>2.79</td><td>73.11</td><td>84.43</td><td>2.22</td><td>81.21</td><td>74.58</td><td>3.93</td><td>70.19</td><td>80.93</td><td>2.91</td><td>76.77</td><td>73.59</td><td>4.41</td><td>70.24</td><td>58.69</td><td>7.5</td><td>53.49</td></tr><tr><td>MobileNetV3-Large</td> <td>Input-aware</td><td>76.91</td><td>7.79</td><td>64.29</td><td>80.03</td><td>11.14</td><td>60.69</td><td>82.15</td><td>10.91</td><td>63.52</td><td>81.57</td><td>10.86</td><td>61.88</td><td>77.61</td><td>9.9</td><td>64.67</td><td>76.91</td><td>7.79</td><td>64.31</td><td>72.17</td><td>7.63</td><td>58.21</td><td>81.23</td><td>11.22</td><td>60.83</td><td>73.41</td><td>9.84</td><td>57.94</td><td>58.87</td><td>22.5</td><td>45.66</td></tr><tr><td>MobileNetV3-Large</td> <td>WaNet</td><td>81.64</td><td>2.34</td><td>80.42</td><td>81.32</td><td>2.5</td><td>79.44</td><td>82.51</td><td>3.68</td><td>79.62</td><td>82.96</td><td>2.33</td><td>81.3</td><td>80.69</td><td>2.49</td><td>78.57</td><td>81.64</td><td>2.34</td><td>80.42</td><td>73.22</td><td>3.13</td><td>71.6</td><td>80.43</td><td>2.06</td><td>78.93</td><td>74.06</td><td>3.59</td><td>69.06</td><td>56.35</td><td>8.21</td><td>51.92</td></tr><tr><td>DenseNet-161</td> <td>BadNets</td><td>86.7</td><td>1.57</td><td>86.07</td><td>85.66</td><td>1.6</td><td>84.99</td><td>86.63</td><td>1.24</td><td>86.46</td><td>84.97</td><td>1.72</td><td>84.2</td><td>82.42</td><td>2.01</td><td>82.02</td><td>86.7</td><td>1.57</td><td>86.07</td><td>77.15</td><td>2.27</td><td>76.44</td><td>83.3</td><td>1.76</td><td>83.03</td><td>55.76</td><td>9.23</td><td>51.93</td><td>70.29</td><td>4.12</td><td>67.93</td></tr><tr><td>DenseNet-161</td> <td>Blended</td><td>86.76</td><td>14.84</td><td>68.23</td><td>86.14</td><td>7.41</td><td>71.77</td><td>86.82</td><td>12.47</td><td>69.93</td><td>84.86</td><td>9.92</td><td>69.96</td><td>86.76</td><td>14.87</td><td>68.22</td><td>86.05</td><td>5.03</td><td>72.32</td><td>75.84</td><td>4.7</td><td>65.69</td><td>83.11</td><td>8.63</td><td>70.07</td><td>58.68</td><td>8.94</td><td>45.44</td><td>60.06</td><td>6.18</td><td>53.56</td></tr><tr><td>DenseNet-161</td> <td>LC</td><td>86.48</td><td>4.59</td><td>57.67</td><td>85.52</td><td>4.83</td><td>55.82</td><td>86.68</td><td>4.83</td><td>57.36</td><td>85.02</td><td>4.78</td><td>55.42</td><td>81.39</td><td>4.86</td><td>52.78</td><td>86.48</td><td>4.59</td><td>57.66</td><td>76.42</td><td>5.03</td><td>51.0</td><td>83.08</td><td>4.71</td><td>54.94</td><td>68.04</td><td>3.08</td><td>45.28</td><td>67.35</td><td>9.6</td><td>48.66</td></tr><tr><td>DenseNet-161</td> <td>SIG</td><td>86.69</td><td>14.97</td><td>53.42</td><td>86.2</td><td>11.59</td><td>53.52</td><td>86.79</td><td>17.82</td><td>51.38</td><td>84.99</td><td>12.14</td><td>54.86</td><td>86.69</td><td>15.0</td><td>53.41</td><td>81.57</td><td>6.48</td><td>51.47</td><td>75.87</td><td>9.82</td><td>47.46</td><td>83.22</td><td>10.32</td><td>54.99</td><td>57.21</td><td>30.58</td><td>28.48</td><td>69.11</td><td>22.93</td><td>52.27</td></tr><tr><td>DenseNet-161</td> <td>LF</td><td>86.46</td><td>7.19</td><td>78.67</td><td>85.85</td><td>7.56</td><td>77.37</td><td>86.56</td><td>6.74</td><td>78.94</td><td>85.36</td><td>7.53</td><td>77.27</td><td>86.46</td><td>7.2</td><td>78.67</td><td>86.45</td><td>6.9</td><td>78.31</td><td>76.56</td><td>9.86</td><td>64.79</td><td>83.03</td><td>9.09</td><td>72.5</td><td>54.78</td><td>6.47</td><td>54.13</td><td>67.58</td><td>12.28</td><td>61.98</td></tr><tr><td>DenseNet-161</td> <td>SSBA</td><td>87.01</td><td>2.09</td><td>83.46</td><td>85.71</td><td>2.31</td><td>82.04</td><td>87.14</td><td>2.06</td><td>83.37</td><td>85.47</td><td>2.84</td><td>81.22</td><td>87.01</td><td>2.09</td><td>83.46</td><td>87.15</td><td>2.01</td><td>83.32</td><td>76.53</td><td>4.19</td><td>71.98</td><td>83.4</td><td>2.67</td><td>79.57</td><td>54.1</td><td>10.03</td><td>49.31</td><td>59.3</td><td>11.78</td><td>53.6</td></tr><tr><td>DenseNet-161</td> <td>Input-aware</td><td>84.55</td><td>33.69</td><td>42.29</td><td>87.27</td><td>43.66</td><td>41.48</td><td>85.37</td><td>50.64</td><td>33.52</td><td>87.23</td><td>43.29</td><td>41.39</td><td>85.93</td><td>3.84</td><td>71.39</td><td>77.14</td><td>6.58</td><td>55.92</td><td>76.86</td><td>17.74</td><td>51.07</td><td>82.63</td><td>25.6</td><td>50.04</td><td>57.83</td><td>16.99</td><td>28.34</td><td>72.3</td><td>13.6</td><td>51.52</td></tr><tr><td>DenseNet-161</td> <td>WaNet</td><td>86.48</td><td>1.76</td><td>85.09</td><td>88.24</td><td>1.18</td><td>86.53</td><td>85.85</td><td>1.77</td><td>83.87</td><td>87.99</td><td>1.18</td><td>86.6</td><td>86.46</td><td>1.76</td><td>85.09</td><td>82.23</td><td>1.41</td><td>81.19</td><td>76.03</td><td>2.34</td><td>73.56</td><td>83.25</td><td>1.53</td><td>81.46</td><td>56.87</td><td>2.38</td><td>48.59</td><td>67.75</td><td>5.66</td><td>65.3</td></tr></tbody>
+</table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 thumb">
+
+            <ul>
+                <li>
+                    <b>NA</b> means non-applicable.
+                </li>
+
+                <li>
+                    <b>TBD</b> means to be declared, the results of these methods are running and will be comming soon.
+                </li>
+                <li>For <b>SIG</b> and <b>LC</b> attack, since they are clean-label attack, if poisoning rate is higher
+                    than the percentage of the target class, these attack methods is non-applicable.
+                </li>
+                <li>For <b>ANP</b> defense, since the VGG19 model we used does not have batch normalization layer, ANP is non-applicable for VGG19.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <br />
+</body>
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/sorttable.js"></script>
+<script src="js/leaderboard_render.js"></script>
+<script>
+    $("#aaaa").load("results/cifar10-10.html");
+</script>
+
+
+
+</html>
