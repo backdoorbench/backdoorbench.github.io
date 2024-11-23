@@ -123,7 +123,7 @@
         /* padding: 20px; */
       }
 
-      body .container-fluid {
+      .container-fluid {
         margin-top: -50px;
       }
   </style>
@@ -138,7 +138,7 @@
           .then(html => {
               document.getElementById('navbar').innerHTML = html;
 
-              const navbarContainer = document.querySelector('.container-fluid');
+              const navbarContainer = document.querySelector('#navbar .container-fluid');
               if (navbarContainer) {
                   navbarContainer.style.paddingLeft = '15px !important';
                   navbarContainer.style.paddingRight = '15px !important';
