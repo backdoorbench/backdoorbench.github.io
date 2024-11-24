@@ -4,14 +4,3 @@
     padding-right: 15px;
     margin-bottom: -50px;
 }
-
-.navbar {
-    position: fixed; /* 固定导航栏 */
-    top: 0; /* 距离页面顶部为 0 */
-    left: 0; /* 距离页面左边为 0 */
-    width: 100%; /* 占据整个页面宽度 */
-    z-index: 1000; /* 确保导航栏始终在最上层 */
-    background-color: white; /* 导航栏背景色 */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 添加阴影 */
-}
-
