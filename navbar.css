@@ -1,0 +1,5 @@
+/* 导航栏专属 container-fluid 样式 */
+.navbar .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+}
